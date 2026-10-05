@@ -1,196 +1,156 @@
-# Real Feng Shui DB (实战风水数据库与排盘引擎)
+# Real Feng Shui Database & Interactive Studio (实战风水数据库与可视化工作台)
+
+<div align="center">
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3.8+-yellow.svg)](https://www.python.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-5.22-green)](https://www.prisma.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-Prebuilt%20DB-003B57?logo=sqlite)](database/fengshui_master.sqlite)
 
-面向现代住宅、商业空间与别墅的**实战落地级风水数据库与排盘计算引擎**。
+面向现代住宅、商业空间与别墅的**实战落地级风水知识库、排盘计算引擎与交互式可视化工作台**。
 
-不仅涵盖玄学古籍理论算法，更以**现代建筑学、户型平面空间划分、室内动线气流与物理软装化解**为核心，将**玄空飞星、八宅明镜、三元纳气、内外峦头形煞**无缝融合到统一的实体数据模型中。
+完全对齐 [bazi-liuyao-database](https://github.com/orikami048/bazi-liuyao-database) 规范，独立拆分构建。
 
----
-
-## 🌟 核心特色与现实落地价值
-
-1. **精准罗盘与兼向判定**：
-   - 支持 0.00° ~ 359.99° 连续实测度数与地磁偏角校正。
-   - 依据古籍规范与实战标准（偏离中心线 $\ge 3^\circ$），自动切分 **正向下卦** 与 **兼向替卦（挨星替卦诀）**。
-2. **沈氏玄空飞星全周期排盘**：
-   - 包含三元九运（当前 2024–2043 下元九运）。
-   - 自动推演运盘、山星盘、向星盘洛书九宫顺逆飞布。
-   - 自动识别四大核心格局：**到山到向（旺山旺向）、上山下水、双星到向、双星到山、反吟伏吟**及九星组合断语。
-3. **八宅明镜宅命匹配**：
-   - 严格按农历立春节气干支推算居者三元本命卦（男命/女命区分）。
-   - 依据坐山排定房屋宅卦（坎宅、坤宅、震宅等）与八宫游年九星（生气、延年、天医、伏位、绝命、五鬼、六煞、祸害）。
-4. **现代高层三元纳气法**：
-   - 针对现代电梯高层住宅、落地窗、主阳台的实战纳气评估。
-   - 严格遵循九运正神（离火宜静）、零神（坎水宜动）法则，评估进气口旺气、生气、衰气、死气。
-5. **峦头形煞与可落地装修化解百科**：
-   - 涵盖穿堂煞、路冲、天斩煞、反弓水、壁刀煞、开门见灶、卫生间居中、横梁压顶、西北/西南缺角等。
-   - 提供**现代建筑物理阻隔**（隔断屏风、磨砂门、动线调整、绿植屏障）与**传统五行化解方案**（六帝钱、泰山石敢当、山海镇、安忍水）。
+</div>
 
 ---
 
-## 🌐 网络现成资料库与开源参考调研
+## 🌟 Overview & Highlights
 
-在架构设计与数据梳理阶段，本仓库调研并对齐了网络上主流的开源术数资源：
-
-| 开源项目 / 数据源 | 语言 / 平台 | 特点与本仓库借鉴点 |
-| :--- | :--- | :--- |
-| **[6tail / lunar-typescript](https://github.com/6tail/lunar-typescript)** | TypeScript | 极高精度的公历、农历、二十四节气与干支换算库。本项目用于居者立春本命卦的精准计算。 |
-| **[Sudo-Biao / Chinese-Metaphysics-Platform](https://github.com/Sudo-Biao/Chinese-Metaphysics-Platform)** | Python | 严谨的古籍术数逻辑分层，为玄空飞星洛书轨迹和九星组合断语提供了算法依据。 |
-| **[Brhiza / mingyu](https://github.com/Brhiza/mingyu)** | Go / MCP | 提供八宅明镜和玄空飞星的 API 标准接口结构。 |
-| **[funfwo / Fengshui](https://github.com/funfwo/Fengshui)** | Python | 专注下卦与兼向替卦排盘逻辑校验。 |
-| **沈氏玄空学 & 八宅明镜古本** | 文献规范 | 校核了二十四山阴阳顺逆极性、三元龙属性与替卦秘诀口诀（子癸并甲申等）。 |
-
----
-
-## 🗄️ 数据库架构设计 (Schema Architecture)
-
-本项目采用 **Prisma ORM** 进行强类型建模，默认配置轻量 **SQLite**（开箱即用），仅需修改 `.env` 即可一键平滑切换至 **PostgreSQL**。
-
-### 1. 术数常量与字典层 (Metaphysics Knowledge)
-- `Period`: 三元九运字典（一运至九运年份与五行八卦）
-- `TwentyFourMountain`: 罗盘二十四山（八卦所属、度数范围、三元龙、阴阳极性、替卦星）
-- `NineStar`: 紫白九星全属性（五行、本宫、人体部位、健康影响、生旺与克泄五行）
-- `EightMansionsStar`: 八宅游年星（四吉四凶属性、影响力评级）
-- `FormShaDict`: 现代空间内外峦头形煞百科（成因、危害评级、物理软装化解、风水物化解）
-
-### 2. 现实空间与物业层 (Spatial Property)
-- `Property`: 房产实体（建造/入住年份、归属元运、向首/坐山精确度数、是否兼向）
-- `Resident`: 居者人员档案（公历出生日期、立春干支年、男女命卦、东四/西四命）
-- `FloorPlan`: 户型平面图（楼层、长宽尺寸、天心十道立极点相对坐标、正北夹角）
-- `RoomZone`: 室内功能空间分区（大门、客厅、主卧、灶台、卫生间、阳台；所在九宫与纳气口标记）
-- `MissingCorner`: 户型缺角/凸角记录（方位九宫、缺角比例、健康与家庭影响、补角措施）
-- `InternalShaRecord` / `ExternalShaRecord`: 室内外实测形煞记录
-
-### 3. 排盘诊断与推演层 (Assessment Engine)
-- `Assessment`: 一次完整的风水实勘评估事务（综合评分、流年干支、评估师）
-- `FlyingStarChart` / `FlyingStarPalace`: 玄空飞星九宫明细（运星、山向星顺逆、格局断语）
-- `EightMansionsChart` / `EightMansionsPalace`: 宅卦与八宫吉凶游年分布
-- `AirIntakeChart`: 三元纳气门窗动气评估（正神/零神、生旺衰死气）
-- `RemedyPlan`: 实战落地调理清单（优先级、装修施工、家具挪位、材料软装、完成打卡标记）
+1. **多流派数学化严谨排盘**：
+   - **沈氏玄空飞星**：洛书九宫轨迹顺逆飞布，支持下元九运（2024–2043）、下卦正向与兼向替卦（挨星替卦诀），自动判定四大格局（旺山旺向/上山下水/双星到向/双星到山）与星曜交会吉凶。
+   - **八宅明镜宅法**：严守立春干支计算居者男女三元命卦（东四命/西四命），推演八大宅卦与八宫游年星（生气、延年、天医、伏位、绝命、五鬼、六煞、祸害）。
+   - **现代高层三元纳气法**：以门窗阳台为动气口，严格遵循九运正神（离火宜静）、零神（坎水宜动）法则，评估生旺衰死气。
+   - **峦头形煞与可落地装修化解**：穿堂煞、卫生间居中、开门见灶、横梁压顶、天斩煞、缺角煞等，提供现代建筑物理软装阻隔与五行化解方案。
+2. **多形态交付与即插即用**：
+   - **🖥️ 开箱即用 Web 交互式界面 (`index.html`)**：零依赖纯前端与本地 Web 服务，提供 360° 交互式罗盘、彩色九宫飞星盘、八宅吉凶卡片与一键打印诊断报告。
+   - **🐍 独立 CLI 排盘引擎 (`scripts/fengshui_paipan.py`)**：单文件跨平台排盘，支持终端排盘与 `--json` 机器格式输出。
+   - **💾 预构建单文件 SQLite 数据库 (`database/fengshui_master.sqlite`)**：内置 24 山、九星、八宅、形煞及真实住宅实勘案例。
+   - **📚 体系化理论与实战案例 (`references/`, `cases/`)**：5 篇核心理论白皮书与 2 篇真实住宅勘测工程化解案例。
 
 ---
 
-## 🚀 快速开始 (Quick Start)
+## 🖥️ 可视化交互工作台 (Web Studio)
 
-### 1. 克隆与安装依赖
+本项目内置极具东方美学的交互式风水评估工作台，**两种方式均可一键启动**：
+
+### 方式 1：双击本地运行（零依赖）
+直接在文件管理器中双击打开根目录的 [`index.html`](file:///C:/Users/kami/.gemini/antigravity/scratch/real-fengshui-db/index.html)，即可在任意现代浏览器中离线流畅运行！
+
+### 方式 2：本地 Node.js 服务器启动
 ```bash
-git clone https://github.com/orikami048/real-fengshui-db.git
-cd real-fengshui-db
-npm install
+npm run start
+# 浏览器访问: http://localhost:3000
 ```
 
-### 2. 生成 Prisma Client 与数据库建表
-```bash
-npx prisma generate
-npx prisma db push
-```
+### 界面核心交互特性：
+- **🧭 360° 动态罗盘定向器**：拖动滑块或输入向首角度，罗盘指针实时旋转，自动判定坐山、向山、八卦宫位、三元龙极性，并实时侦测“正向下卦”或“兼向替卦”（偏离中心线 $\ge 3^\circ$ 自动切替卦）。
+- **九宫洛书交互飞星盘**：彩色渲染山星、向星与运星，醒目高亮九运当令旺星与二五交加大煞；点击任一宫位即可查看星曜组合秘传断语与现代调理指导。
+- **八宅宅命配合器**：输入居者出生年份与性别，自动推算三元本命卦与宅卦八宫游年分布。
+- **三元纳气门窗体检**：评估大门与阳台纳气属性，指导落地窗纱帘与玄关动线。
+- **🖨️ 一键打印报告**：点击“打印/导出实战风水诊断勘测报告”，生成整洁的 PDF 或纸质施工方案。
 
-### 3. 一键初始化种子数据 (包含古籍规范与真实住宅勘测全流程案例)
-```bash
-npm run db:seed
-```
-运行后将自动：
-1. 导入 9 个三元九运、24 座二十四山精确角度、9 颗紫白九星、8 大游年星、10 条实战形煞百科。
-2. 完整建档演示案例：**某高层住宅 1603 室（2024年九运交付、坐子向午、玄关穿堂煞诊断、九宫排盘与落地整改清单）**。
+---
 
-### 4. 运行引擎单元测试
+## 🚀 命令行 CLI 使用 (CLI Usage)
+
+### Python 独立排盘 CLI (`scripts/fengshui_paipan.py`)
 ```bash
-npm test
+# 1. 默认九运、向首 180°（坐正北子山 向正南午山）
+python scripts/fengshui_paipan.py --facing 180
+
+# 2. 兼向替卦测试（偏离正山超过3度）
+python scripts/fengshui_paipan.py --facing 184.2
+
+# 3. 输出机器可读 JSON 数据给 API 或大模型
+python scripts/fengshui_paipan.py --facing 180 --json
 ```
 
 ---
 
-## 💻 代码调用示例 (Engine Usage)
-
-### 1. 罗盘测向与兼向分析
-```typescript
-import { analyzeOrientation } from "real-fengshui-db";
-
-// 输入实测向首度数（例如向首 184.2°）
-const result = analyzeOrientation(184.2);
-console.log(result.description);
-// 输出: 坐子向午（兼向替卦，偏离4.2°）
-```
-
-### 2. 玄空飞星排盘
-```typescript
-import { calculateFlyingStarChart } from "real-fengshui-db";
-
-// 计算九运、坐子山向午山（正向）星盘
-const chart = calculateFlyingStarChart(9, result.sittingMountain, result.facingMountain, false);
-console.log(`格局判定: ${chart.patternName}`);
-// 查看离九宫（正南方向首）
-const southPalace = chart.palaces.find(p => p.palaceNumber === 9);
-console.log(`离宫星曜: 山星[${southPalace.mountainStar}] 向星[${southPalace.facingStar}] 运星[${southPalace.baseStar}]`);
-```
-
-### 3. 计算居者三元命卦与八宅游年
-```typescript
-import { calculateLifeGua, getEightMansionsChart } from "real-fengshui-db";
-
-const lifeGua = calculateLifeGua(new Date("1990-05-15"), "MALE");
-console.log(`居者命卦: ${lifeGua.name} (${lifeGua.group === "EAST_FOUR" ? "东四命" : "西四命"})`);
-
-// 坎宅（坐北朝南）八宫吉凶
-const houseChart = getEightMansionsChart(1);
-console.log(houseChart.palaces);
-```
-
-### 4. 评估现代门窗三元纳气
-```typescript
-import { evaluateAirIntake } from "real-fengshui-db";
-
-// 评估九运正北方（坎一宫）大门纳气
-const northIntake = evaluateAirIntake(1, 9);
-console.log(northIntake.qiNature); // 旺气（当运大吉） (零神方见动气大吉)
-```
-
----
-
-## 📂 项目目录结构
+## 🗂️ 仓库架构目录 (Repository Architecture)
 
 ```
 real-fengshui-db/
-├── data/                         # 现成标准术数资料库 (JSON)
-│   ├── periods.json              # 三元九运划分标准 (1864 - 2043)
-│   ├── twenty_four_mountains.json# 罗盘二十四山精确角度、三元龙与替卦
-│   ├── nine_stars.json           # 紫白九星全属性、疾病与行业象意
-│   ├── eight_mansions.json       # 八宅游年四吉四凶星
-│   └── form_sha.json             # 峦头形煞与现代物理/五行化解百科
+├── index.html                            # 🖥️ 开箱即用 Web 交互式工作台主入口（双击直接运行）
+├── app/
+│   └── index.html                        # 现代可视化前端应用源码
+│
+├── scripts/                              # 🐍 核心计算与排盘引擎 CLI
+│   └── fengshui_paipan.py                # 独立 Python 排盘工具（终端九宫飞星、格局与 JSON 导出）
+│
+├── data/                                 # 🗄️ 标准机器可读 JSON 数据集
+│   ├── periods.json                      # 三元九运划分标准 (1864 - 2043)
+│   ├── twenty_four_mountains.json        # 罗盘二十四山精确角度、三元龙与替卦诀
+│   ├── nine_stars.json                   # 紫白九星全属性、疾病与行业象意
+│   ├── eight_mansions.json               # 八宅大游年四吉四凶星
+│   └── form_sha.json                     # 常见峦头形煞与现代建筑软装物理化解字典
+│
+├── database/                             # 💾 预构建单文件 SQLite 数据库
+│   └── fengshui_master.sqlite            # 开箱即用预填充关系型数据库
+│
+├── references/                           # 📚 深度理论与计算准则白皮书
+│   ├── 00_gainian_suoyin.md              # 概念索引与二十四山分金秘要
+│   ├── 01_xuankong_feixing.md            # 沈氏玄空飞星排盘与三元九运吉凶推断
+│   ├── 02_bazhai_mingjing.md             # 八宅明镜宅法、东四西四命卦与游年吉凶
+│   ├── 03_sanyuan_naqi.md                # 现代高层住宅三元纳气法与零正神动气法则
+│   └── 04_luantou_xingsha_huajie.md      # 峦头形煞大全与现代建筑室内物理软装化解手册
+│
+├── cases/                                # 📝 真实住宅实战勘测工程案例
+│   ├── 01_gaoceng_chuangtang_erwu_huajie.md # 现代高层穿堂煞与二五交加综合化解实录
+│   └── 02_jiuyun_zhengbei_naqi_office.md    # 下元九运正北零神纳气商业选址与布局实战案
+│
+├── src/                                  # ⚡ TypeScript 引擎与服务模块
+│   ├── engine/                           # 算法核心（24山、飞星、八宅、三元纳气）
+│   ├── seed.ts                           # Prisma 数据库种子填充与实战案例建档
+│   ├── test.ts                           # 核心算法自动化测试脚本
+│   └── server.ts                         # 零依赖本地轻量静态 HTTP 服务器
+│
 ├── prisma/
-│   └── schema.prisma             # 完整实战风水数据库 Schema 定义
-├── src/
-│   ├── engine/                   # 纯 TypeScript 排盘核心算法引擎
-│   │   ├── twentyFourMountain.ts # 罗盘度数、山向转换、下卦兼向判定
-│   │   ├── flyingStar.ts         # 玄空飞星九宫洛书轨迹顺逆算法
-│   │   ├── eightMansions.ts      # 八宅宅卦推演与立春三元命卦算法
-│   │   └── airIntake.ts          # 三元纳气法门窗动气评估
-│   ├── seed.ts                   # 种子数据填充与真实勘测实战案例建档
-│   ├── test.ts                   # 核心算法与古籍规范单元测试
-│   └── index.ts                  # 入口导出
+│   └── schema.prisma                     # 工业级强类型数据库 Prisma Schema 模型
 ├── package.json
 └── tsconfig.json
 ```
 
 ---
 
-## 🔮 路线图 (Roadmap)
+## 💾 SQLite 数据库查询示例
 
-- [x] 罗盘 24 山度数与兼向替卦自动判定
-- [x] 沈氏玄空飞星九宫排盘引擎与四大格局推演
-- [x] 八宅明镜宅命配合与三元命卦计算
-- [x] 现代高层三元纳气法则
-- [x] 实战峦头形煞库与物理装修化解指南
-- [x] Prisma SQLite/PostgreSQL 完整数据模型与种子脚本
-- [ ] 交互式户型图 Canvas / SVG 九宫放射线立极标注
-- [ ] 移动端陀螺仪与电子罗盘实时指向排盘集成
-- [ ] 集成 LLM 大模型根据诊断记录自动输出定制风水调理报告
+你可以使用任意 SQLite 工具或客户端直接打开 `database/fengshui_master.sqlite` 进行 SQL 查询：
+
+```sql
+-- 1. 查询九运中正南向（午山）的相关属性
+SELECT name, chineseTrigram, palaceNumber, yuanDragon, polarity, substituteStar 
+FROM TwentyFourMountain 
+WHERE name = '午';
+
+-- 2. 查询现代室内危害评级最高的形煞与物理化解建议
+SELECT name, hazardLevel, impactOnWealth, physicalRemedy 
+FROM FormShaDict 
+WHERE category = 'INTERNAL' AND hazardLevel >= 4;
+
+-- 3. 查询数据库中预存的真实住宅勘测评估得分与朝向
+SELECT title, propertyType, facingDegree, mountainSitting, mountainFacing 
+FROM Property;
+```
 
 ---
 
-## 📄 开源许可证
+## 🔮 路线图 (Roadmap)
 
-本项目遵循 [MIT License](LICENSE) 开源协议。
+- [x] 完整对齐 `bazi-liuyao-database` 规格架构并独立拆分
+- [x] 预构建独立 `database/fengshui_master.sqlite`
+- [x] 独立 `scripts/fengshui_paipan.py` 终端命令行工具
+- [x] 深度学术级理论 Markdown 体系 (`references/`)
+- [x] 现实生活工程化解实战案例库 (`cases/`)
+- [x] 交互式现代 Web 工作台与 360° 动态罗盘 (`index.html`)
+- [ ] 户型图 Canvas 交互式天心立极与放射线户型标注组件
+- [ ] 结合手机陀螺仪的 Web 实时电子罗盘指向功能
+- [ ] 集成 LLM 大模型根据勘测数据一键生成 PDF 深度定制诊断报告
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE) — open and free for personal study, academic research, and commercial applications.

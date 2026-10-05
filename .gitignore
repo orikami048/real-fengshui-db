@@ -1,6 +1,7 @@
 node_modules
 dist
 .env
-*.db
 *.db-journal
+prisma/*.db
+!database/fengshui_master.sqlite
 .DS_Store

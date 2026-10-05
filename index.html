@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Feng Shui Master | 实战风水罗盘与空间诊断工作台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>☯️</text></svg>">
+  <style>
+    :root {
+      --bg-main: #0c0f17;
+      --bg-card: #151a26;
+      --bg-card-hover: #1c2333;
+      --border-color: #273142;
+      --text-main: #e2e8f0;
+      --text-muted: #8e9bb0;
+      --gold: #d4af37;
+      --gold-light: #f7d560;
+      --crimson: #e54d42;
+      --green: #2ecc71;
+      --blue: #3498db;
+      --purple: #9b59b6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #171d2b 0%, var(--bg-main) 100%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(15, 20, 31, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      font-size: 28px;
+      animation: rotateTaiji 20s linear infinite;
+    }
+    @keyframes rotateTaiji { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+    }
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-tags {
+      display: flex;
+      gap: 10px;
+    }
+    .tag-badge {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold-light);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1080px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    /* 控制面板 */
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      margin-bottom: 20px;
+    }
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .form-control, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      background: #0f141f;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--gold);
+    }
+
+    /* 罗盘仪表盘 */
+    .compass-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 16px auto;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: radial-gradient(circle, #1a2333 0%, #0d121c 100%);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .compass-plate {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s ease-out;
+    }
+    .compass-needle {
+      position: absolute;
+      width: 4px;
+      height: 190px;
+      background: linear-gradient(to bottom, var(--crimson) 50%, var(--blue) 50%);
+      border-radius: 2px;
+      z-index: 10;
+      box-shadow: 0 0 10px rgba(229, 77, 66, 0.6);
+    }
+    .compass-center-dot {
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      border-radius: 50%;
+      z-index: 12;
+      border: 2px solid #fff;
+    }
+
+    .range-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .range-input {
+      flex: 1;
+      accent-color: var(--gold);
+    }
+
+    /* 结果信息条目 */
+    .metric-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .badge-gold { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border: 1px solid var(--gold); }
+    .badge-green { background: rgba(46, 204, 113, 0.15); color: var(--green); border: 1px solid var(--green); }
+    .badge-red { background: rgba(229, 77, 66, 0.15); color: var(--crimson); border: 1px solid var(--crimson); }
+    .badge-blue { background: rgba(52, 152, 219, 0.15); color: var(--blue); border: 1px solid var(--blue); }
+
+    /* 选项卡系统 */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 10px 18px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--gold-light);
+    }
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    /* 玄空飞星九宫网格 */
+    .grid-jiugong {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      aspect-ratio: 1;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .cell-palace {
+      background: #111624;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .cell-palace:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+    .cell-palace.selected {
+      border-color: var(--gold-light);
+      background: #192135;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+    }
+    .palace-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .palace-direction {
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .stars-cluster {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+    .star-mountain {
+      font-size: 24px;
+      font-weight: 800;
+      color: #60a5fa;
+    }
+    .star-facing {
+      font-size: 24px;
+      font-weight: 800;
+      color: #f87171;
+    }
+    .star-base {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .star-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .palace-tag {
+      font-size: 11px;
+      text-align: center;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* 八宅卡片 */
+    .bazhai-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .bazhai-cell {
+      background: #111624;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .bazhai-star-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .ji-star { color: var(--green); }
+    .xiong-star { color: var(--crimson); }
+
+    /* 形煞化解清单 */
+    .remedy-item {
+      background: #111624;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .remedy-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+    .remedy-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* 打印/导出报告样式 */
+    @media print {
+      body { background: #fff; color: #000; }
+      header, .panel-card:first-child, .tab-bar, .no-print { display: none !important; }
+      main { display: block; padding: 0; }
+      .panel-card { border: 1px solid #ccc; box-shadow: none; background: #fff; color: #000; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37, #f7d560);
+      color: #0c0f17;
+    }
+    .btn-gold:hover {
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">☯️</div>
+      <div>
+        <div class="brand-title">Real Feng Shui Master</div>
+        <div class="brand-subtitle">实战风水空间评估与排盘工作台 · 三元九运规范</div>
+      </div>
+    </div>
+    <div class="header-tags">
+      <div class="tag-badge">沈氏玄空飞星</div>
+      <div class="tag-badge">八宅明镜</div>
+      <div class="tag-badge">高层三元纳气</div>
+      <div class="tag-badge">峦头实战化解</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 左侧参数与罗盘控制台 -->
+    <div>
+      <div class="panel-card">
+        <div class="panel-title">🧭 实测罗盘定向与元运</div>
+        
+        <div class="form-group">
+          <label class="form-label">三元元运周期</label>
+          <select id="selectPeriod" class="form-select">
+            <option value="9" selected>下元九运 (2024 - 2043) 【当前当令元运】</option>
+            <option value="8">下元八运 (2004 - 2023)</option>
+            <option value="7">下元七运 (1984 - 2003)</option>
+            <option value="1">上元一运 (1864 - 1883)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <label class="form-label" style="margin-bottom:0;">实测向首度数 (0° ~ 360°)</label>
+            <span id="txtFacingDegree" style="font-weight: 700; color: var(--gold-light);">180.0°</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="sliderFacingDegree" class="range-input" min="0" max="359.9" step="0.5" value="180">
+          </div>
+        </div>
+
+        <!-- 罗盘表盘展示 -->
+        <div class="compass-container">
+          <div id="compassPlate" class="compass-plate">
+            <!-- 刻度与方向字 -->
+            <div style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: bold; color: var(--crimson);">南 (离)</div>
+            <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: bold; color: var(--blue);">北 (坎)</div>
+            <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: bold; color: #cbd5e1;">东 (震)</div>
+            <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: bold; color: #cbd5e1;">西 (兑)</div>
+          </div>
+          <div class="compass-needle"></div>
+          <div class="compass-center-dot"></div>
+        </div>
+
+        <div id="orientationSummary" style="margin-top: 14px; font-size: 14px; line-height: 1.6;">
+          <!-- 动态渲染坐向信息 -->
+        </div>
+      </div>
+
+      <!-- 居者命卦速查 -->
+      <div class="panel-card">
+        <div class="panel-title">👤 居者三元命卦与宅命配对</div>
+        <div class="form-group">
+          <label class="form-label">居者性别</label>
+          <div style="display: flex; gap: 16px;">
+            <label><input type="radio" name="gender" value="MALE" checked> 男主人</label>
+            <label><input type="radio" name="gender" value="FEMALE"> 女主人</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">出生年份 (阳历立春分界)</label>
+          <input type="number" id="inputBirthYear" class="form-control" value="1990" min="1920" max="2030">
+        </div>
+        <div id="lifeGuaResult" style="font-size: 13px; line-height: 1.6; padding-top: 6px;"></div>
+      </div>
+    </div>
+
+    <!-- 右侧综合工作台与推演图 -->
+    <div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-feixing')">玄空飞星九宫盘</button>
+        <button class="tab-btn" onclick="switchTab('tab-bazhai')">八宅明镜吉凶盘</button>
+        <button class="tab-btn" onclick="switchTab('tab-naqi')">三元高层纳气评估</button>
+        <button class="tab-btn" onclick="switchTab('tab-remedies')">实战峦头形煞与化解工程</button>
+      </div>
+
+      <!-- Tab 1: 玄空飞星 -->
+      <div id="tab-feixing" class="tab-content">
+        <div class="panel-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <span id="patternBadge" class="metric-badge badge-gold" style="font-size: 14px;">旺山旺向</span>
+              <span id="substituteBadge" class="metric-badge badge-blue">下卦正向</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              左蓝：<span style="color:#60a5fa; font-weight:bold;">山星(管丁/健康)</span> | 
+              右红：<span style="color:#f87171; font-weight:bold;">向星(管财/进取)</span> | 
+              中黄：<span style="color:var(--gold); font-weight:bold;">运星</span>
+            </div>
+          </div>
+
+          <div id="jiugongGrid" class="grid-jiugong">
+            <!-- 动态渲染 9 个宫位 -->
+          </div>
+
+          <div id="palaceDetailCard" style="margin-top: 20px; padding: 16px; background: #0f141f; border: 1px solid var(--border-color); border-radius: 10px;">
+            <div style="font-weight: 700; color: var(--gold-light); margin-bottom: 6px;">🔍 宫位秘传断语与调理指导</div>
+            <div id="palaceDetailContent" style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              点击上方任意宫位格子，查看该方位的星曜交会吉凶与落地布局建议。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 八宅明镜 -->
+      <div id="tab-bazhai" class="tab-content" style="display: none;">
+        <div class="panel-card">
+          <div id="houseGuaTitle" style="font-size: 16px; font-weight: 700; color: var(--gold-light); margin-bottom: 14px;"></div>
+          <div id="bazhaiGrid" class="bazhai-card-grid"></div>
+        </div>
+      </div>
+
+      <!-- Tab 3: 三元纳气 -->
+      <div id="tab-naqi" class="tab-content" style="display: none;">
+        <div class="panel-card">
+          <div class="panel-title">💨 现代高层住宅门窗纳气评估 (九运正零神法)</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            现代住宅以外飘阳台、大落地窗与入户大门为三大核心动气口。九运以<strong>正北坎卦为正零神（见动水动气大吉发财）</strong>，以<strong>正南离卦为正神（宜静宜实墙，见强动气反犯正神下水）</strong>。
+          </p>
+          <div id="naqiList"></div>
+        </div>
+      </div>
+
+      <!-- Tab 4: 峦头形煞与化解方案 -->
+      <div id="tab-remedies" class="tab-content" style="display: none;">
+        <div class="panel-card">
+          <div class="panel-title">🛠️ 常见形煞快速体检与现代建筑物理化解方案</div>
+          <div id="formShaList"></div>
+          <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-gold" onclick="window.print()">🖨️ 打印 / 导出实战风水诊断勘测报告</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    // 二十四山完整数据
+    const MOUNTAINS = [
+      { name: "子", gua: "坎", palace: 1, dragon: "天", polarity: "-", deg: 0.0, min: 352.5, max: 7.5, sub: 1 },
+      { name: "癸", gua: "坎", palace: 1, dragon: "人", polarity: "-", deg: 15.0, min: 7.5, max: 22.5, sub: 1 },
+      { name: "丑", gua: "艮", palace: 8, dragon: "地", polarity: "-", deg: 30.0, min: 22.5, max: 37.5, sub: 7 },
+      { name: "艮", gua: "艮", palace: 8, dragon: "天", polarity: "+", deg: 45.0, min: 37.5, max: 52.5, sub: 7 },
+      { name: "寅", gua: "艮", palace: 8, dragon: "人", polarity: "+", deg: 60.0, min: 52.5, max: 67.5, sub: 7 },
+      { name: "甲", gua: "震", palace: 3, dragon: "地", polarity: "+", deg: 75.0, min: 67.5, max: 82.5, sub: 1 },
+      { name: "卯", gua: "震", palace: 3, dragon: "天", polarity: "-", deg: 90.0, min: 82.5, max: 97.5, sub: 2 },
+      { name: "乙", gua: "震", palace: 3, dragon: "人", polarity: "-", deg: 105.0, min: 97.5, max: 112.5, sub: 2 },
+      { name: "辰", gua: "巽", palace: 4, dragon: "地", polarity: "-", deg: 120.0, min: 112.5, max: 127.5, sub: 6 },
+      { name: "巽", gua: "巽", palace: 4, dragon: "天", polarity: "+", deg: 135.0, min: 127.5, max: 142.5, sub: 6 },
+      { name: "巳", gua: "巽", palace: 4, dragon: "人", polarity: "+", deg: 150.0, min: 142.5, max: 157.5, sub: 6 },
+      { name: "丙", gua: "离", palace: 9, dragon: "地", polarity: "+", deg: 165.0, min: 157.5, max: 172.5, sub: 7 },
+      { name: "午", gua: "离", palace: 9, dragon: "天", polarity: "-", deg: 180.0, min: 172.5, max: 187.5, sub: 7 },
+      { name: "丁", gua: "离", palace: 9, dragon: "人", polarity: "-", deg: 195.0, min: 187.5, max: 202.5, sub: 7 },
+      { name: "未", gua: "坤", palace: 2, dragon: "地", polarity: "-", deg: 210.0, min: 202.5, max: 217.5, sub: 2 },
+      { name: "坤", gua: "坤", palace: 2, dragon: "天", polarity: "+", deg: 225.0, min: 217.5, max: 232.5, sub: 2 },
+      { name: "申", gua: "坤", palace: 2, dragon: "人", polarity: "+", deg: 240.0, min: 232.5, max: 247.5, sub: 1 },
+      { name: "庚", gua: "兑", palace: 7, dragon: "地", polarity: "+", deg: 255.0, min: 247.5, max: 262.5, sub: 6 },
+      { name: "酉", gua: "兑", palace: 7, dragon: "天", polarity: "-", deg: 270.0, min: 262.5, max: 277.5, sub: 7 },
+      { name: "辛", gua: "兑", palace: 7, dragon: "人", polarity: "-", deg: 285.0, min: 277.5, max: 292.5, sub: 7 },
+      { name: "戌", gua: "乾", palace: 6, dragon: "地", polarity: "-", deg: 300.0, min: 292.5, max: 307.5, sub: 6 },
+      { name: "乾", gua: "乾", palace: 6, dragon: "天", polarity: "+", deg: 315.0, min: 307.5, max: 322.5, sub: 6 },
+      { name: "亥", gua: "乾", palace: 6, dragon: "人", polarity: "+", deg: 330.0, min: 322.5, max: 337.5, sub: 6 },
+      { name: "壬", gua: "坎", palace: 1, dragon: "地", polarity: "+", deg: 345.0, min: 337.5, max: 352.5, sub: 2 }
+    ];
+
+    const LUO_SHU_STEPS = [5, 6, 7, 8, 9, 1, 2, 3, 4];
+
+    // 九宫排布显示网格 (4, 9, 2 / 3, 5, 7 / 8, 1, 6)
+    const GRID_ORDER = [
+      { p: 4, name: "东南 (巽四)" }, { p: 9, name: "正南 (离九)" }, { p: 2, name: "西南 (坤二)" },
+      { p: 3, name: "正东 (震三)" }, { p: 5, name: "中宫 (五黄)" }, { p: 7, name: "正西 (兑七)" },
+      { p: 8, name: "东北 (艮八)" }, { p: 1, name: "正北 (坎一)" }, { p: 6, name: "西北 (乾六)" }
+    ];
+
+    function getMountain(deg) {
+      let d = deg % 360;
+      if (d < 0) d += 360;
+      for (const m of MOUNTAINS) {
+        if (m.name === "子") {
+          if (d >= 352.5 || d < 7.5) return m;
+        } else {
+          if (d >= m.min && d < m.max) return m;
+        }
+      }
+      return MOUNTAINS[0];
+    }
+
+    function fly(centerStar, isForward) {
+      const res = {};
+      for (let i = 0; i < LUO_SHU_STEPS.length; i++) {
+        const pal = LUO_SHU_STEPS[i];
+        let s = isForward ? ((centerStar - 1 + i) % 9) + 1 : ((centerStar - 1 - i) % 9 + 9) % 9 + 1;
+        res[pal] = s;
+      }
+      return res;
+    }
+
+    // 核心排盘
+    function calculateAll() {
+      const period = parseInt(document.getElementById("selectPeriod").value);
+      const facingDeg = parseFloat(document.getElementById("sliderFacingDegree").value);
+
+      document.getElementById("txtFacingDegree").innerText = facingDeg.toFixed(1) + "°";
+      document.getElementById("compassPlate").style.transform = `rotate(${-facingDeg}deg)`;
+
+      const facingM = getMountain(facingDeg);
+      const sittingM = getMountain((facingDeg + 180) % 360);
+
+      let diff = Math.abs(facingDeg - facingM.deg);
+      if (diff > 180) diff = 360 - diff;
+      const isSub = diff > 3.0;
+
+      // 渲染坐向概览
+      const orientSummary = document.getElementById("orientationSummary");
+      orientSummary.innerHTML = `
+        <div style="font-weight: 700; color: var(--gold-light); margin-bottom: 4px;">
+          坐${sittingM.name}山 向${facingM.name}山 (${facingDeg.toFixed(1)}°)
+        </div>
+        <div style="color: var(--text-muted); font-size: 13px;">
+          向山：${facingM.gua}卦 | ${facingM.dragon}元龙 (${facingM.polarity === "+" ? "阳+" : "阴-"})<br>
+          坐山：${sittingM.gua}卦 | ${sittingM.dragon}元龙 (${sittingM.polarity === "+" ? "阳+" : "阴-"})<br>
+          立向状态：<strong style="color: ${isSub ? '#f87171' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "°" : "【正向下卦】气场纯正"}</strong>
+        </div>
+      `;
+
+      // 运盘
+      const baseChart = fly(period, true);
+
+      // 山星
+      const sBase = isSub ? sittingM.sub : baseChart[sittingM.palace];
+      const sTarget = MOUNTAINS.find(m => m.palace === sBase && m.dragon === sittingM.dragon);
+      const sForward = sTarget ? sTarget.polarity === "+" : true;
+      const mountainChart = fly(sBase, sForward);
+
+      // 向星
+      const fBase = isSub ? facingM.sub : baseChart[facingM.palace];
+      const fTarget = MOUNTAINS.find(m => m.palace === fBase && m.dragon === facingM.dragon);
+      const fForward = fTarget ? fTarget.polarity === "+" : true;
+      const facingChart = fly(fBase, fForward);
+
+      // 格局判定
+      let pattern = "普通格局";
+      let patternClass = "badge-blue";
+      if (mountainChart[sittingM.palace] === period && facingChart[facingM.palace] === period) {
+        pattern = "旺山旺向（到山到向）🌟 丁财两旺";
+        patternClass = "badge-green";
+      } else if (mountainChart[facingM.palace] === period && facingChart[sittingM.palace] === period) {
+        pattern = "上山下水 ⚠️ 损丁破财宜化解";
+        patternClass = "badge-red";
+      } else if (facingChart[facingM.palace] === period && mountainChart[facingM.palace] === period) {
+        pattern = "双星到向 💰 大利发财";
+        patternClass = "badge-gold";
+      } else if (mountainChart[sittingM.palace] === period && facingChart[sittingM.palace] === period) {
+        pattern = "双星到山 👥 利人丁声誉";
+        patternClass = "badge-gold";
+      }
+
+      document.getElementById("patternBadge").innerText = pattern;
+      document.getElementById("patternBadge").className = `metric-badge ${patternClass}`;
+      document.getElementById("substituteBadge").innerText = isSub ? "替卦兼向" : "正向下卦";
+
+      // 渲染九宫格
+      const gridContainer = document.getElementById("jiugongGrid");
+      gridContainer.innerHTML = "";
+
+      GRID_ORDER.forEach(item => {
+        const p = item.p;
+        const m = mountainChart[p];
+        const f = facingChart[p];
+        const b = baseChart[p];
+
+        const isDangLing = m === period || f === period;
+        const isErWu = (m === 2 && f === 5) || (m === 5 && f === 2);
+
+        const cell = document.createElement("div");
+        cell.className = `cell-palace ${isDangLing ? "selected" : ""}`;
+        cell.innerHTML = `
+          <div class="palace-header">
+            <span class="palace-direction">${item.name}</span>
+            <span class="palace-tag">${isErWu ? "⚠️二五大煞" : (isDangLing ? "当令旺位" : "")}</span>
+          </div>
+          <div class="stars-cluster">
+            <div>
+              <div class="star-mountain">${m}</div>
+              <div class="star-label">山星</div>
+            </div>
+            <div>
+              <div class="star-facing">${f}</div>
+              <div class="star-label">向星</div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span class="star-base">运 ${b}</span>
+          </div>
+        `;
+
+        cell.onclick = () => {
+          showPalaceDetail(item.name, m, f, b, period);
+        };
+
+        gridContainer.appendChild(cell);
+      });
+
+      // 更新八宅与纳气
+      updateBazhai(sittingM.palace);
+      updateNaqi(period);
+    }
+
+    function showPalaceDetail(palaceName, m, f, b, period) {
+      let desc = `当前宫位：<strong>${palaceName}</strong> | 山星[${m}] 向星[${f}] 运星[${b}]。<br>`;
+      const pair = `${Math.min(m, f)}${Math.max(m, f)}`;
+
+      if ((m === 2 && f === 5) || (m === 5 && f === 2)) {
+        desc += `<span style="color:#f87171; font-weight:bold;">【二五交加必损主】</span>：病符与大煞同宫，主重疾恶疾、意外血光。严禁在此方位安放炉灶、主卧床头；布局切忌红黄色系，必须以六帝铜钱、安忍水、铜风铃重金泄土。`;
+      } else if (pair === "14") {
+        desc += `<span style="color:#60a5fa; font-weight:bold;">【一四同宫准发科名】</span>：文昌大旺！极其适合做书房、学习桌、总裁办公位，摆放四支水培富贵竹催发灵感考运。`;
+      } else if (pair === "68") {
+        desc += `<span style="color:var(--gold-light); font-weight:bold;">【六八齐到富比陶朱】</span>：武曲与左辅土金相生，大旺财富与职场升迁，宜作客厅主位或财位布局。`;
+      } else if (m === 9 && f === 9) {
+        desc += `<span style="color:#f87171; font-weight:bold;">【九紫双逢】</span>：当下九运极旺吉曜聚首，利喜事、升职、婚恋文化，宜设暖光长明灯、迎客动水。`;
+      } else {
+        desc += `此方位气场平和，依山向生克顺应自然采光通风即可。`;
+      }
+
+      document.getElementById("palaceDetailContent").innerHTML = desc;
+    }
+
+    // 八宅明镜计算
+    const BAZHAI_DATA = {
+      1: { name: "坎宅 (坐北)", stars: { 1: "伏位(木)", 9: "延年(金)", 3: "天医(土)", 4: "生气(木)", 6: "六煞(水)", 2: "绝命(金)", 8: "五鬼(火)", 7: "祸害(土)" } },
+      2: { name: "坤宅 (坐西南)", stars: { 2: "伏位(木)", 8: "生气(木)", 6: "延年(金)", 7: "天医(土)", 1: "绝命(金)", 3: "祸害(土)", 4: "五鬼(火)", 9: "六煞(水)" } },
+      3: { name: "震宅 (坐东)", stars: { 3: "伏位(木)", 9: "生气(木)", 4: "延年(金)", 1: "天医(土)", 7: "绝命(金)", 6: "五鬼(火)", 8: "六煞(水)", 2: "祸害(土)" } },
+      4: { name: "巽宅 (坐东南)", stars: { 4: "伏位(木)", 1: "生气(木)", 3: "延年(金)", 9: "天医(土)", 6: "祸害(土)", 7: "六煞(水)", 2: "五鬼(火)", 8: "绝命(金)" } },
+      6: { name: "乾宅 (坐西北)", stars: { 6: "伏位(木)", 7: "生气(木)", 2: "延年(金)", 8: "天医(土)", 4: "祸害(土)", 1: "六煞(水)", 9: "绝命(金)", 3: "五鬼(火)" } },
+      7: { name: "兑宅 (坐西)", stars: { 7: "伏位(木)", 6: "生气(木)", 8: "延年(金)", 2: "天医(土)", 3: "绝命(金)", 4: "六煞(水)", 1: "祸害(土)", 9: "五鬼(火)" } },
+      8: { name: "艮宅 (坐东北)", stars: { 8: "伏位(木)", 2: "生气(木)", 7: "延年(金)", 6: "天医(土)", 9: "祸害(土)", 1: "五鬼(火)", 3: "六煞(水)", 4: "绝命(金)" } },
+      9: { name: "离宅 (坐南)", stars: { 9: "伏位(木)", 3: "生气(木)", 1: "延年(金)", 4: "天医(土)", 8: "祸害(土)", 2: "六煞(水)", 6: "绝命(金)", 7: "五鬼(火)" } }
+    };
+
+    const PALACE_NAMES = { 1: "正北方", 2: "西南方", 3: "正东方", 4: "东南方", 6: "西北方", 7: "正西方", 8: "东北方", 9: "正南方" };
+
+    function updateBazhai(sittingPalace) {
+      const bz = BAZHAI_DATA[sittingPalace] || BAZHAI_DATA[1];
+      document.getElementById("houseGuaTitle").innerText = `🏠 房屋宅卦：${bz.name} · 八宫游年吉凶配属`;
+
+      const grid = document.getElementById("bazhaiGrid");
+      grid.innerHTML = "";
+
+      Object.keys(bz.stars).forEach(p => {
+        const star = bz.stars[p];
+        const isJi = star.includes("生") || star.includes("延") || star.includes("天") || star.includes("伏");
+        const card = document.createElement("div");
+        card.className = "bazhai-cell";
+        card.innerHTML = `
+          <div style="font-size:12px; color:var(--text-muted);">${PALACE_NAMES[p]}</div>
+          <div class="bazhai-star-name ${isJi ? 'ji-star' : 'xiong-star'}">${star}</div>
+          <div style="font-size:12px; color:#94a3b8;">${isJi ? '【四吉方】宜大门、主卧、书房' : '【四凶方】宜压卫生间、储藏间'}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // 居者三元本命卦计算
+    function updateLifeGua() {
+      const year = parseInt(document.getElementById("inputBirthYear").value);
+      const gender = document.querySelector('input[name="gender"]:checked').value;
+
+      let sum = (year % 100);
+      let s = year.toString().split("").reduce((a, b) => a + parseInt(b), 0);
+      while (s > 9) s = s.toString().split("").reduce((a, b) => a + parseInt(b), 0);
+
+      let guaNum = gender === "MALE" ? (11 - s) : (4 + s);
+      while (guaNum > 9) guaNum -= 9;
+      if (guaNum <= 0) guaNum += 9;
+      if (guaNum === 5) guaNum = (gender === "MALE" ? 2 : 8);
+
+      const guaMap = {
+        1: { name: "坎卦水", grp: "东四命" }, 2: { name: "坤卦土", grp: "西四命" },
+        3: { name: "震卦木", grp: "东四命" }, 4: { name: "巽卦木", grp: "东四命" },
+        6: { name: "乾卦金", grp: "西四命" }, 7: { name: "兑卦金", grp: "西四命" },
+        8: { name: "艮卦土", grp: "西四命" }, 9: { name: "离卦火", grp: "东四命" }
+      };
+
+      const res = guaMap[guaNum];
+      document.getElementById("lifeGuaResult").innerHTML = `
+        <strong>${year}年居者本命卦</strong>：<span style="color:var(--gold-light); font-weight:bold;">${res.name}（${res.grp}）</span><br>
+        <span style="color:var(--text-muted);">配置法则：${res.grp === '东四命' ? '宜开坎/震/巽/离门卧' : '宜开乾/坤/艮/兑门卧'}</span>
+      `;
+    }
+
+    // 纳气评估渲染
+    function updateNaqi(period) {
+      const naqiList = document.getElementById("naqiList");
+      naqiList.innerHTML = `
+        <div class="remedy-item" style="border-left-color: #2ecc71;">
+          <div class="remedy-title">正北方（坎一宫）· 正零神位【大吉动水纳气口】</div>
+          <div class="remedy-desc">
+            九运中正北为零神正位，若此处为入户大门、客厅外飘景观阳台或见大马路流水，纳大吉旺动之气，主骤发财源、现金流极佳！
+          </div>
+        </div>
+        <div class="remedy-item" style="border-left-color: #e74c3c;">
+          <div class="remedy-title">正南方（离九宫）· 正神位【宜静不宜动】</div>
+          <div class="remedy-desc">
+            九运离火为当令正神，管人丁健康与声誉。正神宜实墙、靠山静修。若有大落地玻璃门窗强风直灌，主犯“正神下水”破财，建议常挂轻薄纱帘缓冲气流。
+          </div>
+        </div>
+        <div class="remedy-item" style="border-left-color: #3498db;">
+          <div class="remedy-title">西南方（坤二宫）& 东南方（巽四宫）· 【生旺辅佐纳气口】</div>
+          <div class="remedy-desc">
+            为未来生气吉方，门窗纳气温和生机，利人际和睦与投资蓄势。
+          </div>
+        </div>
+      `;
+    }
+
+    // 形煞化解数据
+    function initFormSha() {
+      const shaList = document.getElementById("formShaList");
+      const items = [
+        { name: "穿堂煞（入户门直对客厅全景阳台）", hazard: "危害 4星 · 破财不聚气", phy: "距入户门1.5米处定制长虹玻璃磨砂屏风，阳台入口摆设阔叶发财树盆栽阻断风道。" },
+        { name: "卫生间居中（污秽中宫皇极）", hazard: "危害 5星 · 损心脑脾胃", phy: "加装工业级超静音换气扇24小时保持负压；严格干湿分离，马桶旁放置天然黄玉球或粗盐安忍水镇水。" },
+        { name: "开门见灶（火烧天门破财库）", hazard: "危害 4星 · 钱财多耗", phy: "厨房加装实木平开门或移门常闭；门框上方悬挂过膝长门帘（长1.5米以上）；炉灶与水槽错位排列。" },
+        { name: "横梁压顶（床头/书桌梁下受压）", hazard: "危害 4星 · 头痛失眠仕途受阻", phy: "彻底将床位或办公桌横移50cm离开横梁垂直投影；或制作圆弧假天花彻底将梁体吊顶包裹平整。" }
+      ];
+
+      shaList.innerHTML = items.map(it => `
+        <div class="remedy-item">
+          <div class="remedy-title">${it.name} <span class="badge-red metric-badge" style="font-size:11px;">${it.hazard}</span></div>
+          <div class="remedy-desc"><strong>实战物理化解：</strong>${it.phy}</div>
+        </div>
+      `).join("");
+    }
+
+    // 选项卡切换
+    window.switchTab = function(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabId).style.display = "block";
+      event.target.classList.add("active");
+    };
+
+    // 事件绑定
+    document.getElementById("sliderFacingDegree").addEventListener("input", calculateAll);
+    document.getElementById("selectPeriod").addEventListener("change", calculateAll);
+    document.getElementById("inputBirthYear").addEventListener("input", updateLifeGua);
+    document.querySelectorAll('input[name="gender"]').forEach(el => el.addEventListener("change", updateLifeGua));
+
+    // 初始化运行
+    calculateAll();
+    updateLifeGua();
+    initFormSha();
+  </script>
+</body>
+</html>
