@@ -157,6 +157,84 @@
     .badge-red { background: rgba(239, 68, 68, 0.15); color: #fb7185; border: 1px solid rgba(239, 68, 68, 0.4); }
     .badge-blue { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
 
+    /* 悬停白话解释气泡系统 (Tooltip) */
+    .term-tip {
+      position: relative;
+      cursor: help;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border-bottom: 1px dashed rgba(212, 175, 55, 0.6);
+      text-decoration: none;
+    }
+    .term-tip .tip-icon {
+      font-size: 11px;
+      opacity: 0.7;
+      color: var(--gold-light);
+    }
+    [data-tooltip] {
+      position: relative;
+    }
+    [data-tooltip]::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      padding: 9px 13px;
+      background: #0b111e;
+      color: #e2e8f0;
+      border: 1px solid var(--gold-primary);
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 400;
+      line-height: 1.55;
+      white-space: normal;
+      width: max-content;
+      max-width: 280px;
+      text-align: left;
+      z-index: 9999;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), 0 0 12px rgba(212, 175, 55, 0.25);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    [data-tooltip]::after {
+      content: "";
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      border-width: 6px 6px 0 6px;
+      border-style: solid;
+      border-color: var(--gold-primary) transparent transparent transparent;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    [data-tooltip]:hover::before,
+    [data-tooltip]:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    /* 针对靠左或靠右元素的防溢出修正 */
+    [data-tooltip-pos="right"]::before {
+      left: 0;
+      transform: translateX(0) translateY(4px);
+    }
+    [data-tooltip-pos="right"]::after {
+      left: 18px;
+      transform: translateX(0) translateY(4px);
+    }
+    [data-tooltip-pos="right"]:hover::before,
+    [data-tooltip-pos="right"]:hover::after {
+      transform: translateX(0) translateY(0);
+    }
+
     .tab-bar {
       display: flex;
       border-bottom: 1px solid rgba(212, 175, 55, 0.2);
@@ -473,11 +551,15 @@
       <div class="panel-card">
         <div class="panel-title">
           <span>🧭 实测坐向与元运</span>
-          <span id="substituteBadge" class="metric-badge badge-blue">下卦正向</span>
+          <span id="substituteBadge" class="metric-badge badge-blue term-tip" data-tooltip="【下卦/替卦白话】：正向误差≤3度为下卦（磁场纯净大吉）；若偏角>3度为兼向替卦（磁场混杂，需借用替卦星盘）。">下卦正向</span>
         </div>
         
         <div class="form-group">
-          <label class="form-label">三元九运</label>
+          <label class="form-label">
+            <span class="term-tip" data-tooltip="【三元九运白话】：风水大运周期表。每运20年，三元共180年。2024~2043年正处于【下元九运】（九紫离火运），火属性、南向当旺！">
+              三元九运 <span class="tip-icon">❓</span>
+            </span>
+          </label>
           <select id="selectPeriod" class="form-select">
             <option value="9" selected>下元九运 (2024 - 2043) 【当令旺火】</option>
             <option value="8">下元八运 (2004 - 2023)</option>
@@ -488,7 +570,11 @@
 
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <label class="form-label" style="margin-bottom:0;">实测向首度数 (0° ~ 360°)</label>
+            <label class="form-label" style="margin-bottom:0;">
+              <span class="term-tip" data-tooltip="【实测向首度数白话】：房子正前方（纳气采光大窗或主大门）朝向的地磁角度（0°为正北、90°正东、180°正南、270°正西）。风水以向首定进财吉凶！">
+                实测向首度数 (0° ~ 360°) <span class="tip-icon">❓</span>
+              </span>
+            </label>
             <span id="txtFacingDegree" style="font-weight: 700; color: var(--gold-light);">180.0°</span>
           </div>
           <input type="range" id="sliderFacingDegree" class="range-input" min="0" max="359.9" step="0.5" value="180">
@@ -496,7 +582,11 @@
 
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <label class="form-label" style="margin-bottom:0;">🧭 户型图指北针真北校准角</label>
+            <label class="form-label" style="margin-bottom:0;">
+              <span class="term-tip" data-tooltip="【真北校准角白话】：建筑设计图通常不是上北下南，右上角常有带偏角的指北针N。罗盘需旋转此角度与图纸指北针完全重合，方能精准定出房屋八方吉凶！">
+                🧭 户型指北针真北校准角 <span class="tip-icon">❓</span>
+              </span>
+            </label>
             <span id="txtNorthOffset" style="font-weight: 700; color: #60a5fa;">0.0°</span>
           </div>
           <input type="range" id="sliderNorthOffset" class="range-input" min="-180" max="180" step="1" value="0">
@@ -510,7 +600,12 @@
 
       <!-- 居者命卦 -->
       <div class="panel-card">
-        <div class="panel-title">👤 居者命卦与宅命相配</div>
+        <div class="panel-title">
+          <span>👤 居者命卦与宅命相配</span>
+          <span class="term-tip" data-tooltip="【本命卦白话】：根据居者出生年份与性别推算的个人五行气场。分东四命（宜坎震巽离）与西四命（宜乾坤艮兑），人宅相配家运更兴旺。">
+            <span class="tip-icon">❓ 白话解释</span>
+          </span>
+        </div>
         <div class="form-group">
           <label class="form-label">居者角色</label>
           <div style="display: flex; gap: 16px; font-size: 13px;">
@@ -519,7 +614,11 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">出生年份 (阳历立春为界)</label>
+          <label class="form-label">
+            <span class="term-tip" data-tooltip="【立春换年】：易学排盘以立春（每年2月4日前后）为当年真正开始，立春前出生仍算上一年年份。">
+              出生年份 (阳历立春为界) <span class="tip-icon">❓</span>
+            </span>
+          </label>
           <input type="number" id="inputBirthYear" class="form-control" value="1988" min="1920" max="2030">
         </div>
         <div id="lifeGuaResult" style="font-size: 12px; line-height: 1.5;"></div>
@@ -541,12 +640,12 @@
     <!-- 右侧综合工作台 -->
     <div>
       <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('tab-floorplan')">📐 户型图罗盘旋转校准与立极</button>
-        <button class="tab-btn" onclick="switchTab('tab-feixing')">玄空飞星九宫盘</button>
-        <button class="tab-btn" onclick="switchTab('tab-bazhai')">八宅明镜吉凶盘</button>
-        <button class="tab-btn" onclick="switchTab('tab-naqi')">三元高层纳气</button>
-        <button class="tab-btn" onclick="switchTab('tab-ai-diag')">🤖 AI 空间全维度诊断</button>
-        <button class="tab-btn" onclick="switchTab('tab-remedies')">实战峦头化解清单</button>
+        <button class="tab-btn active term-tip" onclick="switchTab('tab-floorplan')" data-tooltip="【罗盘立极白话】：将实体罗盘叠加到图纸上，确定几何中心天心十道，对准指北针精准分出全屋八方二十四山。">📐 户型罗盘旋转与立极</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-feixing')" data-tooltip="【玄空飞星白话】：风水顶级理气法门。结合三元九运时空流转与房屋朝向，推算全屋9个宫位的人丁健康（山星）与财富进取（向星）。">玄空飞星九宫盘</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-bazhai')" data-tooltip="【八宅明镜白话】：大门与坐向定宅卦，推演全屋四吉方(生气延年天医伏位)与四凶方(绝命五鬼六煞祸害)，适合布局主卧与厨卫。">八宅明镜吉凶盘</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-naqi')" data-tooltip="【三元纳气白话】：高层现代楼房核心！看大窗与阳台从哪个方位进风进气。九运正神宜静、零神宜动纳旺水旺气。">三元高层纳气</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-ai-diag')" data-tooltip="【AI深度诊断白话】：综合玄空星曜、八宅吉凶、纳气口与峦头形态，生成房间逐一定位分析与现代软装化解全套方案。">🤖 AI 空间全维度诊断</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-remedies')" data-tooltip="【峦头形煞白话】：看得见的室内外物理结构煞气（如穿堂风、开门见灶、横梁压顶、卫生间居中等）的现代建筑装修改造指南。">实战峦头化解清单</button>
       </div>
 
       <!-- Tab 0: 户型图真实旋转罗盘视窗 -->
@@ -647,14 +746,20 @@
       <!-- Tab 1: 玄空飞星 -->
       <div id="tab-feixing" class="tab-content" style="display: none;">
         <div class="panel-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
             <div>
-              <span id="patternBadge" class="metric-badge badge-gold" style="font-size: 13.5px; padding: 4px 10px;">旺山旺向</span>
+              <span id="patternBadge" class="metric-badge badge-gold term-tip" data-tooltip="【四大格局白话】：旺山旺向(丁财两旺吉宅)；上山下水(倒退破财凶局)；双星到向(财源广进利经商)；双星到山(利人丁健康学术)。">旺山旺向</span>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted);">
-              左蓝：<span style="color:#60a5fa; font-weight:bold;">山星(主健康/人丁)</span> | 
-              右红：<span style="color:#f87171; font-weight:bold;">向星(主财帛/进取)</span> | 
-              中黄：<span style="color:var(--gold-light); font-weight:bold;">运星</span>
+            <div style="font-size: 12px; color: var(--text-muted); display: flex; gap: 12px; align-items: center;">
+              <span class="term-tip" data-tooltip="【山星白话】：左上角数字。代表背后靠山气场，主全家身体健康、贵人扶持、人丁兴旺与感情和睦。">
+                左蓝：<strong style="color:#60a5fa;">山星(主人丁健康)</strong>
+              </span>
+              <span class="term-tip" data-tooltip="【向星白话】：右上角数字。代表前方采光纳气流，主全家财帛进取、事业赚钱、开门纳财动线。">
+                右红：<strong style="color:#f87171;">向星(主财帛事业)</strong>
+              </span>
+              <span class="term-tip" data-tooltip="【运星白话】：底部中宫飞布基底。代表当下二十年元运背景底色，与山向二星发生生克制化。">
+                中黄：<strong style="color:var(--gold-light);">运星(元运底盘)</strong>
+              </span>
             </div>
           </div>
 
@@ -680,7 +785,12 @@
       <!-- Tab 3: 三元纳气 -->
       <div id="tab-naqi" class="tab-content" style="display: none;">
         <div class="panel-card">
-          <div class="panel-title">💨 现代高层住宅门窗纳气评估 (九运正零神法)</div>
+          <div class="panel-title">
+            <span>💨 现代高层住宅门窗纳气评估 (九运正零神法)</span>
+            <span class="term-tip" data-tooltip="【正零神水火白话】：九运（2024-2043）正神在正南（宜高山实墙安静），零神在正北（宜大门阳台大窗见水见动气，催财极速）！">
+              <span class="tip-icon">❓ 白话解释</span>
+            </span>
+          </div>
           <div id="naqiList"></div>
         </div>
       </div>
@@ -922,13 +1032,21 @@
       const isSub = diff > 3.0;
 
       document.getElementById("orientationSummary").innerHTML = `
-        <div style="font-weight: 800; color: var(--gold-light); margin-bottom: 2px;">
-          坐${sittingM.name}山 向${facingM.name}山 (${facingDeg.toFixed(1)}°)
+        <div style="font-weight: 800; color: var(--gold-light); margin-bottom: 4px;">
+          <span class="term-tip" data-tooltip="【坐山白话】：房子正后方的靠山方位（床头或沙发常靠此方），主全家人的身体健康、人丁兴旺与贵人运气。">坐${sittingM.name}山</span>
+          <span class="term-tip" data-tooltip="【向山白话】：房子正前方的纳气采光方位（大门或阳台开阔处），主财帛收入、事业发展与商业机遇。">向${facingM.name}山</span>
+          <span>(${facingDeg.toFixed(1)}°)</span>
         </div>
-        <div style="color: var(--text-muted); font-size: 11.5px; line-height: 1.5;">
-          向山：${facingM.gua}卦 | ${facingM.dragon}元龙 (${facingM.polarity === "+" ? "阳+" : "阴-"})<br>
-          坐山：${sittingM.gua}卦 | ${sittingM.dragon}元龙 (${sittingM.polarity === "+" ? "阳+" : "阴-"})<br>
-          立向状态：<strong style="color: ${isSub ? '#fb7185' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "°" : "【正向下卦】纯正吉气"}</strong>
+        <div style="color: var(--text-muted); font-size: 11.5px; line-height: 1.6;">
+          向山：<strong>${facingM.name}</strong>（${facingM.gua}卦 | 
+          <span class="term-tip" data-tooltip="【三元龙白话】：二十四山分为天元龙(父母卦)、地元龙(长男长女)、人元龙(中男中女)，用于确定飞星顺飞逆飞的阴阳基准。">${facingM.dragon}元龙</span> · 
+          <span class="term-tip" data-tooltip="【阴阳符号白话】：决定飞星排盘顺序。阳(+)按数字升序顺飞九宫，阴(-)按数字降序逆飞九宫。">${facingM.polarity === "+" ? "阳+ 顺飞" : "阴- 逆飞"}</span>）<br>
+          坐山：<strong>${sittingM.name}</strong>（${sittingM.gua}卦 | 
+          <span class="term-tip" data-tooltip="【三元龙白话】：二十四山分为天元龙(父母卦)、地元龙(长男长女)、人元龙(中男中女)，用于确定飞星顺飞逆飞的阴阳基准。">${sittingM.dragon}元龙</span> · 
+          <span class="term-tip" data-tooltip="【阴阳符号白话】：决定飞星排盘顺序。阳(+)按数字升序顺飞九宫，阴(-)按数字降序逆飞九宫。">${sittingM.polarity === "+" ? "阳+ 顺飞" : "阴- 逆飞"}</span>）<br>
+          立向状态：<span class="term-tip" data-tooltip="${isSub ? '【兼向替卦白话】：实测度数偏离正山中心超过3度（出线出卦），磁场驳杂，玄空需用寻龙替卦诀转换星耀纳气！' : '【正向下卦白话】：实测度数在正山中心±3度内，地气纯正清澈，直接按下卦正常飞星排盘，主家运稳定大吉！'}">
+            <strong style="color: ${isSub ? '#fb7185' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "° ⚠️" : "【正向下卦】纯正吉气 ✨"}</strong>
+          </span>
         </div>
       `;
       document.getElementById("substituteBadge").innerText = isSub ? "替卦兼向" : "正向下卦";
@@ -945,20 +1063,27 @@
       const fForward = fTarget ? fTarget.polarity === "+" : true;
       const facingChart = fly(fBase, fForward);
 
-      let pattern = "普通格局";
-      let patternClass = "badge-blue";
+      let patternTip = "";
       if (mountainChart[sittingM.palace] === period && facingChart[facingM.palace] === period) {
         pattern = "旺山旺向（到山到向）🌟 丁财两旺"; patternClass = "badge-green";
+        patternTip = "【旺山旺向白话】：最理想大吉格局！当令旺星分别飞临坐山与向首。主丁财两旺，家庭健康和顺且财运稳步腾飞！";
       } else if (mountainChart[facingM.palace] === period && facingChart[sittingM.palace] === period) {
         pattern = "上山下水 ⚠️ 损丁破财宜化解"; patternClass = "badge-red";
+        patternTip = "【上山下水白话】：玄空大凶局。山星下水（主损人丁体弱）、向星上山（主破财耗资）。宜借颠倒峦头化解（前高后低或门窗调理）。";
       } else if (facingChart[facingM.palace] === period && mountainChart[facingM.palace] === period) {
         pattern = "双星到向 💰 大利发财"; patternClass = "badge-gold";
+        patternTip = "【双星到向白话】：山向两颗当令旺星齐聚大门或明堂阳台。极利商业进取、投资发横财，主发财神速！";
       } else if (mountainChart[sittingM.palace] === period && facingChart[sittingM.palace] === period) {
         pattern = "双星到山 👥 利人丁健康"; patternClass = "badge-gold";
+        patternTip = "【双星到山白话】：山向两颗旺星齐聚房子后背靠山。主家族添丁、人丁健康长寿、文贵扬名，财运相对平稳守成。";
+      } else {
+        patternTip = "【普通格局白话】：星曜分布相对均匀，需结合各房间纳气与飞星组合针对性趋吉避凶。";
       }
 
-      document.getElementById("patternBadge").innerText = pattern;
-      document.getElementById("patternBadge").className = `metric-badge ${patternClass}`;
+      const pBadge = document.getElementById("patternBadge");
+      pBadge.innerText = pattern;
+      pBadge.className = `metric-badge ${patternClass} term-tip`;
+      pBadge.setAttribute("data-tooltip", patternTip);
 
       currentChartState = { period, facingDeg, northOffset, sittingM, facingM, isSub, baseChart, mountainChart, facingChart, pattern };
 
@@ -980,18 +1105,22 @@
         const isDangLing = m === period || f === period;
         const isErWu = (m === 2 && f === 5) || (m === 5 && f === 2);
 
+        const badgeTip = isErWu 
+          ? "【二五大煞白话】：二黑病符星加五黄廉贞大煞，玄空最凶险组合，主重病官非意外，绝不能做卧室或灶台！" 
+          : (isDangLing ? "【当令旺星白话】：九运当旺之九紫火星降临此方，最适合设主大门、大景观阳台或主位！" : "");
+
         const cell = document.createElement("div");
         cell.className = `cell-palace ${isDangLing ? "selected" : ""}`;
         cell.innerHTML = `
           <div class="palace-header">
             <span class="palace-direction">${item.name}</span>
-            <span class="metric-badge ${isErWu ? 'badge-red' : (isDangLing ? 'badge-gold' : '')}" style="font-size:10px;">${isErWu ? "二五大煞" : (isDangLing ? "当令旺星" : "")}</span>
+            <span class="metric-badge ${isErWu ? 'badge-red' : (isDangLing ? 'badge-gold' : '')} term-tip" ${badgeTip ? `data-tooltip="${badgeTip}"` : ''} style="font-size:10px;">${isErWu ? "二五大煞" : (isDangLing ? "当令旺星" : "")}</span>
           </div>
           <div class="stars-cluster">
-            <div><div class="star-mountain">${m}</div><div style="font-size:10px; color:#64748b; text-align:center;">山</div></div>
-            <div><div class="star-facing">${f}</div><div style="font-size:10px; color:#64748b; text-align:center;">向</div></div>
+            <div class="term-tip" data-tooltip="【山星[${m}]白话】：主此方人丁健康与贵人运势。"><div class="star-mountain">${m}</div><div style="font-size:10px; color:#64748b; text-align:center;">山</div></div>
+            <div class="term-tip" data-tooltip="【向星[${f}]白话】：主此方财帛进取与资金流动。"><div class="star-facing">${f}</div><div style="font-size:10px; color:#64748b; text-align:center;">向</div></div>
           </div>
-          <div style="text-align: right;"><span class="star-base">运 ${b}</span></div>
+          <div style="text-align: right;"><span class="star-base term-tip" data-tooltip="【运星[${b}]白话】：此宫位元运底盘星。">运 ${b}</span></div>
         `;
         cell.onclick = () => showPalaceDetail(item.name, m, f, b, period);
         gridContainer.appendChild(cell);
@@ -1016,6 +1145,17 @@
       document.getElementById("palaceDetailContent").innerHTML = desc;
     }
 
+    const BAZHAI_EXPLAIN = {
+      "生气": "【生气大吉】：八宅第一大吉星！主管生机活力、事业腾飞、升职加薪、精力充沛。最宜设大门或主卧。",
+      "延年": "【延年大吉】：八宅第二大吉星！主管健康长寿、夫妻恩爱、家庭和睦、人际贵人相助。最宜主卧床位。",
+      "天医": "【天医大吉】：八宅第三大吉星！主管祛病消灾、贵人医疗、身心愉悦、财源稳固。最宜长辈房或餐厅。",
+      "伏位": "【伏位中吉】：本宅本命坐山气场！主管安定平稳、沉稳踏实、蓄力思考。最宜书房或儿童房。",
+      "绝命": "【绝命极凶】：八宅第一大凶煞！伤人破财、突发灾祸。宜作为卫生间、储物间压制凶性，切忌开大门。",
+      "五鬼": "【五鬼大凶】：火煞凶星，主官非口舌、小人暗害、意外失火。宜作卫生间或用静水化解。",
+      "六煞": "【六煞次凶】：水煞淫荡之气，主感情纷扰、桃花劫、情绪内耗失眠。宜作杂物间。",
+      "祸害": "【祸害小凶】：土煞小人星，主经常生病、破小财、言语争吵琐事烦心。宜保持清洁干燥。"
+    };
+
     function updateBazhai(sittingPalace) {
       const bz = BAZHAI_DATA[sittingPalace] || BAZHAI_DATA[1];
       document.getElementById("houseGuaTitle").innerText = `🏠 房屋宅卦：${bz.name} · 八宫游年吉凶分布`;
@@ -1025,8 +1165,10 @@
       Object.keys(bz.stars).forEach(p => {
         const star = bz.stars[p];
         const isJi = star.includes("生") || star.includes("延") || star.includes("天") || star.includes("伏");
+        const tip = BAZHAI_EXPLAIN[star] || "";
         const card = document.createElement("div");
-        card.className = "bazhai-cell";
+        card.className = "bazhai-cell term-tip";
+        if (tip) card.setAttribute("data-tooltip", tip);
         card.innerHTML = `
           <div style="font-size:12px; color:var(--text-muted);">${PALACE_NAMES[p]}</div>
           <div class="bazhai-star-name ${isJi ? 'ji-star' : 'xiong-star'}">${star}</div>
