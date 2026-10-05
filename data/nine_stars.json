@@ -1,0 +1,110 @@
+[
+  {
+    "number": 1,
+    "name": "一白贪狼星",
+    "shortName": "一白",
+    "element": "水",
+    "originalPalace": 1,
+    "nature": "吉星",
+    "bodyPart": "耳、肾脏、血液循环、泌尿生殖系统",
+    "industry": "航运、物流、旅游、贸易、水产、文创思考",
+    "remedyElement": "木（泄水）或土（克水）",
+    "catalystElement": "金（金生水，圆铜器、金属风铃）或水（流水摆件）"
+  },
+  {
+    "number": 2,
+    "name": "二黑巨门星（病符星）",
+    "shortName": "二黑",
+    "element": "土",
+    "originalPalace": 2,
+    "nature": "凶星",
+    "bodyPart": "脾胃、消化系统、腹部、女性妇科、皮肤",
+    "industry": "地产、农牧、仓储、医药、慈善",
+    "remedyElement": "金（金泄土气，最忌火生土与红黄色系；宜六帝铜钱、安忍水、铜葫芦）",
+    "catalystElement": "当令时生旺可用土，失令时严禁催动"
+  },
+  {
+    "number": 3,
+    "name": "三碧禄存星（是非星）",
+    "shortName": "三碧",
+    "element": "木",
+    "originalPalace": 3,
+    "nature": "凶星",
+    "bodyPart": "肝胆、四肢、神经系统、足部、筋骨",
+    "industry": "体育、法务、刑警、竞技争斗、林业",
+    "remedyElement": "火（火泄木气，宜红色地毯、红中国结、暖光长明灯；忌水木生扶）",
+    "catalystElement": "争辩诉讼利时方可用"
+  },
+  {
+    "number": 4,
+    "name": "四绿文曲星（文昌星）",
+    "shortName": "四绿",
+    "element": "木",
+    "originalPalace": 4,
+    "nature": "吉星",
+    "bodyPart": "呼吸道、气管、大腿、神经衰弱、精神压力",
+    "industry": "文化、教育、出版、科研、艺术、设计、传媒",
+    "remedyElement": "金（克木）或火（泄木）",
+    "catalystElement": "水木（富贵竹4支、文昌塔、水培绿植，利考运与升迁）"
+  },
+  {
+    "number": 5,
+    "name": "五黄廉贞星（大煞星）",
+    "shortName": "五黄",
+    "element": "土",
+    "originalPalace": 5,
+    "nature": "极凶",
+    "bodyPart": "全身重疾、心脑血管突发、骨癌、意外血光之灾",
+    "industry": "军警、爆破、极权、重型机械",
+    "remedyElement": "金（强力金泄土气；挂六帝纯铜风铃、安忍水、纯铜化煞镜；严禁动土、红色、敲击）",
+    "catalystElement": "极凶之煞，不可催发"
+  },
+  {
+    "number": 6,
+    "name": "六白武曲星（偏财星/驿马星）",
+    "shortName": "六白",
+    "element": "金",
+    "originalPalace": 6,
+    "nature": "吉星",
+    "bodyPart": "头部、肺部、呼吸系统、大肠、骨骼",
+    "industry": "金融、军警、政界公职、高管、五金矿产、长途商贸",
+    "remedyElement": "水（泄金）或火（克金）",
+    "catalystElement": "土金（黄水晶、白水晶球、铜钟，催官职偏财与晋升）"
+  },
+  {
+    "number": 7,
+    "name": "七赤破军星（破财贼星）",
+    "shortName": "七赤",
+    "element": "金",
+    "originalPalace": 7,
+    "nature": "凶星",
+    "bodyPart": "口腔、牙齿、咽喉、气管、手术开刀、皮肤划伤",
+    "industry": "演艺、占卜、律师、娱乐、餐饮服务、变动拆除",
+    "remedyElement": "水（水泄金气，以静水或黑色装饰化解；忌土金火催旺）",
+    "catalystElement": "下元九运已退气，主盗贼口舌，宜化不宜催"
+  },
+  {
+    "number": 8,
+    "name": "八白左辅星（财星）",
+    "shortName": "八白",
+    "element": "土",
+    "originalPalace": 8,
+    "nature": "吉星",
+    "bodyPart": "手部、鼻子、背脊骨、关节、手指、脾胃",
+    "industry": "房地产、建筑、采矿、传统实体商铺、资产积累",
+    "remedyElement": "金（泄土）或木（克土）",
+    "catalystElement": "火土（九运中为退气财星但仍为吉曜，可用聚宝盆、陶瓷工艺催发正财）"
+  },
+  {
+    "number": 9,
+    "name": "九紫右弼星（当前九运当令正神旺星/喜庆星）",
+    "shortName": "九紫",
+    "element": "火",
+    "originalPalace": 9,
+    "nature": "大吉",
+    "bodyPart": "眼目、心脏、心脑血管、精神情志、小肠",
+    "industry": "人工智能、元宇宙、能源科技、文化传播、美容时尚、心理咨询",
+    "remedyElement": "土（泄火）或水（克火）",
+    "catalystElement": "木火（2024-2043九运第一大旺财贵神星！宜开大门、置红色系、长明暖灯、阔叶绿植、动水纳气）"
+  }
+]

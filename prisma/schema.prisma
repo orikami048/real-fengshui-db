@@ -1,0 +1,328 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// 1. 术数基础字典体系 (Metaphysics Knowledge Bases)
+// ==========================================
+
+/// 三元九运字典
+model Period {
+  id          Int      @id // 1 ~ 9
+  name        String   // 一运、二运 ... 九运
+  element     String   // 五行：水、土、木、木、土、金、金、土、火
+  gua         String   // 所属卦象：坎、坤、震、巽、中、乾、兑、艮、离
+  startYear   Int      // 起始年份（如九运为 2024）
+  endYear     Int      // 结束年份（如九运为 2043）
+  description String?
+  properties  Property[]
+}
+
+/// 罗盘二十四山字典
+model TwentyFourMountain {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique // 子、癸、丑、艮、寅 ...
+  chineseTrigram  String   // 所属八卦宫位：坎、艮、震、巽、离、坤、兑、乾
+  palaceNumber    Int      // 洛书九宫数 (1~9)
+  element         String   // 藏干与五行
+  yuanDragon      String   // 天元龙、地元龙、人元龙
+  polarity        String   // 阴阳性：阳(+) 或 阴(-)
+  centerDegree    Float    // 中心角度数 (0.00 ~ 359.99)
+  minDegree       Float    // 起始度数
+  maxDegree       Float    // 终止度数
+  substituteStar  Int      // 替卦星 (挨星替卦数)
+  substituteGua   String   // 替卦字名
+  description     String?
+}
+
+/// 紫白九星字典
+model NineStar {
+  number          Int      @id // 1 ~ 9
+  name            String   // 一白贪狼、二黑巨门、三碧禄存、四绿文曲、五黄廉贞、六白武曲、七赤破军、八白左辅、九紫右弼
+  shortName       String   // 一白、二黑 ...
+  element         String   // 金、木、水、火、土
+  originalPalace  Int      // 原始本宫 (1~9)
+  nature          String   // 吉星 / 凶星 / 权衡
+  bodyPart        String?  // 对应人体部位（如坎水对应肾脏、血液、泌尿）
+  industry        String?  // 对应事业行业
+  remedyElement   String?  // 化解克泄之五行属性
+  catalystElement String?  // 催旺生旺之五行属性
+}
+
+/// 八宅游年星字典
+model EightMansionsStar {
+  id          Int     @id @default(autoincrement())
+  name        String  // 生气、延年、天医、伏位、绝命、祸害、五鬼、六煞
+  type        String  // 四吉方 / 四凶方
+  element     String  // 木、金、土、木、金、土、火、水
+  rank        Int     // 影响力级别 (1~4)
+  description String  // 对财运、健康、人际、婚姻的吉凶具体影响
+}
+
+/// 峦头形煞百科与现代家居化解字典
+model FormShaDict {
+  id              String   @id @default(cuid())
+  code            String   @unique // 形煞编码，如 SHA_CHUANG_TANG, SHA_LU_CHONG
+  name            String   // 煞名，如：穿堂煞、路冲煞、天斩煞、反弓水、开门见灶、横梁压顶、卫生间居中
+  category        String   // EXTERNAL(外峦头) / INTERNAL(室内形煞) / DEFICIENCY(缺角煞)
+  hazardLevel     Int      // 危害评级 1 ~ 5 (5为极凶)
+  description     String   // 成因机理与煞气特征
+  impactOnHealth  String?  // 对健康具体器官或疾患的影响
+  impactOnWealth  String?  // 对财运/破财/是非的影响
+  impactFamily    String?  // 对家庭成员/人丁/婚姻的影响
+  physicalRemedy  String   // 现代建筑/室内软装物理化解（屏风、玄关门帘、磨砂玻璃、绿植阻隔）
+  metaphysicRemedy String  // 传统五行风水物调理建议（泰山石敢当、凸面八卦镜、五帝钱、安忍水等）
+  cautions        String?  // 施工与安放禁忌事项
+}
+
+// ==========================================
+// 2. 现实房产与空间实体 (Real Spatial Property)
+// ==========================================
+
+/// 真实房产项目
+model Property {
+  id              String   @id @default(cuid())
+  title           String   // 例如："阳光花园1期3栋1202室" 或 "高新园区科技孵化器A座201"
+  propertyType    String   // APARTMENT(高层洋房), VILLA(独栋别墅), COMMERCIAL(商铺办公), FACTORY(厂房)
+  address         String?
+  builtYear       Int      // 建造/封顶年份
+  moveInYear      Int?     // 入住或开业年份
+  periodId        Int      // 归属三元元运 (如 8, 9)
+  period          Period   @relation(fields: [periodId], references: [id])
+  
+  // 罗盘实测数据
+  facingDegree    Float    // 实测向首精确度数 (0.00 ~ 359.99)
+  sittingDegree   Float    // 实测坐山精确度数 (对角线 +/- 180度)
+  magneticDecl    Float    @default(0.0) // 当地地磁偏角修正值
+  mountainSitting String   // 坐山（如：子、癸、午、丙）
+  mountainFacing  String   // 向山（如：午、丁、子、壬）
+  isSubstitute    Boolean  @default(false) // 是否出线入替（兼向替卦，偏离中心度数超3度）
+  substituteAngle Float    @default(0.0)   // 偏向度数（如 兼癸向丁 2.5度）
+
+  // 关联
+  floorPlans      FloorPlan[]
+  assessments     Assessment[]
+  residents       Resident[]
+  externalShaList ExternalShaRecord[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+/// 居住/使用者人员命卦档案（八宅与九星命盘匹配）
+model Resident {
+  id           String    @id @default(cuid())
+  propertyId   String
+  property     Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name         String    // 姓名或称谓，如 "户主男主人"、"大女儿"
+  gender       String    // MALE(男) / FEMALE(女)
+  birthDate    DateTime  // 出生年月日（公历）
+  lunarYear    Int       // 农历干支纪年对应年份（立春为界）
+  lifeGuaNumber Int      // 个人三元本命卦数 (1~9)
+  lifeGuaName  String    // 坎卦、坤卦、乾卦、兑卦、艮卦、震卦、巽卦、离卦
+  lifeGroup    String    // EAST_FOUR(东四命) / WEST_FOUR(西四命)
+  role         String?   // MASTER(户主), SPOUSE(配偶), CHILD(子女), ELDER(长辈)
+}
+
+/// 房屋户型平面图与天心立极
+model FloorPlan {
+  id              String      @id @default(cuid())
+  propertyId      String
+  property        Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  floorLevel      Int         @default(1) // 所在楼层
+  imageUrl        String?     // 户型图文件URL或路径
+  widthMeters     Float?      // 户型实际宽度（米）
+  lengthMeters    Float?      // 户型实际长度（米）
+  centerXRatio    Float       @default(0.5) // 天心十道立极点相对坐标 X (0.0~1.0)
+  centerYRatio    Float       @default(0.5) // 天心十道立极点相对坐标 Y (0.0~1.0)
+  northAngle      Float       @default(0.0) // 图纸正北指针夹角
+  rooms           RoomZone[]
+  internalShaList InternalShaRecord[]
+  missingCorners  MissingCorner[]
+}
+
+/// 室内功能分区（九宫分布）
+model RoomZone {
+  id              String    @id @default(cuid())
+  floorPlanId     String
+  floorPlan       FloorPlan @relation(fields: [floorPlanId], references: [id], onDelete: Cascade)
+  name            String    // 客厅、主卧、书房、厨房炉灶、主卫、公卫、主阳台、入户大门
+  roomType        String    // ENTRANCE_DOOR, LIVING_ROOM, MASTER_BEDROOM, BEDROOM, KITCHEN_STOVE, BATHROOM, BALCONY_AIR, STUDY_DESK
+  palaceNumber    Int       // 所在九宫 (1:坎/北, 2:坤/西南, 3:震/东, 4:巽/东南, 5:中宫, 6:乾/西北, 7:兑/西, 8:艮/东北, 9:离/南)
+  areaSquareMeter Float?    // 房间面积
+  isAirIntake     Boolean   @default(false) // 是否为主要动态纳气口（大门、落地窗、大阳台）
+  intakeDegree    Float?    // 纳气口朝向角度
+  notes           String?
+}
+
+/// 户型缺角与凸角记录
+model MissingCorner {
+  id              String    @id @default(cuid())
+  floorPlanId     String
+  floorPlan       FloorPlan @relation(fields: [floorPlanId], references: [id], onDelete: Cascade)
+  palaceNumber    Int       // 缺角所在的九宫宫位 (1~9，中宫除外)
+  severity        String    // SLIGHT(轻微 <10%), MODERATE(中度 10~20%), SEVERE(严重 >20%), PROTRUSION(凸角)
+  impactFamily    String?   // 对应家庭成员（如西北乾位缺角损男主人/父辈；西南坤位缺角损女主人）
+  impactHealth    String?   // 对应生理器官病象
+  remedyMethod    String    // 实战补角方案（泰山石、五行绿植、色彩灯光弥补）
+}
+
+/// 室内形煞记录
+model InternalShaRecord {
+  id              String    @id @default(cuid())
+  floorPlanId     String
+  floorPlan       FloorPlan @relation(fields: [floorPlanId], references: [id], onDelete: Cascade)
+  shaCode         String    // 关联 FormShaDict
+  name            String    // 如：大门正对卫生间门、主卧横梁压床头、灶台水槽相邻水火相冲
+  locationPalace  Int       // 所在九宫
+  severity        Int       // 1 ~ 5
+  description     String?
+  photoUrl        String?
+  isResolved      Boolean   @default(false)
+  remedyAction    String?   // 实际采取的调理方案
+}
+
+/// 室外峦头形煞记录
+model ExternalShaRecord {
+  id              String    @id @default(cuid())
+  propertyId      String
+  property        Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  shaCode         String    // 关联 FormShaDict
+  name            String    // 如：正南方向有高架路反弓水、东北方见变电站天斩煞
+  bearingDegree   Float     // 煞气方位精确角度
+  palaceNumber    Int       // 所在九宫方向
+  distanceMeters  Float?    // 距离房屋米数
+  severity        Int       // 1 ~ 5
+  description     String?
+  photoUrl        String?
+  isResolved      Boolean   @default(false)
+  remedyAction    String?   // 实际采取的调理方案
+}
+
+// ==========================================
+// 3. 实战排盘与推演计算表 (Metaphysics Assessment Engine)
+// ==========================================
+
+/// 一次完整的风水评估诊断事务
+model Assessment {
+  id              String    @id @default(cuid())
+  propertyId      String
+  property        Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  auditDate       DateTime  @default(now())
+  assessorName    String?   // 评估师或用户
+  yearPeriod      Int       // 评估时所在元运 (如 9运)
+  lunarYearStemBranch String? // 评估时流年干支（如 甲辰年）
+  overallScore    Int       @default(70) // 综合风水得分 (0~100)
+  
+  // 排盘关联
+  flyingStarChart FlyingStarChart?
+  eightMansions   EightMansionsChart?
+  airIntakeCharts AirIntakeChart[]
+  remedyPlans     RemedyPlan[]
+}
+
+/// 玄空飞星排盘记录
+model FlyingStarChart {
+  id              String     @id @default(cuid())
+  assessmentId    String     @unique
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  periodNumber    Int        // 元运数 (1~9)
+  sittingMountain String     // 坐山
+  facingMountain  String     // 向山
+  chartType       String     // NORMAL(下卦正向) / SUBSTITUTE(替卦兼向)
+  patternName     String     // 旺山旺向(到山到向) / 双星到向 / 双星到山 / 上山下水
+  isWangShanWangXiang Boolean @default(false)
+  isShangShanXiaShui  Boolean @default(false)
+  isDoubleFacing      Boolean @default(false)
+  isDoubleSitting     Boolean @default(false)
+  isFuYin             Boolean @default(false) // 伏吟
+  isFanYin            Boolean @default(false) // 反吟
+  isSevenStarRobbery  Boolean @default(false) // 七星打劫
+  
+  // 九宫具体星盘数据
+  palaces         FlyingStarPalace[]
+}
+
+/// 玄空九宫飞星宫位明细
+model FlyingStarPalace {
+  id              String          @id @default(cuid())
+  chartId         String
+  chart           FlyingStarChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  palaceNumber    Int             // 九宫数 (1~9)
+  directionName   String          // 北(坎), 东北(艮), 东(震), 东南(巽), 中, 西北(乾), 西(兑), 西南(坤), 南(离)
+  baseStar        Int             // 运星 (元运入中顺飞所得)
+  mountainStar    Int             // 山星 (坐山星入中，依阴阳顺逆飞布)
+  mountainFlight  String          // 山星顺飞(FORWARD) 或 逆飞(BACKWARD)
+  facingStar      Int             // 向星 (向首星入中，依阴阳顺逆飞布)
+  facingFlight    String          // 向星顺飞(FORWARD) 或 逆飞(BACKWARD)
+  annualStar      Int?            // 当年流年客星
+  monthlyStar     Int?            // 当月流月客星
+  
+  combinationDesc String?         // 山向星组合秘断（如 "二五交加必损主"、"一四同宫准发科名"、"六八齐到富比陶朱"）
+  starAuspicious  String?         // AUSPICIOUS(大吉) / SAFE(平吉) / INAUSPICIOUS(凶) / DISASTER(大凶)
+  suggestedAction String?         // 布局建议（宜静/宜动/水法催旺/五行化解）
+}
+
+/// 八宅明镜宅法评估记录
+model EightMansionsChart {
+  id              String     @id @default(cuid())
+  assessmentId    String     @unique
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  houseGuaName    String     // 房屋宅卦（如坐子向午为"坎宅"、坐乾向巽为"乾宅"）
+  houseGroup      String     // EAST_FOUR(东四宅) / WEST_FOUR(西四宅)
+  doorLocationGua String     // 大门所在八宫方位
+  doorStarName    String     // 大门飞临游年星（生气/延年/天医/伏位/绝命/祸害/五鬼/六煞）
+  doorAuspicious  Boolean    // 大门吉凶属性
+  summary         String     // 宅门相生或相克分析
+  palaces         EightMansionsPalace[]
+}
+
+/// 八宅九宫游年星排布
+model EightMansionsPalace {
+  id              String             @id @default(cuid())
+  chartId         String
+  chart           EightMansionsChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  palaceNumber    Int                // 1~9 (除中宫外)
+  starName        String             // 生气、延年、天医、伏位、绝命、祸害、五鬼、六煞
+  isAuspicious    Boolean            // 是否为四吉方
+  element         String             // 游年星五行
+  suitableUse     String             // 适宜功能（如生气方宜做主卧、书房、大门；绝命五鬼方宜压卫生间压煞）
+}
+
+/// 三元纳气法门窗纳气吉凶评估
+model AirIntakeChart {
+  id              String     @id @default(cuid())
+  assessmentId    String
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  zoneName        String     // 评估的纳气空间，如 "主卧南阳台"、"客厅大门"
+  intakePalace    Int        // 纳气口所在九宫 (1~9)
+  currentPeriod   Int        // 当前所处元运（如九运）
+  qiNature        String     // SHENG_QI(生旺气) / CUI_QI(催官气) / SHUAI_QI(衰气) / SI_QI(死气)
+  isZhengShen     Boolean    // 是否纳正神水/零神水
+  evaluation      String     // 详细评价说明
+}
+
+// ==========================================
+// 4. 实战落地化解与调理实施清单 (Remedy & Enhancement Action)
+// ==========================================
+
+/// 实战调理化解与布局执行方案
+model RemedyPlan {
+  id              String     @id @default(cuid())
+  assessmentId    String
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  title           String     // 如 "玄关穿堂遮蔽工程"、"二黑五黄病煞化解"、"九运离宫主财位催旺"
+  palaceNumber    Int        // 涉及九宫方位
+  priority        Int        // 优先级 1(紧急必须化解) ~ 4(后期锦上添花催旺)
+  problemSummary  String     // 诊断发现的问题描述（峦头冲煞或理气凶星聚汇）
+  actionType      String     // STRUCTURAL(空间装修改造), FURNITURE(家具挪移), METAPHYSIC_CURE(风水五行陈设), BOTANICAL(生旺绿植/水景)
+  materialNeeded  String?    // 所需材料物品（如六帝钱、木本阔叶绿植、白水晶簇、玄关屏风）
+  implementationSteps String  // 施工与安放具体指导
+  isCompleted     Boolean    @default(false) // 业主是否已完成落地
+  completedAt     DateTime?
+}

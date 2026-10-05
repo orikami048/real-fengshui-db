@@ -1,0 +1,33 @@
+{
+  "name": "real-fengshui-db",
+  "version": "1.0.0",
+  "description": "面向现代住宅与商业空间的实战风水数据库与排盘引擎（包含玄空飞星、八宅明镜、三元纳气、峦头形煞与空间化解）",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "ts-node src/seed.ts",
+    "test": "ts-node src/test.ts"
+  },
+  "keywords": [
+    "fengshui",
+    "flying-star",
+    "eight-mansions",
+    "metaphysics",
+    "prisma",
+    "spatial-architecture"
+  ],
+  "author": "orikami048",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "lunar-typescript": "^1.7.5"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.9.0"
+  }
+}

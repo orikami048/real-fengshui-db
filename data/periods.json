@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "name": "一运",
+    "element": "水",
+    "gua": "坎",
+    "startYear": 1864,
+    "endYear": 1883,
+    "description": "上元一运坎水，统领二十年。"
+  },
+  {
+    "id": 2,
+    "name": "二运",
+    "element": "土",
+    "gua": "坤",
+    "startYear": 1884,
+    "endYear": 1903,
+    "description": "上元二运坤土，统领二十年。"
+  },
+  {
+    "id": 3,
+    "name": "三运",
+    "element": "木",
+    "gua": "震",
+    "startYear": 1904,
+    "endYear": 1923,
+    "description": "上元三运震木，统领二十年。"
+  },
+  {
+    "id": 4,
+    "name": "四运",
+    "element": "木",
+    "gua": "巽",
+    "startYear": 1924,
+    "endYear": 1943,
+    "description": "中元四运巽木，统领二十年。"
+  },
+  {
+    "id": 5,
+    "name": "五运",
+    "element": "土",
+    "gua": "中",
+    "startYear": 1944,
+    "endYear": 1963,
+    "description": "中元五运中宫土，前十年寄艮，后十年寄坤。"
+  },
+  {
+    "id": 6,
+    "name": "六运",
+    "element": "金",
+    "gua": "乾",
+    "startYear": 1964,
+    "endYear": 1983,
+    "description": "中元六运乾金，统领二十年。"
+  },
+  {
+    "id": 7,
+    "name": "七运",
+    "element": "金",
+    "gua": "兑",
+    "startYear": 1984,
+    "endYear": 2003,
+    "description": "下元七运兑金，统领二十年。"
+  },
+  {
+    "id": 8,
+    "name": "八运",
+    "element": "土",
+    "gua": "艮",
+    "startYear": 2004,
+    "endYear": 2023,
+    "description": "下元八运艮土，统领二十年。"
+  },
+  {
+    "id": 9,
+    "name": "九运",
+    "element": "火",
+    "gua": "离",
+    "startYear": 2024,
+    "endYear": 2043,
+    "description": "下元九运离火，当前时代所处元运（2024-2043年），利中女、科技、文化、新能源、心灵与空间美学。"
+  }
+]
