@@ -663,6 +663,82 @@
       line-height: 1.5;
     }
 
+    /* 移动端深度适配 (宽度 <= 768px) */
+    @media (max-width: 768px) {
+      header {
+        padding: 10px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .brand { justify-content: center; }
+      .brand-title { font-size: 16px; }
+      .brand-subtitle { font-size: 11px; text-align: center; }
+      .header-actions {
+        display: flex;
+        gap: 6px;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+      .header-actions .btn {
+        flex: 1;
+        padding: 6px 8px;
+        font-size: 11px;
+        white-space: nowrap;
+        text-align: center;
+        justify-content: center;
+      }
+      main { padding: 10px 10px; gap: 12px; }
+      .floorplan-canvas-container {
+        height: 380px;
+      }
+      .compass-overlay-wrapper {
+        width: 320px;
+        height: 320px;
+      }
+      .compass-hud {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        font-size: 10.5px;
+        padding: 6px 10px;
+      }
+      .compass-rot-tools {
+        bottom: 8px;
+        right: 8px;
+        padding: 4px 6px;
+        gap: 4px;
+      }
+      .rot-btn { padding: 3px 6px; font-size: 10px; }
+      .floorplan-controls {
+        padding: 8px 10px;
+        gap: 8px;
+      }
+      .floorplan-controls .control-group {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .tab-bar {
+        padding-bottom: 4px;
+        gap: 4px;
+      }
+      .tab-btn {
+        padding: 7px 11px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .grid-jiugong {
+        max-width: 100%;
+        gap: 6px;
+      }
+      .cell-palace { padding: 7px; }
+      .star-mountain, .star-facing { font-size: 18px; }
+      .ai-report-container { padding: 14px; }
+      .modal-content { padding: 16px; width: 95%; max-height: 90vh; }
+    }
+
     @media print {
       body { background: #fff; color: #000; }
       header, .panel-card:first-child, .tab-bar, .floorplan-controls, .compass-hud, .compass-rot-tools, .btn { display: none !important; }
