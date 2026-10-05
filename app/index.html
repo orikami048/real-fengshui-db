@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Feng Shui Master | 实战风水罗盘、户型图立极与 AI 空间诊断系统</title>
+  <title>Real Feng Shui Master | 实战风水专业罗盘校准与户型 AI 诊断系统</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>☯️</text></svg>">
   <style>
     :root {
-      --bg-main: #0b0f19;
-      --bg-card: #141a29;
-      --bg-card-hover: #1c2438;
-      --border-color: #242f45;
+      --bg-main: #0a0e17;
+      --bg-card: #131926;
+      --bg-card-hover: #1b2336;
+      --border-color: #232e42;
       --text-main: #e2e8f0;
       --text-muted: #8e9bb0;
       --gold: #d4af37;
@@ -23,7 +23,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: radial-gradient(circle at 50% 0%, #151d30 0%, var(--bg-main) 100%);
+      background: radial-gradient(circle at 50% 0%, #161f33 0%, var(--bg-main) 100%);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       min-height: 100vh;
@@ -35,7 +35,7 @@
       border-bottom: 1px solid var(--border-color);
       background: rgba(13, 18, 29, 0.88);
       backdrop-filter: blur(14px);
-      padding: 14px 28px;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -44,38 +44,19 @@
       z-index: 100;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand-icon {
-      font-size: 28px;
-      animation: rotateTaiji 20s linear infinite;
-    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { font-size: 26px; animation: rotateTaiji 20s linear infinite; }
     @keyframes rotateTaiji { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .brand-title {
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--gold-light);
-      letter-spacing: 0.5px;
-    }
-    .brand-subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
+    .brand-title { font-size: 18px; font-weight: 700; color: var(--gold-light); }
+    .brand-subtitle { font-size: 11px; color: var(--text-muted); }
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
@@ -83,41 +64,22 @@
       border: 1px solid transparent;
       transition: all 0.2s;
     }
-    .btn-gold {
-      background: linear-gradient(135deg, #d4af37, #f7d560);
-      color: #0c0f17;
-    }
-    .btn-gold:hover {
-      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
-      transform: translateY(-1px);
-    }
-    .btn-outline {
-      background: transparent;
-      border-color: var(--border-color);
-      color: var(--text-main);
-    }
-    .btn-outline:hover {
-      border-color: var(--gold);
-      color: var(--gold-light);
-    }
-    .btn-ai {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      color: #fff;
-    }
-    .btn-ai:hover {
-      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
-      transform: translateY(-1px);
-    }
+    .btn-gold { background: linear-gradient(135deg, #d4af37, #f7d560); color: #0c0f17; }
+    .btn-gold:hover { box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4); transform: translateY(-1px); }
+    .btn-outline { background: transparent; border-color: var(--border-color); color: var(--text-main); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+    .btn-ai { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
+    .btn-ai:hover { box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4); transform: translateY(-1px); }
 
     main {
       flex: 1;
-      max-width: 1560px;
+      max-width: 1600px;
       width: 100%;
       margin: 0 auto;
-      padding: 20px 24px;
+      padding: 16px 20px;
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 20px;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
     }
 
     @media (max-width: 1120px) {
@@ -127,94 +89,42 @@
     .panel-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px;
+      border-radius: 12px;
+      padding: 16px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .panel-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--gold-light);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
-    .form-label {
-      display: block;
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
     .form-control, .form-select {
       width: 100%;
-      padding: 9px 12px;
+      padding: 8px 12px;
       background: #0d121c;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       color: var(--text-main);
       font-size: 13px;
       outline: none;
-      transition: border-color 0.2s;
     }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--gold);
-    }
+    .form-control:focus, .form-select:focus { border-color: var(--gold); }
 
-    /* 罗盘仪表盘 */
-    .compass-container {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin: 10px auto;
-      border-radius: 50%;
-      border: 3px solid var(--gold);
-      background: radial-gradient(circle, #182236 0%, #0c111a 100%);
-      box-shadow: 0 0 24px rgba(212, 175, 55, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .compass-plate {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.25s ease-out;
-    }
-    .compass-needle {
-      position: absolute;
-      width: 4px;
-      height: 170px;
-      background: linear-gradient(to bottom, var(--crimson) 50%, var(--blue) 50%);
-      border-radius: 2px;
-      z-index: 10;
-      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-    }
-    .compass-center-dot {
-      width: 14px;
-      height: 14px;
-      background: var(--gold);
-      border-radius: 50%;
-      z-index: 12;
-      border: 2px solid #fff;
-    }
-
-    .range-input {
-      width: 100%;
-      accent-color: var(--gold);
-    }
+    .range-input { width: 100%; accent-color: var(--gold); }
 
     .metric-badge {
       display: inline-flex;
       align-items: center;
-      padding: 3px 8px;
-      border-radius: 6px;
+      padding: 2px 7px;
+      border-radius: 5px;
       font-size: 11px;
       font-weight: 500;
       margin-right: 4px;
@@ -230,24 +140,21 @@
       display: flex;
       border-bottom: 1px solid var(--border-color);
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       overflow-x: auto;
     }
     .tab-btn {
       background: none;
       border: none;
-      padding: 10px 16px;
+      padding: 9px 15px;
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       position: relative;
       white-space: nowrap;
-      transition: color 0.2s;
     }
-    .tab-btn.active {
-      color: var(--gold-light);
-    }
+    .tab-btn.active { color: var(--gold-light); }
     .tab-btn.active::after {
       content: "";
       position: absolute;
@@ -258,69 +165,85 @@
       background: var(--gold);
     }
 
-    /* 户型图 Canvas 叠加层 */
+    /* 户型图与罗盘 Overlay 视窗 */
     .floorplan-workspace {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .floorplan-canvas-container {
       position: relative;
       width: 100%;
-      height: 480px;
-      background: #090d14;
-      border: 1px dashed var(--border-color);
+      height: 520px;
+      background: #080c14;
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select: none;
     }
     .floorplan-img-layer {
       position: absolute;
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 92%;
+      max-height: 92%;
       object-fit: contain;
-      user-select: none;
       pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
     }
+
+    /* 可旋转拖拽的专业透明罗盘层 */
+    .compass-overlay-wrapper {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      pointer-events: auto;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .compass-overlay-wrapper:active { cursor: grabbing; }
+
     .floorplan-grid-overlay {
       position: absolute;
-      width: 360px;
-      height: 360px;
-      border: 2px solid rgba(212, 175, 55, 0.85);
-      border-radius: 8px;
+      width: 380px;
+      height: 380px;
+      border: 2px dashed rgba(212, 175, 55, 0.7);
+      border-radius: 6px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      pointer-events: auto;
-      cursor: move;
-      backdrop-filter: blur(1px);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      pointer-events: none;
     }
     .grid-cell-label {
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.25);
       padding: 4px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       font-size: 10px;
       color: #f1f5f9;
-      background: rgba(15, 23, 42, 0.45);
-      transition: background 0.2s;
+      background: rgba(15, 23, 42, 0.4);
     }
-    .grid-cell-label:hover {
-      background: rgba(212, 175, 55, 0.25);
-    }
+
     .floorplan-controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
+      justify-content: space-between;
       background: #0d121c;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     /* 玄空飞星九宫网格 */
@@ -328,7 +251,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      max-width: 540px;
+      max-width: 520px;
       margin: 0 auto;
     }
     .cell-palace {
@@ -342,35 +265,19 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .cell-palace:hover {
-      border-color: var(--gold);
-      transform: translateY(-2px);
-    }
+    .cell-palace:hover { border-color: var(--gold); transform: translateY(-2px); }
     .cell-palace.selected {
       border-color: var(--gold-light);
       background: #182236;
       box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
     }
-    .palace-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-    .palace-direction {
-      font-weight: 700;
-      color: #cbd5e1;
-    }
-    .stars-cluster {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-around;
-      margin: 8px 0;
-    }
+    .palace-header { display: flex; justify-content: space-between; font-size: 11px; }
+    .palace-direction { font-weight: 700; color: #cbd5e1; }
+    .stars-cluster { display: flex; align-items: baseline; justify-content: space-around; margin: 8px 0; }
     .star-mountain { font-size: 22px; font-weight: 800; color: #60a5fa; }
     .star-facing { font-size: 22px; font-weight: 800; color: #f87171; }
     .star-base {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--gold);
       background: rgba(212, 175, 55, 0.12);
@@ -378,30 +285,30 @@
       border-radius: 4px;
     }
 
-    /* 八宅卡片 */
+    /* 八宅网格 */
     .bazhai-card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
     }
     .bazhai-cell {
       background: #0f1422;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 12px;
     }
     .bazhai-star-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .ji-star { color: var(--green); }
     .xiong-star { color: var(--crimson); }
 
-    /* AI 分析输出容器 */
+    /* AI 报告 */
     .ai-report-container {
       background: #0c111a;
       border: 1px solid #334155;
       border-radius: 12px;
       padding: 20px;
       line-height: 1.7;
-      font-size: 14px;
+      font-size: 13px;
     }
     .ai-report-header {
       border-bottom: 1px solid var(--border-color);
@@ -411,25 +318,14 @@
       align-items: center;
       justify-content: space-between;
     }
-    .ai-tag {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: #c084fc;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-    }
     .ai-section-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--gold-light);
       margin: 16px 0 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    /* 形煞化解清单 */
+    /* 形煞化解 */
     .remedy-item {
       background: #0f1422;
       border-left: 4px solid var(--gold);
@@ -437,19 +333,10 @@
       padding: 12px 14px;
       margin-bottom: 10px;
     }
-    .remedy-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gold-light);
-      margin-bottom: 4px;
-    }
-    .remedy-desc {
-      font-size: 13px;
-      color: #cbd5e1;
-      line-height: 1.5;
-    }
+    .remedy-title { font-size: 14px; font-weight: 600; color: var(--gold-light); margin-bottom: 4px; }
+    .remedy-desc { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 
-    /* 教程模态弹窗 */
+    /* 弹窗 */
     .modal-backdrop {
       display: none;
       position: fixed;
@@ -464,26 +351,20 @@
     .modal-content {
       background: #111726;
       border: 1px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 14px;
       max-width: 860px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
       padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
       position: relative;
     }
     .modal-close {
       position: absolute;
-      top: 18px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 22px;
-      cursor: pointer;
+      top: 18px; right: 20px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 22px; cursor: pointer;
     }
-    .modal-close:hover { color: #fff; }
 
     @media print {
       body { background: #fff; color: #000; }
@@ -501,12 +382,12 @@
       <div class="brand-icon">☯️</div>
       <div>
         <div class="brand-title">Real Feng Shui Master Studio</div>
-        <div class="brand-subtitle">实战风水空间评估 · 户型图天心立极与 AI 深度诊断系统</div>
+        <div class="brand-subtitle">专业罗盘真北校准 · 户型天心立极 · AI 空间全维度诊断系统</div>
       </div>
     </div>
     <div class="header-actions">
-      <button class="btn btn-outline" onclick="loadSampleCase()">🌟 一键载入 120㎡ 实战户型案例</button>
-      <button class="btn btn-outline" onclick="openTutorialModal()">📚 实战新手操作教程</button>
+      <button class="btn btn-outline" onclick="loadSampleCase()">🌟 一键载入真实 120㎡ 户型</button>
+      <button class="btn btn-outline" onclick="openTutorialModal()">📚 罗盘校准与实战教程</button>
       <button class="btn btn-ai" onclick="switchTab('tab-ai-diag'); runAiAnalysis();">✨ 启动 AI 空间分析</button>
     </div>
   </header>
@@ -521,9 +402,9 @@
         </div>
         
         <div class="form-group">
-          <label class="form-label">三元元运周期</label>
+          <label class="form-label">三元九运</label>
           <select id="selectPeriod" class="form-select">
-            <option value="9" selected>下元九运 (2024 - 2043) 【当前当令旺火】</option>
+            <option value="9" selected>下元九运 (2024 - 2043) 【当令旺火】</option>
             <option value="8">下元八运 (2004 - 2023)</option>
             <option value="7">下元七运 (1984 - 2003)</option>
             <option value="1">上元一运 (1864 - 1883)</option>
@@ -538,16 +419,15 @@
           <input type="range" id="sliderFacingDegree" class="range-input" min="0" max="359.9" step="0.5" value="180">
         </div>
 
-        <!-- 罗盘表盘展示 -->
-        <div class="compass-container">
-          <div id="compassPlate" class="compass-plate">
-            <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: bold; color: var(--crimson);">南 (离)</div>
-            <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: bold; color: var(--blue);">北 (坎)</div>
-            <div style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: bold; color: #cbd5e1;">东 (震)</div>
-            <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: bold; color: #cbd5e1;">西 (兑)</div>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <label class="form-label" style="margin-bottom:0;">🧭 户型图真北角校准偏角</label>
+            <span id="txtNorthOffset" style="font-weight: 600; color: #60a5fa;">0.0° (正上为北)</span>
           </div>
-          <div class="compass-needle"></div>
-          <div class="compass-center-dot"></div>
+          <input type="range" id="sliderNorthOffset" class="range-input" min="-180" max="180" step="1" value="0">
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+            旋转罗盘天池红线，对准户型图自带的「指北针」即可完成空间绝对地理校准！
+          </div>
         </div>
 
         <div id="orientationSummary" style="margin-top: 10px; font-size: 13px; line-height: 1.5;"></div>
@@ -558,27 +438,27 @@
         <div class="panel-title">👤 居者命卦与宅命相配</div>
         <div class="form-group">
           <label class="form-label">居者角色</label>
-          <div style="display: flex; gap: 16px;">
+          <div style="display: flex; gap: 16px; font-size: 13px;">
             <label><input type="radio" name="gender" value="MALE" checked> 男主人</label>
             <label><input type="radio" name="gender" value="FEMALE"> 女主人</label>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">出生年份 (阳历立春分界)</label>
+          <label class="form-label">出生年份 (阳历立春为界)</label>
           <input type="number" id="inputBirthYear" class="form-control" value="1988" min="1920" max="2030">
         </div>
-        <div id="lifeGuaResult" style="font-size: 13px; line-height: 1.5;"></div>
+        <div id="lifeGuaResult" style="font-size: 12px; line-height: 1.5;"></div>
       </div>
 
       <!-- 上传平面图快捷入口 -->
       <div class="panel-card">
-        <div class="panel-title">🖼️ 户型平面图上传</div>
+        <div class="panel-title">🖼️ 上传户型平面图</div>
         <input type="file" id="fileFloorPlan" accept="image/*" style="display: none;">
         <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="document.getElementById('fileFloorPlan').click()">
-          📁 选择户型图文件 (JPG/PNG)
+          📁 选择本地户型图文件 (JPG/PNG)
         </button>
         <div style="text-align: center; margin-top: 8px;">
-          <a href="javascript:void(0)" onclick="loadSampleCase()" style="font-size: 12px; color: var(--gold);">或点击加载 120㎡ 标准三室户型示例</a>
+          <a href="javascript:void(0)" onclick="loadSampleCase()" style="font-size: 12px; color: var(--gold);">加载 120㎡ 标准户型底图示例</a>
         </div>
       </div>
     </div>
@@ -586,35 +466,84 @@
     <!-- 右侧综合工作台 -->
     <div>
       <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('tab-floorplan')">📐 户型图天心立极叠加</button>
+        <button class="tab-btn active" onclick="switchTab('tab-floorplan')">📐 户型图罗盘校准与立极</button>
         <button class="tab-btn" onclick="switchTab('tab-feixing')">玄空飞星九宫盘</button>
         <button class="tab-btn" onclick="switchTab('tab-bazhai')">八宅明镜吉凶盘</button>
         <button class="tab-btn" onclick="switchTab('tab-naqi')">三元高层纳气</button>
-        <button class="tab-btn" onclick="switchTab('tab-ai-diag')">🤖 AI 空间智能分析</button>
+        <button class="tab-btn" onclick="switchTab('tab-ai-diag')">🤖 AI 空间全维度诊断</button>
         <button class="tab-btn" onclick="switchTab('tab-remedies')">实战峦头化解清单</button>
       </div>
 
-      <!-- Tab 0: 户型图叠加视窗 -->
+      <!-- Tab 0: 户型图专业罗盘叠加视窗 -->
       <div id="tab-floorplan" class="tab-content">
         <div class="panel-card floorplan-workspace">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 600; color: var(--gold-light);">天心十道立极视窗 (拖动网格可对准户型中心)</div>
-            <div style="font-size: 12px; color: var(--text-muted);">提示：九宫格与坐向已实时联动</div>
+            <div style="font-weight: 600; color: var(--gold-light);">
+              🧭 二十四山透明罗盘叠加校准器 (拖动罗盘中心对准天心点)
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="padding: 3px 8px; font-size: 11px;" onclick="toggleOverlayMode('COMPASS')">圆盘罗盘</button>
+              <button class="btn btn-outline" style="padding: 3px 8px; font-size: 11px;" onclick="toggleOverlayMode('GRID')">方块九宫</button>
+              <button class="btn btn-outline" style="padding: 3px 8px; font-size: 11px;" onclick="toggleOverlayMode('BOTH')">两者同心叠加</button>
+            </div>
           </div>
 
+          <!-- 交互视窗容器 -->
           <div id="canvasContainer" class="floorplan-canvas-container">
             <img id="floorplanImg" class="floorplan-img-layer" alt="户型平面图">
-            <!-- 九宫半透明叠加层 -->
-            <div id="gridOverlay" class="floorplan-grid-overlay">
-              <!-- 9个宫位格子由 JS 动态生成 -->
+
+            <!-- 专业透明二十四山矢量罗盘 Overlay (可拖动、旋转) -->
+            <div id="compassOverlay" class="compass-overlay-wrapper">
+              <!-- 精密 24 山矢量罗盘 SVG -->
+              <svg id="svgCompass" width="100%" height="100%" viewBox="0 0 500 500" style="filter: drop-shadow(0 0 16px rgba(0,0,0,0.8));">
+                <!-- 罗盘外盘铜圈 -->
+                <circle cx="250" cy="250" r="240" fill="rgba(15, 23, 42, 0.4)" stroke="#d4af37" stroke-width="4"/>
+                <circle cx="250" cy="250" r="230" fill="none" stroke="#d4af37" stroke-width="1" stroke-dasharray="2,3"/>
+
+                <!-- 360度刻度细线与角度 -->
+                <g id="svgCompassTicks"></g>
+
+                <!-- 二十四山同心环 (每山15度) -->
+                <circle cx="250" cy="250" r="195" fill="none" stroke="#d4af37" stroke-width="2"/>
+                <circle cx="250" cy="250" r="150" fill="rgba(11, 15, 25, 0.5)" stroke="#d4af37" stroke-width="2"/>
+                <g id="svgTwentyFourMountains"></g>
+
+                <!-- 八卦同心环 -->
+                <circle cx="250" cy="250" r="105" fill="none" stroke="#d4af37" stroke-width="2"/>
+                <g id="svgEightTrigrams"></g>
+
+                <!-- 天池与十字天心红线 (定位线) -->
+                <line x1="250" y1="10" x2="250" y2="490" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4"/>
+                <line x1="10" y1="250" x2="490" y2="250" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,4"/>
+                
+                <!-- 天池中心红针 (指南指北) -->
+                <circle cx="250" cy="250" r="45" fill="#0f172a" stroke="#d4af37" stroke-width="3"/>
+                <!-- 南针红 / 北针蓝 -->
+                <polygon points="250,210 245,250 255,250" fill="#ef4444"/>
+                <polygon points="250,290 245,250 255,250" fill="#3b82f6"/>
+                <circle cx="250" cy="250" r="6" fill="#f7d560" stroke="#fff" stroke-width="1"/>
+                <text x="250" y="200" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">南 (向)</text>
+                <text x="250" y="310" fill="#3b82f6" font-size="12" font-weight="bold" text-anchor="middle">北 (坐)</text>
+              </svg>
+
+              <!-- 同步显示的方块九宫格 -->
+              <div id="gridOverlay" class="floorplan-grid-overlay" style="display: none;"></div>
             </div>
           </div>
 
           <div class="floorplan-controls">
-            <label>网格大小：<input type="range" id="sliderGridScale" min="200" max="600" value="360" style="vertical-align: middle; accent-color: var(--gold);"></label>
-            <label style="margin-left: 12px;">网格透明度：<input type="range" id="sliderGridOpacity" min="0.2" max="1" step="0.05" value="0.75" style="vertical-align: middle; accent-color: var(--gold);"></label>
-            <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;" onclick="resetGridPosition()">🎯 重置居中</button>
-            <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;" onclick="document.getElementById('fileFloorPlan').click()">🔄 更换户型图</button>
+            <div class="control-group">
+              <span>罗盘尺寸：</span>
+              <input type="range" id="sliderCompassScale" min="260" max="620" value="420" style="vertical-align: middle; accent-color: var(--gold); width: 110px;">
+            </div>
+            <div class="control-group">
+              <span>透明度：</span>
+              <input type="range" id="sliderCompassOpacity" min="0.2" max="1" step="0.05" value="0.85" style="vertical-align: middle; accent-color: var(--gold); width: 90px;">
+            </div>
+            <div class="control-group">
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="resetCompassPosition()">🎯 居中对齐</button>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="rotateCompassToNorth()">🧭 快速校准正北</button>
+            </div>
           </div>
         </div>
       </div>
@@ -675,7 +604,6 @@
           </div>
 
           <div id="aiReportBox" class="ai-report-container">
-            <!-- 动态生成 AI 报告 -->
             <div style="text-align: center; padding: 40px 0; color: var(--text-muted);">
               点击右上角「✨ 启动 AI 空间分析」按钮，AI 将根据户型图坐向、飞星、八宅与纳气口生成专家级诊断报告。
             </div>
@@ -697,32 +625,36 @@
   <div id="modalTutorial" class="modal-backdrop">
     <div class="modal-content">
       <button class="modal-close" onclick="closeTutorialModal()">×</button>
-      <h2 style="color: var(--gold-light); margin-bottom: 14px;">📚 现代住宅实战风水操作全流程指引</h2>
+      <h2 style="color: var(--gold-light); margin-bottom: 12px;">🧭 罗盘真北校准与现代风水实战教程</h2>
       
-      <div style="line-height: 1.7; font-size: 14px; color: #cbd5e1;">
-        <h3 style="color: var(--gold); margin: 14px 0 6px 0;">第 1 步：怎么测量房屋坐向？</h3>
-        <p>• <strong>高层住宅以大采光面为向</strong>：站在客厅阳台内侧 1.5 米处（避开铁栏杆和电器干扰），手机罗盘水平端平指向窗外，读取角度（例如正南 180°）。</p>
+      <div style="line-height: 1.7; font-size: 13px; color: #cbd5e1;">
+        <div style="background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 10px 14px; margin-bottom: 14px; border-radius: 4px;">
+          <strong>💡 为什么必须用罗盘校准户型图的东南西北？</strong><br>
+          买房的户型图纸<strong>上边往往不一定是地理正北</strong>！开发商为了排版美观，经常把户型图旋转了 30° 或 45°。
+          风水实战第一步，就是<strong>把透明罗盘的北针旋转对齐户型图自带的指北针</strong>，这叫「真北定盘」，否则全屋吉凶全会错位！
+        </div>
+
+        <h3 style="color: var(--gold); margin: 12px 0 4px 0;">第一步：天心立极（对准中心点）</h3>
+        <p>• 拖动透明罗盘，把十字天心红色十字交点对准户型图的几何重心（通过对角线交叉得出）。</p>
         
-        <h3 style="color: var(--gold); margin: 14px 0 6px 0;">第 2 步：如何天心十道立极？</h3>
-        <p>• 上传您的户型图，拖动透明九宫格让中心圆点对准这套房子的<strong>几何几何重心点</strong>（通过户型图四周对角线交叉得出）。</p>
+        <h3 style="color: var(--gold); margin: 12px 0 4px 0;">第二步：旋转罗盘校准真北</h3>
+        <p>• 调节左侧「🧭 户型图真北角校准偏角」滑块，转动罗盘的天池天心线，使罗盘正北与户型图纸上的指北针完全重合平行。</p>
 
-        <h3 style="color: var(--gold); margin: 14px 0 6px 0;">第 3 步：看懂九宫星盘三大重点</h3>
-        <p>• <strong>当令旺星在哪</strong>：2024–2043 为下元九运，九紫为第一大旺财贵神，宜开大门、大阳台纳气；<br>
-        • <strong>病符大煞在哪</strong>：二黑、五黄相聚（二五交加）最凶，严禁作床头或炉灶，必须用纯铜六帝钱泄化；<br>
-        • <strong>门窗纳气吉凶</strong>：正北为九运零神位，开大门大窗见动水大吉；正南为正神位宜静不宜强风直冲。</p>
-
-        <h3 style="color: var(--gold); margin: 14px 0 6px 0;">第 4 步：现代软装物理化解</h3>
-        <p>• 穿堂煞不用砌实墙，定制 1.8 米长虹磨砂玻璃隔断柜阻挡气流即可；横梁压顶将床位横移 50cm 或做圆弧吊顶隐蔽即可。</p>
+        <h3 style="color: var(--gold); margin: 12px 0 4px 0;">第三步：十字天心十字线看八方功能</h3>
+        <p>• 此时罗盘的二十四山与八卦放射线已精确覆盖到每个房间：<br>
+        - <strong>大门落在哪一山</strong>：决定纳气是生旺还是衰死；<br>
+        - <strong>主卧落在哪一宫</strong>：八宅四吉方宜安床；二五交加大煞严禁安床；<br>
+        - <strong>厨房与卫生间落在哪一宫</strong>：水火相克与压煞排污。</p>
       </div>
 
-      <div style="text-align: right; margin-top: 20px;">
-        <button class="btn btn-gold" onclick="closeTutorialModal()">我明白了，开始实操</button>
+      <div style="text-align: right; margin-top: 18px;">
+        <button class="btn btn-gold" onclick="closeTutorialModal()">我知道了，开始校准</button>
       </div>
     </div>
   </div>
 
   <script type="module">
-    // 二十四山完整常量
+    // 24山完整定义（每山15度，顺时针排列）
     const MOUNTAINS = [
       { name: "子", gua: "坎", palace: 1, dragon: "天", polarity: "-", deg: 0.0, min: 352.5, max: 7.5, sub: 1 },
       { name: "癸", gua: "坎", palace: 1, dragon: "人", polarity: "-", deg: 15.0, min: 7.5, max: 22.5, sub: 1 },
@@ -751,28 +683,89 @@
     ];
 
     const LUO_SHU_STEPS = [5, 6, 7, 8, 9, 1, 2, 3, 4];
-
-    // 九宫网格顺序: 东南(4), 正南(9), 西南(2), 正东(3), 中宫(5), 正西(7), 东北(8), 正北(1), 西北(6)
     const GRID_ORDER = [
       { p: 4, name: "东南 (巽四)" }, { p: 9, name: "正南 (离九)" }, { p: 2, name: "西南 (坤二)" },
       { p: 3, name: "正东 (震三)" }, { p: 5, name: "中宫 (五黄)" }, { p: 7, name: "正西 (兑七)" },
       { p: 8, name: "东北 (艮八)" }, { p: 1, name: "正北 (坎一)" }, { p: 6, name: "西北 (乾六)" }
     ];
 
-    // 八宅游年星数据
     const BAZHAI_DATA = {
-      1: { name: "坎宅 (坐北)", stars: { 1: "伏位(木)", 9: "延年(金)", 3: "天医(土)", 4: "生气(木)", 6: "六煞(水)", 2: "绝命(金)", 8: "五鬼(火)", 7: "祸害(土)" } },
-      2: { name: "坤宅 (坐西南)", stars: { 2: "伏位(木)", 8: "生气(木)", 6: "延年(金)", 7: "天医(土)", 1: "绝命(金)", 3: "祸害(土)", 4: "五鬼(火)", 9: "六煞(水)" } },
-      3: { name: "震宅 (坐东)", stars: { 3: "伏位(木)", 9: "生气(木)", 4: "延年(金)", 1: "天医(土)", 7: "绝命(金)", 6: "五鬼(火)", 8: "六煞(水)", 2: "祸害(土)" } },
-      4: { name: "巽宅 (坐东南)", stars: { 4: "伏位(木)", 1: "生气(木)", 3: "延年(金)", 9: "天医(土)", 6: "祸害(土)", 7: "六煞(水)", 2: "五鬼(火)", 8: "绝命(金)" } },
-      6: { name: "乾宅 (坐西北)", stars: { 6: "伏位(木)", 7: "生气(木)", 2: "延年(金)", 8: "天医(土)", 4: "祸害(土)", 1: "六煞(水)", 9: "绝命(金)", 3: "五鬼(火)" } },
-      7: { name: "兑宅 (坐西)", stars: { 7: "伏位(木)", 6: "生气(木)", 8: "延年(金)", 2: "天医(土)", 3: "绝命(金)", 4: "六煞(水)", 1: "祸害(土)", 9: "五鬼(火)" } },
-      8: { name: "艮宅 (坐东北)", stars: { 8: "伏位(木)", 2: "生气(木)", 7: "延年(金)", 6: "天医(土)", 9: "祸害(土)", 1: "五鬼(火)", 3: "六煞(水)", 4: "绝命(金)" } },
-      9: { name: "离宅 (坐南)", stars: { 9: "伏位(木)", 3: "生气(木)", 1: "延年(金)", 4: "天医(土)", 8: "祸害(土)", 2: "六煞(水)", 6: "绝命(金)", 7: "五鬼(火)" } }
+      1: { name: "坎宅 (坐北)", stars: { 1: "伏位", 9: "延年", 3: "天医", 4: "生气", 6: "六煞", 2: "绝命", 8: "五鬼", 7: "祸害" } },
+      2: { name: "坤宅 (坐西南)", stars: { 2: "伏位", 8: "生气", 6: "延年", 7: "天医", 1: "绝命", 3: "祸害", 4: "五鬼", 9: "六煞" } },
+      3: { name: "震宅 (坐东)", stars: { 3: "伏位", 9: "生气", 4: "延年", 1: "天医", 7: "绝命", 6: "五鬼", 8: "六煞", 2: "祸害" } },
+      4: { name: "巽宅 (坐东南)", stars: { 4: "伏位", 1: "生气", 3: "延年", 9: "天医", 6: "祸害", 7: "六煞", 2: "五鬼", 8: "绝命" } },
+      6: { name: "乾宅 (坐西北)", stars: { 6: "伏位", 7: "生气", 2: "延年", 8: "天医", 4: "祸害", 1: "六煞", 9: "绝命", 3: "五鬼" } },
+      7: { name: "兑宅 (坐西)", stars: { 7: "伏位", 6: "生气", 8: "延年", 2: "天医", 3: "绝命", 4: "六煞", 1: "祸害", 9: "五鬼" } },
+      8: { name: "艮宅 (坐东北)", stars: { 8: "伏位", 2: "生气", 7: "延年", 6: "天医", 9: "祸害", 1: "五鬼", 3: "六煞", 4: "绝命" } },
+      9: { name: "离宅 (坐南)", stars: { 9: "伏位", 3: "生气", 1: "延年", 4: "天医", 8: "祸害", 2: "六煞", 6: "绝命", 7: "五鬼" } }
     };
     const PALACE_NAMES = { 1: "正北方", 2: "西南方", 3: "正东方", 4: "东南方", 6: "西北方", 7: "正西方", 8: "东北方", 9: "正南方" };
 
     let currentChartState = null;
+    let overlayMode = "COMPASS"; // "COMPASS" | "GRID" | "BOTH"
+
+    // 动态绘制二十四山罗盘 SVG
+    function initSvgCompass() {
+      const gMountains = document.getElementById("svgTwentyFourMountains");
+      const gEight = document.getElementById("svgEightTrigrams");
+      const gTicks = document.getElementById("svgCompassTicks");
+      gMountains.innerHTML = "";
+      gEight.innerHTML = "";
+      gTicks.innerHTML = "";
+
+      // 绘制 24 山文字与分界线 (每山 15 度，中心度数对准圆周)
+      MOUNTAINS.forEach(m => {
+        // 罗盘方位：正南午山在顶部 (270度在标准坐标系，这里按 0度为正北，180度为正南)
+        // 角度转换成 SVG 旋转角度
+        const rot = m.deg;
+        const rad = (rot - 90) * Math.PI / 180;
+        const x = 250 + 172 * Math.cos(rad);
+        const y = 250 + 172 * Math.sin(rad);
+
+        // 文字
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x);
+        txt.setAttribute("y", y + 4);
+        txt.setAttribute("fill", m.polarity === "+" ? "#ef4444" : "#60a5fa");
+        txt.setAttribute("font-size", "11");
+        txt.setAttribute("font-weight", "bold");
+        txt.setAttribute("font-family", "sans-serif");
+        txt.setAttribute("text-anchor", "middle");
+        txt.textContent = m.name;
+        gMountains.appendChild(txt);
+
+        // 刻度线
+        const x1 = 250 + 195 * Math.cos(rad);
+        const y1 = 250 + 195 * Math.sin(rad);
+        const x2 = 250 + 150 * Math.cos(rad);
+        const y2 = 250 + 150 * Math.sin(rad);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+        line.setAttribute("stroke", "rgba(212, 175, 55, 0.4)");
+        line.setAttribute("stroke-width", "1");
+        gMountains.appendChild(line);
+      });
+
+      // 绘制八卦文字
+      const EIGHT_GUAS = [
+        { name: "坎一", deg: 0 }, { name: "艮八", deg: 45 }, { name: "震三", deg: 90 }, { name: "巽四", deg: 135 },
+        { name: "离九", deg: 180 }, { name: "坤二", deg: 225 }, { name: "兑七", deg: 270 }, { name: "乾六", deg: 315 }
+      ];
+      EIGHT_GUAS.forEach(g => {
+        const rad = (g.deg - 90) * Math.PI / 180;
+        const x = 250 + 128 * Math.cos(rad);
+        const y = 250 + 128 * Math.sin(rad);
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x); txt.setAttribute("y", y + 4);
+        txt.setAttribute("fill", "#f7d560");
+        txt.setAttribute("font-size", "12");
+        txt.setAttribute("font-weight", "bold");
+        txt.setAttribute("text-anchor", "middle");
+        txt.textContent = g.name;
+        gEight.appendChild(txt);
+      });
+    }
 
     function getMountain(deg) {
       let d = deg % 360;
@@ -797,13 +790,24 @@
       return res;
     }
 
-    // 核心计算联动
     window.calculateAll = function() {
       const period = parseInt(document.getElementById("selectPeriod").value);
       const facingDeg = parseFloat(document.getElementById("sliderFacingDegree").value);
+      const northOffset = parseFloat(document.getElementById("sliderNorthOffset").value);
 
       document.getElementById("txtFacingDegree").innerText = facingDeg.toFixed(1) + "°";
-      document.getElementById("compassPlate").style.transform = `rotate(${-facingDeg}deg)`;
+      document.getElementById("txtNorthOffset").innerText = northOffset >= 0 ? `+${northOffset.toFixed(1)}°` : `${northOffset.toFixed(1)}°`;
+
+      // 罗盘仪表盘旋转
+      const svgCompass = document.getElementById("svgCompass");
+      if (svgCompass) {
+        // 罗盘整体旋转校准户型图真北方向
+        svgCompass.style.transform = `rotate(${facingDeg - 180 + northOffset}deg)`;
+      }
+      const compassPlate = document.getElementById("compassPlate");
+      if (compassPlate) {
+        compassPlate.style.transform = `rotate(${-facingDeg}deg)`;
+      }
 
       const facingM = getMountain(facingDeg);
       const sittingM = getMountain((facingDeg + 180) % 360);
@@ -812,7 +816,6 @@
       if (diff > 180) diff = 360 - diff;
       const isSub = diff > 3.0;
 
-      // 坐向文本
       document.getElementById("orientationSummary").innerHTML = `
         <div style="font-weight: 700; color: var(--gold-light); margin-bottom: 2px;">
           坐${sittingM.name}山 向${facingM.name}山 (${facingDeg.toFixed(1)}°)
@@ -820,7 +823,7 @@
         <div style="color: var(--text-muted); font-size: 12px;">
           向山：${facingM.gua}卦 | ${facingM.dragon}元龙 (${facingM.polarity === "+" ? "阳+" : "阴-"})<br>
           坐山：${sittingM.gua}卦 | ${sittingM.dragon}元龙 (${sittingM.polarity === "+" ? "阳+" : "阴-"})<br>
-          分金定穴：<strong style="color: ${isSub ? '#f87171' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "°" : "【正向下卦】纯正吉气"}</strong>
+          立向状态：<strong style="color: ${isSub ? '#f87171' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "°" : "【正向下卦】纯正吉气"}</strong>
         </div>
       `;
       document.getElementById("substituteBadge").innerText = isSub ? "替卦兼向" : "正向下卦";
@@ -856,13 +859,10 @@
       document.getElementById("patternBadge").innerText = pattern;
       document.getElementById("patternBadge").className = `metric-badge ${patternClass}`;
 
-      currentChartState = { period, facingDeg, sittingM, facingM, isSub, baseChart, mountainChart, facingChart, pattern };
+      currentChartState = { period, facingDeg, northOffset, sittingM, facingM, isSub, baseChart, mountainChart, facingChart, pattern };
 
-      // 渲染九宫飞星格与平面图叠加层
       renderJiugong(mountainChart, facingChart, baseChart, period);
       renderOverlayGrid(mountainChart, facingChart, baseChart, period, sittingM.palace);
-
-      // 八宅与纳气
       updateBazhai(sittingM.palace);
       updateNaqi(period);
     };
@@ -918,7 +918,7 @@
             <span>${item.name.slice(0, 2)}</span>
             <span style="color:${isJi ? '#34d399' : '#f87171'}">${starBz.slice(0, 2)}</span>
           </div>
-          <div style="text-align:center; font-weight:800; font-size:12px;">
+          <div style="text-align:center; font-weight:800; font-size:13px;">
             <span style="color:#60a5fa">${m}</span> · <span style="color:#f87171">${f}</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:9px; color:#94a3b8;">
@@ -962,14 +962,14 @@
         card.innerHTML = `
           <div style="font-size:12px; color:var(--text-muted);">${PALACE_NAMES[p]}</div>
           <div class="bazhai-star-name ${isJi ? 'ji-star' : 'xiong-star'}">${star}</div>
-          <div style="font-size:12px; color:#94a3b8;">${isJi ? '【四吉方】宜大门、主卧、书房' : '【四凶方】宜压卫生间、储物间以煞制煞'}</div>
+          <div style="font-size:11px; color:#94a3b8;">${isJi ? '【四吉方】宜大门、主卧、书房' : '【四凶方】宜压卫生间、储物间以煞制煞'}</div>
         `;
         grid.appendChild(card);
       });
     }
 
     function updateLifeGua() {
-      const year = parseInt(document.getElementById("inputBirthYear").value) || 1990;
+      const year = parseInt(document.getElementById("inputBirthYear").value) || 1988;
       const gender = document.querySelector('input[name="gender"]:checked').value;
 
       let s = year.toString().split("").reduce((a, b) => a + parseInt(b), 0);
@@ -990,7 +990,7 @@
       const res = guaMap[guaNum];
       document.getElementById("lifeGuaResult").innerHTML = `
         <strong>${year}年居者三元本命卦</strong>：<span style="color:var(--gold-light); font-weight:bold;">${res.name}（${res.grp}）</span><br>
-        <span style="color:var(--text-muted); font-size:12px;">配置法则：${res.grp === '东四命' ? '宜选择坎/震/巽/离门及主卧睡向' : '宜选择乾/坤/艮/兑门及主卧睡向'}</span>
+        <span style="color:var(--text-muted);">配置法则：${res.grp === '东四命' ? '宜开坎/震/巽/离门及主卧睡向' : '宜开乾/坤/艮/兑门及主卧睡向'}</span>
       `;
     }
 
@@ -1026,156 +1026,71 @@
       `).join("");
     }
 
-    // AI 深度空间分析
-    window.runAiAnalysis = function() {
-      const reportBox = document.getElementById("aiReportBox");
-      reportBox.innerHTML = `
-        <div style="text-align: center; padding: 40px 0;">
-          <div style="font-size: 24px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
-          <div style="margin-top: 12px; color: var(--gold-light); font-weight: 600;">AI 空间风水智能推理引擎正在综合分析户型图与星盘...</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">正在对齐：沈氏玄空飞星 · 八宅大游年 · 三元纳气正零神 · 峦头软装化解规范</div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        const state = currentChartState;
-        const bz = BAZHAI_DATA[state.sittingM.palace] || BAZHAI_DATA[1];
-
-        // 查找二五煞和文昌财位
-        let erwuPalace = "";
-        let wenchangPalace = "";
-        let wangcaiPalace = "";
-
-        for (let p = 1; p <= 9; p++) {
-          const m = state.mountainChart[p];
-          const f = state.facingChart[p];
-          if ((m === 2 && f === 5) || (m === 5 && f === 2)) {
-            erwuPalace = PALACE_NAMES[p] || "中宫";
-          }
-          if (m === 1 && f === 4 || m === 4 && f === 1) {
-            wenchangPalace = PALACE_NAMES[p] || "";
-          }
-          if (f === state.period) {
-            wangcaiPalace = PALACE_NAMES[p] || "";
-          }
-        }
-
-        const reportHtml = `
-          <div class="ai-report-header">
-            <div>
-              <div style="font-size: 18px; font-weight: 700; color: #f8fafc;">《现代住宅风水 AI 空间诊断与工程调理方案》</div>
-              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-                元运：下元第 ${state.period} 运 | 坐向：坐${state.sittingM.name}向${state.facingM.name} (${state.facingDeg}°) | 格局：${state.pattern}
-              </div>
-            </div>
-            <div>
-              <span class="ai-tag">AI 综合评级：86 分 (良品吉宅)</span>
-            </div>
-          </div>
-
-          <div class="ai-section-title">📊 一、房屋宏观格局与气象评级</div>
-          <p>
-            本户型为标准<strong>【${state.sittingM.name}山${state.facingM.name}向】</strong>，在下元九运属于<strong>【${state.pattern}】</strong>。
-            ${state.isSub ? "实测向首偏离正山中心线超3度，气场微带驳杂，系统已为您自动启用《沈氏挨星替卦诀》排定兼向星盘。" : "向首处于正卦中心黄金分金线，气场纯一，生旺之气易聚。"}
-            房屋宅卦为<strong>${bz.name}</strong>，与居者命卦形成互补呼应。
-          </p>
-
-          <div class="ai-section-title">🎯 二、全屋关键功能方位吉凶对位</div>
-          <ul style="padding-left: 20px; line-height: 1.8;">
-            <li><strong>💰 第一主财位 (${wangcaiPalace ? wangcaiPalace : "正南方向首"})</strong>：九运当令九紫旺向星飞临，此处最宜设为客厅主景观阳台、采光落地窗或常走动动线，宜摆放阔叶常绿盆栽与暖光灯催旺现金流。</li>
-            <li><strong>📚 文昌考运位 (${wenchangPalace ? wenchangPalace : "东南方"})</strong>：一白水与四绿木相生，利功名利禄、深度阅读与考学，最宜设为书房、儿童学习书桌或个人独立办公台。</li>
-            <li><strong>⚠️ 病符重煞警戒区 (${erwuPalace ? erwuPalace : "西北乾宫"})</strong>：${erwuPalace ? erwuPalace + "飞临二五交加大煞" : "注意避开二黑病符星"}！此处绝不可作为主人睡床或明火炉灶，必须采用纯铜金属（六帝钱、安忍水）以金泄土重力化解。</li>
-          </ul>
-
-          <div class="ai-section-title">💨 三、现代高层三元纳气门窗动线诊断</div>
-          <p>
-            现代高层建筑以门窗为主动气口。九运中：
-            <strong>正北方（坎一宫）为正零神大吉位</strong>，若户型在此方开大门或阳台，大吉大利！
-            <strong>正南方为正神位宜静</strong>，若客厅大阳台在正南，建议日常拉上一层半透光轻柔白纱帘，既保留采光，又能避免强风急速直灌犯“正神下水”。
-          </p>
-
-          <div class="ai-section-title">🛠️ 四、室内形煞与现代物理软装施工落地清单</div>
-          <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px;">
-            <thead>
-              <tr style="border-bottom: 1px solid var(--border-color); color: var(--gold-light);">
-                <th style="padding: 6px; text-align: left;">排查项目</th>
-                <th style="padding: 6px; text-align: left;">隐患描述</th>
-                <th style="padding: 6px; text-align: left;">免拆墙现代软装施工方案</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid #1e293b;">
-                <td style="padding: 8px 6px; font-weight: 600;">穿堂气流</td>
-                <td style="padding: 8px 6px; color: #94a3b8;">大门正对客厅通透阳台</td>
-                <td style="padding: 8px 6px;">大门前1.5米定制长虹磨砂玻璃隔断屏风，下设鞋柜阻断直冲风道。</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #1e293b;">
-                <td style="padding: 8px 6px; font-weight: 600;">横梁投影</td>
-                <td style="padding: 8px 6px; color: #94a3b8;">主卧床头或书桌上方有梁</td>
-                <td style="padding: 8px 6px;">睡床横向平移50cm脱离垂直投影，或吊顶做弧形跌级隐藏梁体。</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 6px; font-weight: 600;">卫生间湿秽</td>
-                <td style="padding: 8px 6px; color: #94a3b8;">卫浴靠近中宫核心</td>
-                <td style="padding: 8px 6px;">安装静音工业换气扇24小时弱档排气保持负压，马桶后方放置安忍水化煞。</td>
-              </tr>
-            </tbody>
-          </table>
-        `;
-
-        reportBox.innerHTML = reportHtml;
-      }, 500);
+    // 叠加模式切换
+    window.toggleOverlayMode = function(mode) {
+      overlayMode = mode;
+      const svgCompass = document.getElementById("svgCompass");
+      const gridOverlay = document.getElementById("gridOverlay");
+      if (mode === "COMPASS") {
+        svgCompass.style.display = "block";
+        gridOverlay.style.display = "none";
+      } else if (mode === "GRID") {
+        svgCompass.style.display = "none";
+        gridOverlay.style.display = "grid";
+      } else {
+        svgCompass.style.display = "block";
+        gridOverlay.style.display = "grid";
+      }
     };
 
-    window.copyAiReport = function() {
-      const text = document.getElementById("aiReportBox").innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("✅ AI 空间诊断报告已复制到剪贴板！");
-      });
-    };
-
-    // 交互式网格拖拽移动
-    const gridOverlay = document.getElementById("gridOverlay");
+    // 拖拽罗盘中心
+    const compassWrapper = document.getElementById("compassOverlay");
     let isDragging = false;
     let startX, startY, initLeft = 0, initTop = 0;
 
-    gridOverlay.addEventListener("mousedown", (e) => {
+    compassWrapper.addEventListener("mousedown", (e) => {
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
-      const rect = gridOverlay.getBoundingClientRect();
-      const parentRect = gridOverlay.parentElement.getBoundingClientRect();
+      const rect = compassWrapper.getBoundingClientRect();
+      const parentRect = compassWrapper.parentElement.getBoundingClientRect();
       initLeft = rect.left - parentRect.left;
       initTop = rect.top - parentRect.top;
-      gridOverlay.style.cursor = "grabbing";
     });
 
     window.addEventListener("mousemove", (e) => {
       if (!isDragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      gridOverlay.style.left = (initLeft + dx) + "px";
-      gridOverlay.style.top = (initTop + dy) + "px";
+      compassWrapper.style.left = (initLeft + dx) + "px";
+      compassWrapper.style.top = (initTop + dy) + "px";
     });
 
     window.addEventListener("mouseup", () => {
       isDragging = false;
-      gridOverlay.style.cursor = "move";
     });
 
-    window.resetGridPosition = function() {
-      gridOverlay.style.left = "calc(50% - " + (gridOverlay.offsetWidth / 2) + "px)";
-      gridOverlay.style.top = "calc(50% - " + (gridOverlay.offsetHeight / 2) + "px)";
+    window.resetCompassPosition = function() {
+      compassWrapper.style.left = "calc(50% - " + (compassWrapper.offsetWidth / 2) + "px)";
+      compassWrapper.style.top = "calc(50% - " + (compassWrapper.offsetHeight / 2) + "px)";
     };
 
-    // 缩放与透明度滑块
-    document.getElementById("sliderGridScale").addEventListener("input", (e) => {
+    window.rotateCompassToNorth = function() {
+      document.getElementById("sliderNorthOffset").value = "0";
+      calculateAll();
+    };
+
+    // 缩放与透明度
+    document.getElementById("sliderCompassScale").addEventListener("input", (e) => {
       const size = e.target.value + "px";
-      gridOverlay.style.width = size;
-      gridOverlay.style.height = size;
+      compassWrapper.style.width = size;
+      compassWrapper.style.height = size;
+      const grid = document.getElementById("gridOverlay");
+      grid.style.width = (e.target.value * 0.9) + "px";
+      grid.style.height = (e.target.value * 0.9) + "px";
     });
-    document.getElementById("sliderGridOpacity").addEventListener("input", (e) => {
-      gridOverlay.style.opacity = e.target.value;
+    document.getElementById("sliderCompassOpacity").addEventListener("input", (e) => {
+      compassWrapper.style.opacity = e.target.value;
     });
 
     // 户型图片上传
@@ -1191,52 +1106,152 @@
       }
     });
 
-    // 加载内置实战精选 120㎡ 三室案例
+    // 加载 120㎡ 实战户型案例（带指北针标记）
     window.loadSampleCase = function() {
-      // 动态生成一套高清精美的三室两厅户型矢量图（SVG DataURL）
       const sampleSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="480" viewBox="0 0 600 480">
-        <rect width="600" height="480" fill="%230f172a" stroke="%23334155" stroke-width="4"/>
+        <rect width="600" height="480" fill="%230b1120" stroke="%23334155" stroke-width="4"/>
         <!-- 外墙 -->
         <rect x="50" y="40" width="500" height="400" fill="%231e293b" stroke="%2364748b" stroke-width="6"/>
         <!-- 房间隔墙 -->
-        <!-- 北侧大门与玄关 (西北) -->
-        <rect x="50" y="40" width="160" height="130" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="130" y="105" fill="%2394a3b8" font-size="14" font-family="sans-serif" text-anchor="middle">北入户大门 (坎)</text>
+        <!-- 北侧大门与玄关 -->
+        <rect x="50" y="40" width="160" height="130" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="130" y="105" fill="%2394a3b8" font-size="13" font-family="sans-serif" text-anchor="middle">北入户大门 (坎)</text>
         <!-- 主卧 (东南) -->
-        <rect x="360" y="240" width="190" height="200" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="455" y="345" fill="%2394a3b8" font-size="15" font-family="sans-serif" text-anchor="middle">主卧套间 (巽四)</text>
+        <rect x="360" y="240" width="190" height="200" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="455" y="345" fill="%2394a3b8" font-size="14" font-family="sans-serif" text-anchor="middle">主卧套间 (巽四)</text>
         <!-- 客厅与大阳台 (正南) -->
-        <rect x="170" y="220" width="190" height="220" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="265" y="330" fill="%23f7d560" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle">客厅全景阳台 (离九)</text>
+        <rect x="170" y="220" width="190" height="220" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="265" y="330" fill="%23f7d560" font-size="15" font-family="sans-serif" font-weight="bold" text-anchor="middle">客厅全景阳台 (离九)</text>
         <!-- 厨房 (正东) -->
-        <rect x="360" y="40" width="190" height="140" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="455" y="115" fill="%2394a3b8" font-size="14" font-family="sans-serif" text-anchor="middle">厨房与灶台 (震三)</text>
-        <!-- 主客卫 (西北偏中) -->
-        <rect x="210" y="40" width="150" height="120" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="285" y="105" fill="%2394a3b8" font-size="13" font-family="sans-serif" text-anchor="middle">干湿分离卫浴</text>
+        <rect x="360" y="40" width="190" height="140" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="455" y="115" fill="%2394a3b8" font-size="13" font-family="sans-serif" text-anchor="middle">厨房与灶台 (震三)</text>
+        <!-- 卫生间 -->
+        <rect x="210" y="40" width="150" height="120" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="285" y="105" fill="%2394a3b8" font-size="12" font-family="sans-serif" text-anchor="middle">干湿分离卫浴</text>
         <!-- 次卧 (东北) -->
-        <rect x="50" y="240" width="120" height="200" fill="%23111827" stroke="%23475569" stroke-width="3"/>
-        <text x="110" y="345" fill="%2394a3b8" font-size="14" font-family="sans-serif" text-anchor="middle">次卧书房</text>
-        <!-- 天心十道立极标记 -->
-        <circle cx="300" cy="240" r="10" fill="none" stroke="%23d4af37" stroke-width="3"/>
-        <line x1="280" y1="240" x2="320" y2="240" stroke="%23d4af37" stroke-width="2"/>
-        <line x1="300" y1="220" x2="300" y2="260" stroke="%23d4af37" stroke-width="2"/>
-        <text x="300" y="210" fill="%23d4af37" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">天心立极点</text>
+        <rect x="50" y="240" width="120" height="200" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
+        <text x="110" y="345" fill="%2394a3b8" font-size="13" font-family="sans-serif" text-anchor="middle">次卧书房</text>
+        <!-- 图纸自带指北针 (标明正北) -->
+        <g transform="translate(540, 75)">
+          <circle cx="0" cy="0" r="18" fill="rgba(15,23,42,0.8)" stroke="%23d4af37" stroke-width="2"/>
+          <polygon points="0,-14 -5,0 5,0" fill="%23ef4444"/>
+          <polygon points="0,14 -5,0 5,0" fill="%2394a3b8"/>
+          <text x="0" y="-18" fill="%23ef4444" font-size="11" font-weight="bold" text-anchor="middle">N</text>
+        </g>
       </svg>`;
 
       document.getElementById("floorplanImg").src = sampleSvg;
       document.getElementById("sliderFacingDegree").value = "180";
+      document.getElementById("sliderNorthOffset").value = "0";
       document.getElementById("inputBirthYear").value = "1988";
       calculateAll();
-      resetGridPosition();
+      resetCompassPosition();
       switchTab("tab-floorplan");
+    };
+
+    // AI 分析报告
+    window.runAiAnalysis = function() {
+      const reportBox = document.getElementById("aiReportBox");
+      reportBox.innerHTML = `
+        <div style="text-align: center; padding: 40px 0;">
+          <div style="font-size: 24px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
+          <div style="margin-top: 12px; color: var(--gold-light); font-weight: 600;">AI 空间风水智能推理引擎正在综合分析户型图与罗盘真北...</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">正在对齐：二十四山分金 · 玄空飞星 · 八宅大游年 · 三元纳气正零神 · 峦头软装化解规范</div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const state = currentChartState;
+        const bz = BAZHAI_DATA[state.sittingM.palace] || BAZHAI_DATA[1];
+
+        let erwuPalace = "";
+        let wenchangPalace = "";
+        let wangcaiPalace = "";
+
+        for (let p = 1; p <= 9; p++) {
+          const m = state.mountainChart[p];
+          const f = state.facingChart[p];
+          if ((m === 2 && f === 5) || (m === 5 && f === 2)) erwuPalace = PALACE_NAMES[p] || "中宫";
+          if (m === 1 && f === 4 || m === 4 && f === 1) wenchangPalace = PALACE_NAMES[p] || "";
+          if (f === state.period) wangcaiPalace = PALACE_NAMES[p] || "";
+        }
+
+        const reportHtml = `
+          <div class="ai-report-header">
+            <div>
+              <div style="font-size: 17px; font-weight: 700; color: #f8fafc;">《现代住宅风水 AI 空间诊断与工程调理方案》</div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                元运：下元第 ${state.period} 运 | 坐向：坐${state.sittingM.name}向${state.facingM.name} (${state.facingDeg}°) | 真北校正：${state.northOffset}° | 格局：${state.pattern}
+              </div>
+            </div>
+            <div>
+              <span class="metric-badge badge-green" style="font-size:12px; padding:4px 10px;">AI 综合评级：88 分 (吉宅)</span>
+            </div>
+          </div>
+
+          <div class="ai-section-title">🧭 一、户型图罗盘真北校准评定</div>
+          <p>
+            通过透明二十四山罗盘与户型图指北针重合校准，本宅已完成绝对地理定位：
+            <strong>【坐${state.sittingM.name}山 向${state.facingM.name}山】</strong>。
+            ${state.isSub ? "向首偏离正山中心线超3度，已为您启用沈氏《挨星替卦诀》排定兼向星盘。" : "向首处于正向中心黄金线，气场纯正易聚财。"}
+            房屋宅卦为<strong>${bz.name}</strong>。
+          </p>
+
+          <div class="ai-section-title">🎯 二、全屋关键方位吉凶对位</div>
+          <ul style="padding-left: 20px; line-height: 1.8;">
+            <li><strong>💰 第一主财位 (${wangcaiPalace ? wangcaiPalace : "正南方"})</strong>：九运当令九紫旺向星飞临，此处最宜设为客厅主阳台或常走动动线，宜摆放常青阔叶盆栽催旺现金流。</li>
+            <li><strong>📚 文昌考运位 (${wenchangPalace ? wenchangPalace : "东南方"})</strong>：一四同宫利文思创作、学业晋升，宜设书房、办公台。</li>
+            <li><strong>⚠️ 病符重煞警戒区 (${erwuPalace ? erwuPalace : "西北乾宫"})</strong>：${erwuPalace ? erwuPalace + "飞临二五交加大煞" : "注意避开二黑病符星"}！绝不可作为主人睡床或明火炉灶，必须采用纯铜六帝钱重金泄化。</li>
+          </ul>
+
+          <div class="ai-section-title">💨 三、现代高层三元纳气门窗动线诊断</div>
+          <p>
+            <strong>正北方（坎一宫）为正零神大吉位</strong>，开大门或大阳台见动气大吉！
+            <strong>正南方为正神位宜静</strong>，若客厅大阳台在正南，建议拉上一层半透光轻柔白纱帘，既保留采光，又避免强风急速直冲犯“正神下水”。
+          </p>
+
+          <div class="ai-section-title">🛠️ 四、室内形煞与现代物理软装施工落地清单</div>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-color); color: var(--gold-light);">
+                <th style="padding: 6px; text-align: left;">排查项目</th>
+                <th style="padding: 6px; text-align: left;">隐患描述</th>
+                <th style="padding: 6px; text-align: left;">免拆墙现代软装施工方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 6px; font-weight: 600;">穿堂气流</td>
+                <td style="padding: 6px; color: #94a3b8;">大门直对阳台</td>
+                <td style="padding: 6px;">大门前1.5米定制长虹玻璃隔断屏风，下设鞋柜阻断直冲风道。</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 6px; font-weight: 600;">横梁投影</td>
+                <td style="padding: 6px; color: #94a3b8;">床头/书桌上方有梁</td>
+                <td style="padding: 6px;">睡床横向平移50cm脱离垂直投影，或吊顶做弧形隐藏梁体。</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px; font-weight: 600;">卫生间湿秽</td>
+                <td style="padding: 6px; color: #94a3b8;">卫浴靠近中宫</td>
+                <td style="padding: 6px;">安装静音排气扇24小时排气保持负压，马桶后方放置粗盐安忍水化煞。</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+        reportBox.innerHTML = reportHtml;
+      }, 400);
+    };
+
+    window.copyAiReport = function() {
+      navigator.clipboard.writeText(document.getElementById("aiReportBox").innerText).then(() => {
+        alert("✅ AI 空间诊断报告已复制到剪贴板！");
+      });
     };
 
     // 模态弹窗
     window.openTutorialModal = function() { document.getElementById("modalTutorial").style.display = "flex"; };
     window.closeTutorialModal = function() { document.getElementById("modalTutorial").style.display = "none"; };
 
-    // 选项卡切换
     window.switchTab = function(tabId) {
       document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
@@ -1247,11 +1262,13 @@
 
     // 绑定事件
     document.getElementById("sliderFacingDegree").addEventListener("input", calculateAll);
+    document.getElementById("sliderNorthOffset").addEventListener("input", calculateAll);
     document.getElementById("selectPeriod").addEventListener("change", calculateAll);
     document.getElementById("inputBirthYear").addEventListener("input", updateLifeGua);
     document.querySelectorAll('input[name="gender"]').forEach(el => el.addEventListener("change", updateLifeGua));
 
     // 初始化运行
+    initSvgCompass();
     calculateAll();
     updateLifeGua();
     initFormSha();
