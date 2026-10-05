@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Real Feng Shui Master Studio | 实战风水罗盘与 AI 空间诊断系统</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>☯️</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
       --bg-space: #070a12;
@@ -431,23 +431,82 @@
       background: rgba(12, 17, 28, 0.95);
       border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 12px;
-      padding: 20px;
-      line-height: 1.7;
-      font-size: 13px;
+      padding: 24px;
+      line-height: 1.8;
+      font-size: 13.5px;
     }
     .ai-report-header {
       border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-      padding-bottom: 12px;
-      margin-bottom: 14px;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .ai-section-title {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--gold-light);
-      margin: 16px 0 6px 0;
+      margin: 20px 0 8px 0;
+      border-left: 3px solid var(--gold-primary);
+      padding-left: 8px;
+    }
+    /* Markdown 渲染排版美化 */
+    .ai-markdown-body h1, .ai-markdown-body h2, .ai-markdown-body h3, .ai-markdown-body h4 {
+      color: var(--gold-light);
+      margin-top: 18px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .ai-markdown-body h2 { font-size: 16px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 6px; }
+    .ai-markdown-body h3 { font-size: 14.5px; }
+    .ai-markdown-body p { margin-bottom: 12px; line-height: 1.8; color: #e2e8f0; }
+    .ai-markdown-body ul, .ai-markdown-body ol { padding-left: 22px; margin-bottom: 14px; color: #cbd5e1; }
+    .ai-markdown-body li { margin-bottom: 6px; line-height: 1.7; }
+    .ai-markdown-body strong { color: #fef08a; font-weight: 700; }
+    .ai-markdown-body blockquote {
+      border-left: 4px solid var(--gold-primary);
+      background: rgba(212, 175, 55, 0.08);
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+      color: #fce183;
+    }
+    .ai-markdown-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 12.5px;
+      background: rgba(10, 15, 26, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ai-markdown-body th, .ai-markdown-body td {
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 9px 12px;
+      text-align: left;
+    }
+    .ai-markdown-body th {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+    .ai-markdown-body tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+    /* AI 控制面板栏与配置抽屉 */
+    .ai-config-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 12.5px;
     }
 
     /* 形煞化解 */
@@ -925,9 +984,40 @@
             </div>
           </div>
 
-          <div id="aiReportBox" class="ai-report-container">
+          <!-- AI 引擎配置栏 (免费免配置 与 自定义大模型) -->
+          <div class="ai-config-bar">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:var(--gold-light); font-weight:700;">🤖 AI 引擎：</span>
+              <select id="selectAiProvider" class="form-select" style="width: auto; padding: 4px 10px; font-size: 12px; background: rgba(9,13,22,0.9);" onchange="handleAiProviderChange()">
+                <option value="pollinations_qwen" selected>🆓 免费在线 AI (Qwen 2.5 72B · 免填Key)</option>
+                <option value="pollinations_deepseek">🆓 免费在线 AI (DeepSeek R1 · 免填Key)</option>
+                <option value="custom_deepseek">🔑 自定义 DeepSeek API (需填Key)</option>
+                <option value="custom_openai">🔑 自定义 兼容 OpenAI / Kimi / 智谱 API</option>
+                <option value="builtin_offline">⚡ 本地离线易学专家规则引擎 (无需联网)</option>
+              </select>
+            </div>
+
+            <!-- 自定义 Key 输入区（按需折叠展开） -->
+            <div id="customApiKeyBox" style="display: none; align-items: center; gap: 8px; flex: 1; min-width: 260px;">
+              <input type="password" id="inputAiApiKey" class="form-control" placeholder="sk-..." style="padding: 4px 8px; font-size: 12px;">
+              <button class="btn btn-outline" style="padding: 3px 8px; font-size: 11px;" onclick="saveCustomApiKey()">保存Key</button>
+            </div>
+
+            <div style="margin-left: auto; display:flex; align-items:center; gap:8px;">
+              <span id="aiStatusTag" class="metric-badge badge-green">免费免Key在线可用</span>
+              <button class="btn btn-ai" style="padding: 5px 12px; font-size: 12px;" onclick="runAiAnalysis()">🔄 重新诊断</button>
+            </div>
+          </div>
+
+          <!-- 自定义提问需求输入框（针对用户具体需求如求财、睡眠、孩子考学等） -->
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" id="inputUserConcern" class="form-control" placeholder="💡 可选输入居者特别关切（如：主卧失眠、男主人想催旺事业财运、女儿准备高考想安文昌位）..." style="font-size:12.5px; padding:7px 12px;">
+            <button class="btn btn-outline" style="white-space:nowrap; padding:6px 12px;" onclick="runAiAnalysis()">提问AI</button>
+          </div>
+
+          <div id="aiReportBox" class="ai-report-container ai-markdown-body">
             <div style="text-align: center; padding: 40px 0; color: var(--text-muted);">
-              点击右上角「✨ 启动 AI 空间分析」按钮，AI 将根据户型图坐向、飞星、八宅与纳气口生成专家级诊断报告。
+              点击上方「✨ 启动 AI 空间分析」按钮，AI 将根据户型图坐向、飞星、八宅与纳气口生成专家级诊断报告。
             </div>
           </div>
         </div>
@@ -1748,97 +1838,271 @@
       switchTab("tab-floorplan");
     };
 
-    window.runAiAnalysis = function() {
+    // ==========================================
+    // 免费在线 AI 大模型诊断引擎接入 (免填Key · 免费即用 · 支持自定义)
+    // ==========================================
+    window.handleAiProviderChange = function() {
+      const provider = document.getElementById("selectAiProvider").value;
+      const keyBox = document.getElementById("customApiKeyBox");
+      const statusTag = document.getElementById("aiStatusTag");
+      
+      if (provider.startsWith("custom_")) {
+        keyBox.style.display = "flex";
+        const savedKey = localStorage.getItem("fengshui_ai_api_key") || "";
+        document.getElementById("inputAiApiKey").value = savedKey;
+        statusTag.innerText = savedKey ? "自定义Key已配置" : "请输入API Key";
+        statusTag.className = savedKey ? "metric-badge badge-green" : "metric-badge badge-red";
+      } else if (provider === "builtin_offline") {
+        keyBox.style.display = "none";
+        statusTag.innerText = "本地离线易学引擎";
+        statusTag.className = "metric-badge badge-blue";
+      } else {
+        keyBox.style.display = "none";
+        statusTag.innerText = "免费免Key在线可用";
+        statusTag.className = "metric-badge badge-green";
+      }
+    };
+
+    window.saveCustomApiKey = function() {
+      const key = document.getElementById("inputAiApiKey").value.trim();
+      if (!key) {
+        alert("请输入有效的 API Key！");
+        return;
+      }
+      localStorage.setItem("fengshui_ai_api_key", key);
+      const statusTag = document.getElementById("aiStatusTag");
+      statusTag.innerText = "自定义Key已保存";
+      statusTag.className = "metric-badge badge-green";
+      alert("✅ 自定义 API Key 已安全保存在您本地浏览器中！");
+    };
+
+    // 构建发给 AI 的高精度玄空理气与八宅参数 Prompt
+    function buildFengShuiPrompt(state, bz, userConcern) {
+      let palaceSummary = [];
+      GRID_ORDER.forEach(item => {
+        const p = item.p;
+        const m = state.mountainChart[p];
+        const f = state.facingChart[p];
+        const b = state.baseChart[p];
+        palaceSummary.push(`- ${item.name}：山星[${m}] 向星[${f}] 运盘[${b}]`);
+      });
+
+      const bazhaiSummary = Object.keys(bz.stars).map(p => {
+        return `${PALACE_NAMES[p] || p}为【${bz.stars[p]}】`;
+      }).join("，");
+
+      return `你是一位兼具三十年玄空飞星、八宅明镜、三元纳气正统传承，同时拥有现代国家一级注册建筑室内空间规划经验的风水学专家导师。
+用户正在对一套住宅进行空间风水全维度诊断，请根据以下经过罗盘实测校准的真实理气数据生成一份专业、详实、接地气、免拆承重墙的现代软装调理方案。
+
+【户型与罗盘实测数据】：
+1. 三元九运：下元第 ${state.period} 运（2024~2043 九紫离火运当令）
+2. 房屋坐向：坐${state.sittingM.name}山 向${state.facingM.name}山（实测向首度数 ${state.facingDeg}°，${state.isSub ? "偏角>3° 兼向替卦盘" : "正向下卦纯正气场"}）
+3. 房屋宅卦：八宅明镜【${bz.name}】
+4. 八宅游年九宫分布：${bazhaiSummary}
+5. 玄空飞星九宫盘数据：
+${palaceSummary.join("\n")}
+6. 玄空格局研判：${state.pattern}
+7. 三元纳气法则：九运正神在正南（宜高山实墙静守），零神在正北（宜大门大阳台见动气纳水）
+${userConcern ? `8. 【居者特别关切与诉求】：${userConcern}` : ""}
+
+【请按照以下专业结构输出诊断报告（使用清晰优美的 Markdown 格式输出）】：
+# 《现代住宅风水全维度 AI 空间诊断与工程调理方案》
+
+### 🧭 一、户型地气格局与罗盘真北综评
+- 结合坐向度数、元运与格局（如${state.pattern}），分析此宅对全家事业财帛与身体健康的整体宏观影响。
+
+### 🎯 二、全屋关键功能方位吉凶对位（请逐一点评）
+1. **主财位与动线布局**：指出九运当令财星所在方位，该如何布局客厅阳台、水景绿植或纳气口催旺现金流。
+2. **文昌学业与事业官贵位**：分析一四同宫或贵人方位，指导书房办公位与文昌竹布局。
+3. **主卧睡眠与人丁健康位**：分析主人房安床方位与八宅吉凶匹配（生气/延年/天医）。
+4. **二黑五黄病符重煞警戒区**：明确指出病符星方位，列出绝不可放置的功能（忌床头/忌明火），并给出纯铜重金属化解法。
+
+### 💨 三、现代高层门窗纳气与动线气流调理
+- 结合正神正北零神与门窗朝向，指导如何避开“正神下水”，调节通风与窗帘开合节奏。
+
+${userConcern ? `### 💡 四、居者专属关切针对性解答\n- 深度回应居者诉求：“${userConcern}”，给出具体可执行的风水布局与心理暗示调理方案。` : ""}
+
+### 🛠️ 五、室内常见形煞与免拆墙现代软装施工清单
+- 请整理一张清晰的 Markdown 表格，列出至少3项常见隐患（如穿堂气流、横梁压顶、卫生间湿秽等）对应的现代软装物理施工方案（如长虹玻璃屏风、弧形石膏吊顶包裹、安忍水静音排风等）。
+
+语言风格要求：专业严谨、文笔流畅、拒绝迷信神化、注重现代建筑科学与人居心理舒适度。直接输出报告正文，不要输出无关客套话。`;
+    }
+
+    // 离线专家规则库生成（当无网络或在线AI故障时无缝保障）
+    function generateOfflineExpertReport(state, bz, userConcern) {
+      let erwuPalace = "";
+      let wenchangPalace = "";
+      let wangcaiPalace = "";
+
+      for (let p = 1; p <= 9; p++) {
+        const m = state.mountainChart[p];
+        const f = state.facingChart[p];
+        if ((m === 2 && f === 5) || (m === 5 && f === 2)) erwuPalace = PALACE_NAMES[p] || "中宫";
+        if (m === 1 && f === 4 || m === 4 && f === 1) wenchangPalace = PALACE_NAMES[p] || "";
+        if (f === state.period) wangcaiPalace = PALACE_NAMES[p] || "";
+      }
+
+      return `# 《现代住宅风水全维度 AI 空间诊断与工程调理方案》
+
+> **理气元数据**：下元第 ${state.period} 运 | 坐${state.sittingM.name}山 向${state.facingM.name}山 (${state.facingDeg}°) | 宅卦：${bz.name} | 格局：${state.pattern}
+
+### 🧭 一、户型地气格局与罗盘真北综评
+本宅经罗盘天心立极与真北校准后，确定坐向为**坐${state.sittingM.name}山 向${state.facingM.name}山**。
+${state.isSub ? "实测偏角超过3度，磁场兼带杂气，已按沈氏《挨星替卦诀》排定替卦星盘，关键在于调理向首纳气口之清纯度。" : "实测处于正山正向黄金中心带，地气纯正，主家道平顺安定。"}
+全屋呈现**【${state.pattern}】**气象，只要配合合理的门窗纳气与床位布局，丁财两旺之机立现。
+
+### 🎯 二、全屋关键功能方位吉凶对位
+1. **💰 核心财帛纳气位（${wangcaiPalace ? wangcaiPalace : "正南方"}）**：
+   - 当令九紫当旺向星飞临，此处气场活跃、主生财迅速。
+   - **调理方案**：最宜规划为客厅会客区、全景落地阳台或人员走动主要动线。建议安设温暖柔和之暖光落地灯，配合三盆宽叶发财树或琴叶榕，聚气纳财。
+2. **📚 文昌考运与仕途晋升位（${wenchangPalace ? wenchangPalace : "东南方"}）**：
+   - 一四同宫准发科名，利思维清晰、创作考试与晋升。
+   - **调理方案**：最宜设为书房、静音办公位或学龄儿童书桌，桌角摆放四支水培富贵竹，案头保持洁净明亮。
+3. **🛌 居者人丁康宁主卧位（${PALACE_NAMES[state.sittingM.palace]}）**：
+   - 处于坐山靠山方，主身体精力恢复与夫妻贵人和睦。
+   - **调理方案**：床头宜有坚实厚重靠墙，忌悬空或正对房门，床头柜两侧高度匀称，营造聚气安眠磁场。
+4. **⚠️ 病符重煞警戒区（${erwuPalace ? erwuPalace : "西北乾宫"}）**：
+   - 二黑病符与五黄交加之位，地磁场紊乱，易损人丁脾胃身心。
+   - **调理方案**：绝不可安排主卧床头或厨房大火灶台；建议放置纯铜六帝钱铜尺、天然纯铜葫芦重金泄化二黑五黄土煞。
+
+### 💨 三、现代高层门窗纳气与动线气流调理
+- **零神纳水方（正北方坎宫）**：九运零神宜见动气。若北面有大门或通风窗，常开常通，纳旺气利财源。
+- **正神静守方（正南方离宫）**：正神宜静，客厅若在正南大阳台，建议加挂一层透光不透风的雅白微风透光纱帘，既保全采光，又缓和气流冲击。
+
+${userConcern ? `### 💡 四、居者专属关切调理建议\n针对您的特别关切【${userConcern}】：建议在上述核心吉凶方位基础上，重点优化卧室避光静音隔音，床头避开插座与强电器辐射；玄关处以端景台形成气流S型迂回，心理与气场双重抚平焦虑。` : ""}
+
+### 🛠️ 五、室内常见形煞与免拆墙现代软装施工清单
+
+| 空间隐患 | 现象特征 | 现代工程与软装物理解决方案 |
+| :--- | :--- | :--- |
+| **穿堂直冲** | 入户大门直对客厅大阳台 | 距门1.5米处定制透光长虹玻璃隔断玄关柜，阻截直冲风道形成曲则有情 |
+| **横梁压顶** | 睡床或书桌上方有实心承重梁 | 睡床横移50cm脱离垂直投影，或吊顶做微弧形石膏板包梁消除压抑感 |
+| **中宫湿秽** | 卫生间靠近全屋几何天心点 | 加装静音大风量排风扇24小时排风维持微负压，马桶后方置粗盐安忍水化湿 |
+| **门冲对冲** | 卫生间门正对卧室房门 | 卫生间常闭并悬挂1.5米过膝天然棉麻长门帘，门边摆放黄金葛绿植吸湿 |
+`;
+    }
+
+    // 核心主入口：结合免费真实 AI API 与 本地备用引擎
+    window.runAiAnalysis = async function() {
       const reportBox = document.getElementById("aiReportBox");
+      const provider = document.getElementById("selectAiProvider").value;
+      const userConcern = document.getElementById("inputUserConcern").value.trim();
+      const state = currentChartState;
+      const bz = BAZHAI_DATA[state.sittingM.palace] || BAZHAI_DATA[1];
+
+      // 渲染加载中动态效果
       reportBox.innerHTML = `
-        <div style="text-align: center; padding: 40px 0;">
-          <div style="font-size: 26px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
-          <div style="margin-top: 14px; color: var(--gold-light); font-weight: 700; font-size: 15px;">AI 空间风水智能推理引擎正在综合分析户型图与罗盘真北...</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">正在对齐：二十四山分金 · 玄空飞星 · 八宅大游年 · 三元纳气正零神 · 现代软装物理化解规范</div>
+        <div style="text-align: center; padding: 48px 0;">
+          <div style="font-size: 32px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
+          <div style="margin-top: 16px; color: var(--gold-light); font-weight: 700; font-size: 16px;">
+            正在连接 ${provider.includes("pollinations") ? "免费在线 AI 大模型 (Qwen/DeepSeek)" : (provider.includes("custom") ? "您的自定义 AI 大模型" : "本地易学推理引擎")} ...
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 8px;">
+            正在将罗盘二十四山分金 (${state.facingDeg}°) · 玄空飞星盘 · 八宅明镜 · 三元纳气数据注入大模型 Prompt ...
+          </div>
         </div>
       `;
 
-      setTimeout(() => {
-        const state = currentChartState;
-        const bz = BAZHAI_DATA[state.sittingM.palace] || BAZHAI_DATA[1];
+      const prompt = buildFengShuiPrompt(state, bz, userConcern);
 
-        let erwuPalace = "";
-        let wenchangPalace = "";
-        let wangcaiPalace = "";
+      // 如果用户选择本地离线引擎，直接生成
+      if (provider === "builtin_offline") {
+        setTimeout(() => {
+          const mdText = generateOfflineExpertReport(state, bz, userConcern);
+          renderReportMarkdown(mdText, "⚡ 本地离线易学规则引擎生成");
+        }, 500);
+        return;
+      }
 
-        for (let p = 1; p <= 9; p++) {
-          const m = state.mountainChart[p];
-          const f = state.facingChart[p];
-          if ((m === 2 && f === 5) || (m === 5 && f === 2)) erwuPalace = PALACE_NAMES[p] || "中宫";
-          if (m === 1 && f === 4 || m === 4 && f === 1) wenchangPalace = PALACE_NAMES[p] || "";
-          if (f === state.period) wangcaiPalace = PALACE_NAMES[p] || "";
+      // 如果用户选择自定义 API Key
+      if (provider.startsWith("custom_")) {
+        const apiKey = localStorage.getItem("fengshui_ai_api_key") || document.getElementById("inputAiApiKey").value.trim();
+        if (!apiKey) {
+          alert("⚠️ 请先在上方输入框填入您的 API Key 并点击「保存Key」！\n若没有Key，请直接切换为「🆓 免费在线 AI (Qwen/DeepSeek · 免填Key)」即可免费使用！");
+          const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
+          renderReportMarkdown(fallbackMd, "⚡ 提示：已自动为您切换为本地专家诊断报告");
+          return;
         }
 
-        const reportHtml = `
-          <div class="ai-report-header">
-            <div>
-              <div style="font-size: 18px; font-weight: 800; color: #f8fafc; letter-spacing: 0.5px;">《现代住宅风水 AI 空间诊断与工程调理方案》</div>
-              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-                元运：下元第 ${state.period} 运 | 坐向：坐${state.sittingM.name}山 向${state.facingM.name}山 (${state.facingDeg}°) | 真北校正：${state.northOffset}° | 格局：${state.pattern}
-              </div>
-            </div>
-            <div>
-              <span class="metric-badge badge-green" style="font-size:12px; padding:4px 10px;">AI 空间评级：88 分 (吉宅)</span>
-            </div>
-          </div>
+        try {
+          const endpoint = provider === "custom_deepseek" 
+            ? "https://api.deepseek.com/chat/completions" 
+            : "https://api.openai.com/v1/chat/completions";
+          const modelName = provider === "custom_deepseek" ? "deepseek-chat" : "gpt-4o-mini";
 
-          <div class="ai-section-title">🧭 一、户型图罗盘真北校准评定</div>
-          <p>
-            通过透明二十四山罗盘旋转校准，本宅已消除开发商图纸角度偏差，完成绝对地理定位：
-            <strong>【坐${state.sittingM.name}山 向${state.facingM.name}山】</strong>。
-            ${state.isSub ? "向首偏离正山中心线超3度，已启用沈氏《挨星替卦诀》排定兼向星盘。" : "向首处于正向中心黄金线，气场纯正易聚财。"}
-            房屋宅卦为<strong>${bz.name}</strong>。
-          </p>
+          const resp = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: modelName,
+              messages: [{ role: "user", content: prompt }],
+              temperature: 0.7
+            })
+          });
 
-          <div class="ai-section-title">🎯 二、全屋关键功能方位吉凶对位</div>
-          <ul style="padding-left: 20px; line-height: 1.8;">
-            <li><strong>💰 第一主财位 (${wangcaiPalace ? wangcaiPalace : "正南方"})</strong>：九运当令九紫旺向星飞临，此处最宜设为客厅主阳台或常走动动线，宜摆放常青阔叶盆栽与暖光灯催旺现金流。</li>
-            <li><strong>📚 文昌考运位 (${wenchangPalace ? wenchangPalace : "东南方"})</strong>：一四同宫利文思创作、学业晋升，宜设书房、办公台。</li>
-            <li><strong>⚠️ 病符重煞警戒区 (${erwuPalace ? erwuPalace : "西北乾宫"})</strong>：${erwuPalace ? erwuPalace + "飞临二五交加大煞" : "注意避开二黑病符星"}！绝不可作为主人睡床或明火炉灶，必须采用纯铜六帝钱重金泄化。</li>
-          </ul>
+          if (!resp.ok) throw new Error("API 请求返回状态码：" + resp.status);
+          const data = await resp.json();
+          const reply = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "";
+          if (!reply) throw new Error("API 返回内容为空");
+          renderReportMarkdown(reply, `✨ 由自定义大模型 (${modelName}) 实时推理生成`);
+          return;
+        } catch (err) {
+          console.warn("自定义 API 请求失败，降级为离线专家模式：", err);
+          alert("自定义 API 连接遇到问题（" + err.message + "），已为您无缝加载本地易学专家诊断！");
+          const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
+          renderReportMarkdown(fallbackMd, "⚡ 本地易学专家诊断 (自定义API降级)");
+          return;
+        }
+      }
 
-          <div class="ai-section-title">💨 三、现代高层三元纳气门窗动线诊断</div>
-          <p>
-            <strong>正北方（坎一宫）为正零神大吉位</strong>，开大门或大阳台见动气大吉！
-            <strong>正南方为正神位宜静</strong>，若客厅大阳台在正南，建议拉上一层半透光轻柔白纱帘，既保留采光，又避免强风急速直冲犯“正神下水”。
-          </p>
+      // 默认：使用免费免注册 Pollinations AI 节点 (免Key、免跨域限制、高可用)
+      const freeModel = provider === "pollinations_deepseek" ? "deepseek" : "qwen";
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000); // 25秒超时
 
-          <div class="ai-section-title">🛠️ 四、室内形煞与现代物理软装施工落地清单</div>
-          <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px;">
-            <thead>
-              <tr style="border-bottom: 1px solid var(--border-gold); color: var(--gold-light);">
-                <th style="padding: 7px; text-align: left;">排查项目</th>
-                <th style="padding: 7px; text-align: left;">隐患描述</th>
-                <th style="padding: 7px; text-align: left;">免拆墙现代软装施工方案</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-                <td style="padding: 8px 7px; font-weight: 700;">穿堂气流</td>
-                <td style="padding: 8px 7px; color: #94a3b8;">大门直对阳台</td>
-                <td style="padding: 8px 7px;">大门前1.5米定制长虹玻璃隔断屏风，下设鞋柜阻断直冲风道。</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-                <td style="padding: 8px 7px; font-weight: 700;">横梁投影</td>
-                <td style="padding: 8px 7px; color: #94a3b8;">床头/书桌上方有梁</td>
-                <td style="padding: 8px 7px;">睡床横向平移50cm脱离垂直投影，或吊顶做弧形隐藏梁体。</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 7px; font-weight: 700;">卫生间湿秽</td>
-                <td style="padding: 8px 7px; color: #94a3b8;">卫浴靠近中宫</td>
-                <td style="padding: 8px 7px;">安装静音排气扇24小时排气保持负压，马桶后方放置粗盐安忍水化煞。</td>
-              </tr>
-            </tbody>
-          </table>
-        `;
-        reportBox.innerHTML = reportHtml;
-      }, 400);
+        const resp = await fetch("https://text.pollinations.ai/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            messages: [
+              { role: "system", content: "你是一位兼具三十年风水堪舆与现代室内设计经验的顶级空间规划大师，请使用专业精美的 Markdown 格式回答。" },
+              { role: "user", content: prompt }
+            ],
+            model: freeModel,
+            seed: Math.floor(Math.random() * 100000)
+          })
+        });
+        clearTimeout(timeoutId);
+
+        if (!resp.ok) throw new Error("免费在线 AI 服务暂时繁忙 (状态 " + resp.status + ")");
+        const text = await resp.text();
+        if (!text || text.length < 50) throw new Error("AI 返回内容过短");
+
+        renderReportMarkdown(text, `✨ 由免费在线大模型 (${freeModel.toUpperCase()}) 实时深度推理生成`);
+      } catch (e) {
+        console.warn("免费在线 AI 调用提示或超时，自动切换至离线高阶引擎：", e);
+        const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
+        renderReportMarkdown(fallbackMd, "⚡ 本地易学专家规则引擎 (免费AI网络波动时自动保底)");
+      }
     };
+
+    function renderReportMarkdown(markdownContent, engineBadgeText) {
+      const reportBox = document.getElementById("aiReportBox");
+      const htmlBody = window.marked ? window.marked.parse(markdownContent) : markdownContent.replace(/\n/g, "<br>");
+      
+      reportBox.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.25); padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+          <span class="metric-badge badge-green" style="font-size:12px; padding:4px 10px;">${engineBadgeText}</span>
+          <span style="font-size:11.5px; color:var(--text-muted);">诊断时间：${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</span>
+        </div>
+        <div class="ai-markdown-rendered">${htmlBody}</div>
+      `;
+    }
 
     window.copyAiReport = function() {
       navigator.clipboard.writeText(document.getElementById("aiReportBox").innerText).then(() => {
