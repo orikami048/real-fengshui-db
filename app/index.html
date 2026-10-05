@@ -1,290 +1,205 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Feng Shui Master Studio | 现代东方美学实战风水罗盘与 AI 空间诊断系统</title>
+  <title>Real Feng Shui Master Studio | 实战风水罗盘与 AI 空间诊断系统</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>☯️</text></svg>">
-  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Noto+Serif+SC:wght@500;700;900&display=swap');
-
     :root {
-      --bg-void: #05070d;
-      --bg-panel: rgba(13, 18, 30, 0.78);
-      --bg-card: rgba(19, 26, 44, 0.85);
-      --bg-card-hover: rgba(27, 37, 62, 0.95);
-      
-      --gold-deep: #966b1a;
-      --gold-core: #c59b27;
-      --gold-foil: #e5c158;
-      --gold-bright: #fff2a3;
-      --gold-glow: rgba(229, 193, 88, 0.35);
-
-      --cinnabar-red: #e11d48;
-      --vermilion: #f43f5e;
+      --bg-space: #070a12;
+      --bg-panel: rgba(16, 23, 38, 0.8);
+      --bg-card: rgba(23, 32, 51, 0.85);
+      --border-gold: rgba(212, 175, 55, 0.3);
+      --border-gold-bright: rgba(245, 213, 96, 0.7);
+      --gold-primary: #d4af37;
+      --gold-light: #fce183;
+      --crimson: #ef4444;
       --jade-green: #10b981;
-      --celestial-blue: #38bdf8;
-      --indigo-dark: #1e1b4b;
-      
-      --border-gilded: rgba(229, 193, 88, 0.32);
-      --border-gilded-active: rgba(255, 242, 163, 0.75);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-
+      --sky-blue: #38bdf8;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --text-gold: #fce183;
-      
-      --shadow-ambient: 0 16px 40px -6px rgba(0, 0, 0, 0.75);
-      --shadow-gilded: 0 0 25px rgba(212, 175, 55, 0.22);
+      --shadow-ambient: 0 12px 36px -4px rgba(0, 0, 0, 0.65);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--bg-void);
+      background: #070a12;
       background-image: 
-        radial-gradient(circle at 50% -10%, rgba(30, 42, 75, 0.6) 0%, transparent 60%),
-        radial-gradient(circle at 15% 25%, rgba(197, 155, 39, 0.07) 0%, transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.8) 0%, transparent 70%);
+        radial-gradient(circle at 50% 0%, rgba(30, 42, 70, 0.5) 0%, transparent 60%),
+        radial-gradient(circle at 10% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Serif SC", "Segoe UI", "Microsoft YaHei", serif;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      letter-spacing: 0.2px;
     }
 
-    /* 顶部流光黑金导航 */
     header {
-      border-bottom: 1px solid var(--border-gilded);
-      background: rgba(8, 12, 20, 0.88);
-      backdrop-filter: blur(24px);
-      padding: 14px 32px;
+      border-bottom: 1px solid var(--border-gold);
+      background: rgba(10, 15, 26, 0.88);
+      backdrop-filter: blur(20px);
+      padding: 12px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .brand-logo-disc {
-      position: relative;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(circle, rgba(229,193,88,0.25) 0%, rgba(15,23,42,0.8) 70%);
-      border: 1.5px solid var(--border-gilded);
-      border-radius: 50%;
-      box-shadow: 0 0 16px rgba(229, 193, 88, 0.25);
-    }
-    .brand-icon {
-      font-size: 26px;
-      animation: rotateTaiji 26s linear infinite;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { font-size: 24px; animation: rotateTaiji 24s linear infinite; }
     @keyframes rotateTaiji { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-    .brand-title-wrap { display: flex; flex-direction: column; }
     .brand-title {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      background: linear-gradient(135deg, #ffffff 10%, var(--gold-bright) 50%, var(--gold-core) 100%);
+      font-size: 18px; font-weight: 800;
+      background: linear-gradient(135deg, #fff 20%, var(--gold-light) 60%, var(--gold-primary) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(229, 193, 88, 0.2);
     }
-    .brand-subtitle {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      letter-spacing: 0.4px;
-      margin-top: 2px;
-    }
+    .brand-subtitle { font-size: 11px; color: var(--text-muted); }
 
     .header-actions { display: flex; align-items: center; gap: 10px; }
 
-    /* 现代东方高级按钮体系 */
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 16px;
-      border-radius: 10px;
+      gap: 6px;
+      padding: 7px 15px;
+      border-radius: 9px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      transition: all 0.2s;
     }
     .btn-gold {
-      background: linear-gradient(135deg, #c59b27 0%, #e5c158 50%, #fff2a3 100%);
-      color: #05070d;
-      font-weight: 800;
-      box-shadow: 0 4px 16px rgba(229, 193, 88, 0.35);
+      background: linear-gradient(135deg, #d4af37 0%, #f6d365 100%);
+      color: #080c14;
+      box-shadow: 0 3px 12px rgba(212, 175, 55, 0.3);
     }
-    .btn-gold:hover {
-      box-shadow: 0 6px 24px rgba(229, 193, 88, 0.6);
-      transform: translateY(-1.5px);
-    }
+    .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(212, 175, 55, 0.5); }
     .btn-outline {
-      background: rgba(14, 20, 34, 0.65);
-      border-color: var(--border-gilded);
+      background: rgba(16, 23, 38, 0.6);
+      border-color: var(--border-gold);
       color: var(--text-main);
-      backdrop-filter: blur(12px);
     }
     .btn-outline:hover {
-      border-color: var(--gold-bright);
-      background: rgba(229, 193, 88, 0.12);
-      color: var(--gold-bright);
-      transform: translateY(-1px);
+      border-color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-light);
     }
     .btn-ai {
       background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
       color: #fff;
-      font-weight: 700;
-      box-shadow: 0 4px 18px rgba(168, 85, 247, 0.4);
-    }
-    .btn-ai:hover {
-      box-shadow: 0 6px 26px rgba(168, 85, 247, 0.6);
-      transform: translateY(-1.5px);
     }
 
-    /* 页面栅格 */
     main {
       flex: 1;
-      max-width: 1720px;
+      max-width: 1680px;
       width: 100%;
       margin: 0 auto;
-      padding: 20px 28px;
+      padding: 18px 24px;
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 22px;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
     }
 
-    @media (max-width: 1180px) {
+    @media (max-width: 1140px) {
       main { grid-template-columns: 1fr; }
     }
 
-    /* 玻璃拟态面板 */
     .panel-card {
       background: var(--bg-panel);
-      border: 1px solid var(--border-gilded);
-      border-radius: 16px;
-      padding: 20px;
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      padding: 16px;
       box-shadow: var(--shadow-ambient);
-      backdrop-filter: blur(20px);
-      margin-bottom: 20px;
-      position: relative;
-    }
-    .panel-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 12%; right: 12%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border-gilded-active), transparent);
+      backdrop-filter: blur(16px);
+      margin-bottom: 16px;
     }
     .panel-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--gold-bright);
-      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      letter-spacing: 0.4px;
     }
 
-    .form-group { margin-bottom: 14px; }
-    .form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
     .form-control, .form-select {
       width: 100%;
-      padding: 9px 13px;
-      background: rgba(9, 13, 22, 0.9);
-      border: 1px solid rgba(229, 193, 88, 0.22);
-      border-radius: 10px;
+      padding: 8px 12px;
+      background: rgba(9, 13, 22, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
       color: var(--text-main);
       font-size: 13px;
       outline: none;
-      transition: all 0.25s;
     }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--gold-bright);
-      box-shadow: 0 0 12px rgba(229, 193, 88, 0.3);
-    }
+    .form-control:focus, .form-select:focus { border-color: var(--gold-light); }
+    .range-input { width: 100%; accent-color: var(--gold-primary); cursor: pointer; }
 
-    .range-input {
-      width: 100%;
-      accent-color: var(--gold-core);
-      cursor: pointer;
-    }
-
-    /* 状态徽章 */
     .metric-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 3px 9px;
-      border-radius: 6px;
+      padding: 2px 8px;
+      border-radius: 5px;
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+      font-weight: 600;
     }
-    .badge-gold { background: rgba(229, 193, 88, 0.16); color: var(--gold-bright); border: 1px solid var(--border-gilded); }
-    .badge-green { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-    .badge-red { background: rgba(225, 29, 72, 0.16); color: #fb7185; border: 1px solid rgba(225, 29, 72, 0.4); }
-    .badge-blue { background: rgba(56, 189, 248, 0.16); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge-gold { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); border: 1px solid var(--border-gold); }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-red { background: rgba(239, 68, 68, 0.15); color: #fb7185; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-blue { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
 
-    /* 选项卡导航 */
     .tab-bar {
       display: flex;
-      border-bottom: 1px solid rgba(229, 193, 88, 0.22);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       gap: 6px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       overflow-x: auto;
     }
     .tab-btn {
       background: none;
       border: none;
-      padding: 10px 18px;
+      padding: 9px 16px;
       color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13.5px;
+      font-weight: 600;
       cursor: pointer;
       position: relative;
       white-space: nowrap;
-      transition: all 0.25s;
     }
-    .tab-btn:hover { color: #ffffff; }
-    .tab-btn.active { color: var(--gold-bright); }
+    .tab-btn.active { color: var(--gold-light); }
     .tab-btn.active::after {
       content: "";
       position: absolute;
       bottom: -1px;
       left: 10%; right: 10%;
-      height: 2.5px;
-      background: linear-gradient(90deg, transparent, var(--gold-core), var(--gold-bright), transparent);
-      box-shadow: 0 0 12px rgba(229, 193, 88, 0.8);
+      height: 2px;
+      background: var(--gold-primary);
     }
 
-    /* 户型图 Canvas 罗盘视窗 */
-    .floorplan-workspace { display: flex; flex-direction: column; gap: 14px; }
+    /* 户型图 Canvas 工作台 */
+    .floorplan-workspace { display: flex; flex-direction: column; gap: 12px; }
     .floorplan-canvas-container {
       position: relative;
       width: 100%;
-      height: 580px;
-      background: radial-gradient(circle at 50% 50%, #0d1424 0%, #060912 100%);
-      border: 1px solid var(--border-gilded);
-      border-radius: 16px;
+      height: 560px;
+      background: radial-gradient(circle at 50% 50%, #0d1322 0%, #060910 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       user-select: none;
-      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.85);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
     }
     .floorplan-img-layer {
       position: absolute;
@@ -292,19 +207,19 @@
       max-height: 92%;
       object-fit: contain;
       pointer-events: none;
-      filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.75));
+      filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.7));
     }
 
     /* 真实可旋转与平移的专业罗盘容器 */
     .compass-overlay-wrapper {
       position: absolute;
-      width: 480px;
-      height: 480px;
+      width: 440px;
+      height: 440px;
       pointer-events: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.9));
+      opacity: 0.7;
     }
 
     /* 罗盘外盘旋转盘 */
@@ -312,11 +227,11 @@
       width: 100%;
       height: 100%;
       position: relative;
-      cursor: crosshair; /* 边缘旋转指示 */
-      transition: filter 0.25s;
+      cursor: crosshair; /* 在外圈旋转 */
+      transition: box-shadow 0.2s;
     }
     .compass-rotator:hover {
-      filter: drop-shadow(0 0 25px rgba(229, 193, 88, 0.45));
+      filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.5));
     }
 
     /* 中心天池拖动区域 (用于平移对准天心点) */
@@ -325,234 +240,206 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 105px;
-      height: 105px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       cursor: move;
-      z-index: 25;
-      background: radial-gradient(circle, rgba(229, 193, 88, 0.25) 0%, transparent 70%);
+      z-index: 20;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
       display: flex;
       align-items: center;
       justify-content: center;
       pointer-events: auto;
     }
     .compass-center-handle:hover::after {
-      content: "按住平移立极";
+      content: "拖动立极";
       position: absolute;
-      bottom: -22px;
-      font-size: 11px;
-      color: var(--gold-bright);
-      background: rgba(5, 7, 13, 0.9);
-      border: 1px solid var(--border-gilded);
-      padding: 2px 7px;
-      border-radius: 5px;
+      bottom: -18px;
+      font-size: 10px;
+      color: var(--gold-light);
+      background: rgba(0,0,0,0.8);
+      padding: 1px 5px;
+      border-radius: 4px;
       white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
-    /* HUD 提示条 */
+    /* 罗盘顶部操作 HUD */
     .compass-hud {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      background: rgba(8, 12, 22, 0.88);
-      border: 1px solid var(--border-gilded);
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 12.5px;
-      backdrop-filter: blur(14px);
+      top: 14px;
+      left: 14px;
+      background: rgba(10, 15, 26, 0.85);
+      border: 1px solid var(--border-gold);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      backdrop-filter: blur(10px);
       z-index: 30;
       pointer-events: none;
-      line-height: 1.6;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      line-height: 1.5;
     }
 
-    /* 快捷旋转微调工具条 */
+    /* 快捷旋转控制条 */
     .compass-rot-tools {
       position: absolute;
-      bottom: 16px;
-      right: 16px;
-      background: rgba(8, 12, 22, 0.88);
-      border: 1px solid var(--border-gilded);
-      padding: 8px 12px;
-      border-radius: 10px;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(10, 15, 26, 0.85);
+      border: 1px solid var(--border-gold);
+      padding: 6px 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       z-index: 30;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
     }
     .rot-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(229, 193, 88, 0.3);
-      color: var(--gold-bright);
-      padding: 5px 9px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--gold-light);
+      padding: 4px 8px;
       border-radius: 6px;
-      font-size: 11.5px;
+      font-size: 11px;
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s;
     }
-    .rot-btn:hover {
-      background: rgba(229, 193, 88, 0.22);
-      border-color: var(--gold-bright);
-      transform: translateY(-1px);
-    }
+    .rot-btn:hover { background: rgba(212,175,55,0.25); border-color: var(--gold-light); }
 
     .floorplan-controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
-      background: rgba(13, 18, 30, 0.9);
-      border: 1px solid var(--border-gilded);
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 12.5px;
+      background: rgba(13, 18, 29, 0.9);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 12px;
     }
     .control-group { display: flex; align-items: center; gap: 8px; }
 
-    /* 玄空飞星九宫网格 */
+    /* 九宫飞星网格 */
     .grid-jiugong {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      max-width: 580px;
+      gap: 10px;
+      max-width: 520px;
       margin: 0 auto;
     }
     .cell-palace {
-      background: rgba(15, 22, 38, 0.92);
-      border: 1px solid rgba(229, 193, 88, 0.25);
-      border-radius: 14px;
-      padding: 14px;
+      background: rgba(15, 22, 36, 0.9);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 10px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
+      transition: all 0.2s;
     }
-    .cell-palace:hover {
-      border-color: var(--gold-bright);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 16px rgba(229, 193, 88, 0.25);
-    }
+    .cell-palace:hover { border-color: var(--gold-light); transform: translateY(-2px); }
     .cell-palace.selected {
-      border-color: var(--gold-bright);
-      background: rgba(25, 36, 62, 0.98);
-      box-shadow: 0 0 24px rgba(229, 193, 88, 0.4);
+      border-color: var(--gold-light);
+      background: rgba(26, 38, 64, 0.95);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
     }
-    .palace-header { display: flex; justify-content: space-between; font-size: 12px; }
-    .palace-direction { font-weight: 800; color: #cbd5e1; }
-    .stars-cluster { display: flex; align-items: baseline; justify-content: space-around; margin: 10px 0; }
-    .star-mountain { font-size: 26px; font-weight: 900; color: #60a5fa; text-shadow: 0 0 12px rgba(96, 165, 250, 0.45); }
-    .star-facing { font-size: 26px; font-weight: 900; color: #f87171; text-shadow: 0 0 12px rgba(248, 113, 113, 0.45); }
+    .palace-header { display: flex; justify-content: space-between; font-size: 11px; }
+    .palace-direction { font-weight: 700; color: #cbd5e1; }
+    .stars-cluster { display: flex; align-items: baseline; justify-content: space-around; margin: 8px 0; }
+    .star-mountain { font-size: 22px; font-weight: 900; color: #60a5fa; }
+    .star-facing { font-size: 22px; font-weight: 900; color: #f87171; }
     .star-base {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--gold-bright);
-      background: rgba(229, 193, 88, 0.16);
-      padding: 2px 7px;
-      border-radius: 5px;
-      border: 1px solid rgba(229, 193, 88, 0.3);
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
     /* 八宅网格 */
     .bazhai-card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
     }
     .bazhai-cell {
-      background: rgba(15, 22, 38, 0.88);
-      border: 1px solid rgba(229, 193, 88, 0.22);
-      border-radius: 12px;
-      padding: 14px;
-      transition: all 0.25s;
+      background: rgba(15, 22, 36, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      padding: 12px;
     }
-    .bazhai-cell:hover {
-      border-color: var(--gold-core);
-      transform: translateY(-2px);
-    }
-    .bazhai-star-name { font-size: 16px; font-weight: 900; margin-bottom: 5px; }
-    .ji-star { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.3); }
-    .xiong-star { color: #fb7185; text-shadow: 0 0 8px rgba(251, 113, 133, 0.3); }
+    .bazhai-star-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .ji-star { color: #34d399; }
+    .xiong-star { color: #fb7185; }
 
-    /* AI 空间报告容器 */
+    /* AI 报告 */
     .ai-report-container {
-      background: rgba(10, 15, 26, 0.95);
-      border: 1px solid var(--border-gilded);
-      border-radius: 16px;
-      padding: 24px;
-      line-height: 1.8;
-      font-size: 13.5px;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+      background: rgba(12, 17, 28, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 12px;
+      padding: 20px;
+      line-height: 1.7;
+      font-size: 13px;
     }
     .ai-report-header {
-      border-bottom: 1px solid rgba(229, 193, 88, 0.25);
-      padding-bottom: 14px;
-      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .ai-section-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--gold-bright);
-      margin: 18px 0 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 7px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin: 16px 0 6px 0;
     }
 
-    /* 峦头形煞化解清单 */
+    /* 形煞化解 */
     .remedy-item {
-      background: rgba(15, 22, 38, 0.88);
-      border-left: 4px solid var(--gold-core);
-      border-radius: 0 10px 10px 0;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(15, 22, 36, 0.85);
+      border-left: 4px solid var(--gold-primary);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin-bottom: 10px;
     }
-    .remedy-title { font-size: 14.5px; font-weight: 800; color: var(--gold-bright); margin-bottom: 5px; }
-    .remedy-desc { font-size: 12.5px; color: #cbd5e1; line-height: 1.6; }
+    .remedy-title { font-size: 14px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
+    .remedy-desc { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 
-    /* 模态弹窗 */
+    /* 教程弹窗 */
     .modal-backdrop {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 20px;
     }
     .modal-content {
-      background: #0f1628;
-      border: 1px solid var(--border-gilded-active);
-      border-radius: 18px;
-      max-width: 880px;
+      background: #0f1626;
+      border: 1px solid var(--border-gold-bright);
+      border-radius: 16px;
+      max-width: 860px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
-      padding: 28px;
+      padding: 24px;
       position: relative;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(229, 193, 88, 0.25);
     }
     .modal-close {
       position: absolute;
-      top: 18px; right: 20px;
+      top: 16px; right: 18px;
       background: none; border: none;
-      color: var(--text-muted); font-size: 26px; cursor: pointer;
+      color: var(--text-muted); font-size: 24px; cursor: pointer;
     }
-    .modal-close:hover { color: #fff; }
 
     @media print {
       body { background: #fff; color: #000; }
@@ -567,12 +454,10 @@
   <!-- 顶部导航 -->
   <header>
     <div class="brand">
-      <div class="brand-logo-disc">
-        <div class="brand-icon">☯️</div>
-      </div>
-      <div class="brand-title-wrap">
+      <div class="brand-icon">☯️</div>
+      <div>
         <div class="brand-title">Real Feng Shui Master Studio</div>
-        <div class="brand-subtitle">鼠标手势直接旋转罗盘 · 户型天心立极 · AI 空间全维度诊断系统</div>
+        <div class="brand-subtitle">鼠标直接旋转罗盘 · 天心立极 · AI 空间全维度诊断</div>
       </div>
     </div>
     <div class="header-actions">
@@ -583,7 +468,7 @@
   </header>
 
   <main>
-    <!-- 左侧参数与罗盘控制台 -->
+    <!-- 左侧参数控制台 -->
     <div>
       <div class="panel-card">
         <div class="panel-title">
@@ -604,7 +489,7 @@
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <label class="form-label" style="margin-bottom:0;">实测向首度数 (0° ~ 360°)</label>
-            <span id="txtFacingDegree" style="font-weight: 800; color: var(--gold-bright);">180.0°</span>
+            <span id="txtFacingDegree" style="font-weight: 700; color: var(--gold-light);">180.0°</span>
           </div>
           <input type="range" id="sliderFacingDegree" class="range-input" min="0" max="359.9" step="0.5" value="180">
         </div>
@@ -612,11 +497,11 @@
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <label class="form-label" style="margin-bottom:0;">🧭 户型图指北针真北校准角</label>
-            <span id="txtNorthOffset" style="font-weight: 800; color: #60a5fa;">0.0°</span>
+            <span id="txtNorthOffset" style="font-weight: 700; color: #60a5fa;">0.0°</span>
           </div>
           <input type="range" id="sliderNorthOffset" class="range-input" min="-180" max="180" step="1" value="0">
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.5;">
-            💡 提示：您也可以<strong>直接用鼠标在右侧罗盘外圈按住旋转</strong>，像真实物理罗盘一样随意转动！
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+            💡 提示：您也可以<strong>直接用鼠标在外圈罗盘上顺时针/逆时针旋转</strong>，就像真实物理罗盘一样随意转动！
           </div>
         </div>
 
@@ -647,8 +532,8 @@
         <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="document.getElementById('fileFloorPlan').click()">
           📁 选择本地户型图文件 (JPG/PNG)
         </button>
-        <div style="text-align: center; margin-top: 9px;">
-          <a href="javascript:void(0)" onclick="loadSampleCase()" style="font-size: 12px; color: var(--gold-bright); text-decoration: underline;">一键载入 120㎡ 标准三室示例</a>
+        <div style="text-align: center; margin-top: 8px;">
+          <a href="javascript:void(0)" onclick="loadSampleCase()" style="font-size: 12px; color: var(--gold-light); text-decoration: underline;">一键载入 120㎡ 标准三室示例</a>
         </div>
       </div>
     </div>
@@ -671,14 +556,14 @@
           <div id="canvasContainer" class="floorplan-canvas-container">
             <!-- 实时指向 HUD 提示 -->
             <div id="compassHud" class="compass-hud">
-              <div style="color: var(--gold-bright); font-weight: 800; margin-bottom: 2px;">🎯 实战互动操作指南：</div>
-              <div>• <strong>罗盘外圈</strong>：鼠标按住可<strong>直接 360° 旋转罗盘</strong>对准图纸指北针</div>
-              <div>• <strong>中心天池</strong>：鼠标按住可<strong>平移罗盘</strong>对准户型中心天心点</div>
+              <div>🎯 <strong>操作指南：</strong></div>
+              <div>• <strong>外圈圆环</strong>：鼠标按住可<strong>直接 360° 旋转罗盘</strong>对准图纸指北针</div>
+              <div>• <strong>中心圆圈</strong>：鼠标按住可<strong>平移罗盘</strong>对准户型中心天心点</div>
             </div>
 
             <!-- 右下角旋转微调按键 -->
             <div class="compass-rot-tools">
-              <span style="font-size:11px; color:#94a3b8; font-weight:600;">微调盘面:</span>
+              <span style="font-size:11px; color:#94a3b8;">微调转盘:</span>
               <button class="rot-btn" onclick="rotateByStep(-5)">↺ -5°</button>
               <button class="rot-btn" onclick="rotateByStep(-1)">↺ -1°</button>
               <button class="rot-btn" onclick="rotateByStep(1)">↻ +1°</button>
@@ -692,80 +577,68 @@
             <div id="compassOverlay" class="compass-overlay-wrapper">
               <!-- 可旋转盘面 -->
               <div id="compassRotator" class="compass-rotator">
-                <!-- 高保真东方美学实景罗盘 SVG -->
-                <svg id="svgCompass" width="100%" height="100%" viewBox="0 0 500 500">
+                <svg id="svgCompass" width="100%" height="100%" viewBox="0 0 500 500" style="filter: drop-shadow(0 0 20px rgba(0,0,0,0.85));">
                   <defs>
-                    <radialGradient id="gradBgPlate" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#111827" stop-opacity="0.85"/>
-                      <stop offset="70%" stop-color="#0b111e" stop-opacity="0.92"/>
-                      <stop offset="100%" stop-color="#05070d" stop-opacity="0.98"/>
+                    <radialGradient id="gradCenter" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+                      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95"/>
                     </radialGradient>
-                    <linearGradient id="gradGoldBezel" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#fff2a3"/>
-                      <stop offset="30%" stop-color="#e5c158"/>
-                      <stop offset="70%" stop-color="#966b1a"/>
-                      <stop offset="100%" stop-color="#e5c158"/>
+                    <linearGradient id="gradGoldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#f6d365"/>
+                      <stop offset="50%" stop-color="#d4af37"/>
+                      <stop offset="100%" stop-color="#aa771c"/>
                     </linearGradient>
-                    <radialGradient id="gradTianChi" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.95"/>
-                      <stop offset="85%" stop-color="#0f172a" stop-opacity="0.98"/>
-                      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
-                    </radialGradient>
-                    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="3" result="glow"/>
-                      <feComposite in="SourceGraphic" in2="glow" operator="over"/>
-                    </filter>
                   </defs>
 
-                  <!-- 罗盘外盘青铜金外圈 -->
-                  <circle cx="250" cy="250" r="244" fill="url(#gradBgPlate)" stroke="url(#gradGoldBezel)" stroke-width="4.5" filter="url(#goldGlow)"/>
-                  <circle cx="250" cy="250" r="236" fill="none" stroke="rgba(229, 193, 88, 0.55)" stroke-width="1.2" stroke-dasharray="3,3"/>
+                  <!-- 外盘底座（完全透明，不遮挡户型图） -->
+                  <circle cx="250" cy="250" r="242" fill="none" stroke="url(#gradGoldRing)" stroke-width="3"/>
+                  <circle cx="250" cy="250" r="232" fill="none" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1" stroke-dasharray="2,3"/>
 
                   <!-- 360度细分刻度线与角度数值 -->
                   <g id="svgCompassTicks"></g>
 
-                  <!-- 二十四山同心环 (每山15度) -->
-                  <circle cx="250" cy="250" r="200" fill="none" stroke="url(#gradGoldBezel)" stroke-width="2"/>
-                  <circle cx="250" cy="250" r="150" fill="rgba(15, 23, 42, 0.6)" stroke="url(#gradGoldBezel)" stroke-width="2"/>
+                  <!-- 二十四山同心环 (每山15度，镂空无底色) -->
+                  <circle cx="250" cy="250" r="198" fill="none" stroke="url(#gradGoldRing)" stroke-width="2"/>
+                  <circle cx="250" cy="250" r="152" fill="none" stroke="url(#gradGoldRing)" stroke-width="1.5"/>
                   <g id="svgTwentyFourMountains"></g>
 
-                  <!-- 八卦同心环 -->
-                  <circle cx="250" cy="250" r="105" fill="none" stroke="url(#gradGoldBezel)" stroke-width="2"/>
+                  <!-- 八卦同心环 (镂空无底色) -->
+                  <circle cx="250" cy="250" r="106" fill="none" stroke="url(#gradGoldRing)" stroke-width="1.5"/>
                   <g id="svgEightTrigrams"></g>
 
-                  <!-- 十字天心红线 (经纬定位线) -->
-                  <line x1="250" y1="6" x2="250" y2="494" stroke="#e11d48" stroke-width="2.4" stroke-dasharray="5,4" filter="drop-shadow(0 0 3px #e11d48)"/>
-                  <line x1="6" y1="250" x2="494" y2="250" stroke="#e11d48" stroke-width="2" stroke-dasharray="5,4" filter="drop-shadow(0 0 3px #e11d48)"/>
+                  <!-- 十字天心红线 (经纬定位线，轻微发光，清晰校准) -->
+                  <line x1="250" y1="8" x2="250" y2="492" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4,4"/>
+                  <line x1="8" y1="250" x2="492" y2="250" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,4"/>
                   
-                  <!-- 天池红针 (指南指北) -->
-                  <circle cx="250" cy="250" r="46" fill="url(#gradTianChi)" stroke="url(#gradGoldBezel)" stroke-width="3.5"/>
-                  <polygon points="250,208 243,250 257,250" fill="#e11d48" filter="drop-shadow(0 0 5px #e11d48)"/>
-                  <polygon points="250,292 243,250 257,250" fill="#38bdf8" filter="drop-shadow(0 0 5px #38bdf8)"/>
-                  <circle cx="250" cy="250" r="6" fill="#fff2a3" stroke="#fff" stroke-width="1.5"/>
-                  <text x="250" y="200" fill="#f43f5e" font-size="12" font-weight="900" text-anchor="middle">南 (向)</text>
-                  <text x="250" y="312" fill="#38bdf8" font-size="12" font-weight="900" text-anchor="middle">北 (坐)</text>
+                  <!-- 天池红针 (微型天池，保持透视) -->
+                  <circle cx="250" cy="250" r="38" fill="rgba(15, 23, 42, 0.4)" stroke="url(#gradGoldRing)" stroke-width="2"/>
+                  <polygon points="250,216 245,250 255,250" fill="#ef4444" filter="drop-shadow(0 0 3px #ef4444)"/>
+                  <polygon points="250,284 245,250 255,250" fill="#38bdf8" filter="drop-shadow(0 0 3px #38bdf8)"/>
+                  <circle cx="250" cy="250" r="5" fill="#fce183" stroke="#fff" stroke-width="1.5"/>
+                  <text x="250" y="210" fill="#ef4444" font-size="11" font-weight="900" text-anchor="middle">南 (向)</text>
+                  <text x="250" y="300" fill="#38bdf8" font-size="11" font-weight="900" text-anchor="middle">北 (坐)</text>
                 </svg>
               </div>
 
               <!-- 中心平移拖拽手柄 -->
               <div id="centerMoveHandle" class="compass-center-handle">
-                <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--gold-bright); border: 2.5px solid #ffffff; box-shadow: 0 0 12px var(--gold-core);"></div>
+                <div style="width: 14px; height: 14px; border-radius: 50%; background: var(--gold-light); border: 2px solid #fff; box-shadow: 0 0 8px #d4af37;"></div>
               </div>
             </div>
           </div>
 
           <div class="floorplan-controls">
             <div class="control-group">
-              <span style="font-weight:700; color:var(--gold-bright);">罗盘尺寸：</span>
-              <input type="range" id="sliderCompassScale" min="300" max="660" value="480" style="vertical-align: middle; accent-color: var(--gold-core); width: 120px;">
+              <span>罗盘尺寸：</span>
+              <input type="range" id="sliderCompassScale" min="280" max="640" value="440" style="vertical-align: middle; accent-color: var(--gold-primary); width: 110px;">
             </div>
             <div class="control-group">
-              <span style="font-weight:700; color:var(--gold-bright);">罗盘透明度：</span>
-              <input type="range" id="sliderCompassOpacity" min="0.2" max="1" step="0.05" value="0.9" style="vertical-align: middle; accent-color: var(--gold-core); width: 100px;">
+              <span>罗盘透明度：</span>
+              <input type="range" id="sliderCompassOpacity" min="0.1" max="1" step="0.05" value="0.70" style="vertical-align: middle; accent-color: var(--gold-primary); width: 90px;">
             </div>
             <div class="control-group">
-              <button class="btn btn-outline" style="padding: 5px 12px; font-size: 12px;" onclick="resetCompassPosition()">🎯 居中天心点</button>
-              <button class="btn btn-outline" style="padding: 5px 12px; font-size: 12px;" onclick="document.getElementById('fileFloorPlan').click()">🔄 更换户型图</button>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px;" onclick="resetCompassPosition()">🎯 居中天心点</button>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px;" onclick="document.getElementById('fileFloorPlan').click()">🔄 更换户型图</button>
             </div>
           </div>
         </div>
@@ -774,22 +647,22 @@
       <!-- Tab 1: 玄空飞星 -->
       <div id="tab-feixing" class="tab-content" style="display: none;">
         <div class="panel-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
             <div>
-              <span id="patternBadge" class="metric-badge badge-gold" style="font-size: 14px; padding: 5px 12px;">旺山旺向</span>
+              <span id="patternBadge" class="metric-badge badge-gold" style="font-size: 13.5px; padding: 4px 10px;">旺山旺向</span>
             </div>
-            <div style="font-size: 12.5px; color: var(--text-muted);">
+            <div style="font-size: 12px; color: var(--text-muted);">
               左蓝：<span style="color:#60a5fa; font-weight:bold;">山星(主健康/人丁)</span> | 
               右红：<span style="color:#f87171; font-weight:bold;">向星(主财帛/进取)</span> | 
-              中黄：<span style="color:var(--gold-bright); font-weight:bold;">运星</span>
+              中黄：<span style="color:var(--gold-light); font-weight:bold;">运星</span>
             </div>
           </div>
 
           <div id="jiugongGrid" class="grid-jiugong"></div>
 
-          <div id="palaceDetailCard" style="margin-top: 18px; padding: 16px; background: rgba(12, 17, 28, 0.95); border: 1px solid var(--border-gilded); border-radius: 14px;">
-            <div style="font-weight: 800; color: var(--gold-bright); margin-bottom: 6px; font-size: 14px;">🔍 宫位秘传断语与调理指导</div>
-            <div id="palaceDetailContent" style="font-size: 13px; color: #cbd5e1; line-height: 1.7;">
+          <div id="palaceDetailCard" style="margin-top: 16px; padding: 14px; background: rgba(12, 17, 28, 0.9); border: 1px solid var(--border-gold); border-radius: 12px;">
+            <div style="font-weight: 700; color: var(--gold-light); margin-bottom: 6px; font-size: 13.5px;">🔍 宫位秘传断语与调理指导</div>
+            <div id="palaceDetailContent" style="font-size: 12.5px; color: #cbd5e1; line-height: 1.6;">
               点击上方任意九宫格子，查看该方位的星曜交会吉凶与现代软装落地指导。
             </div>
           </div>
@@ -799,7 +672,7 @@
       <!-- Tab 2: 八宅明镜 -->
       <div id="tab-bazhai" class="tab-content" style="display: none;">
         <div class="panel-card">
-          <div id="houseGuaTitle" style="font-size: 16px; font-weight: 800; color: var(--gold-bright); margin-bottom: 16px;"></div>
+          <div id="houseGuaTitle" style="font-size: 15px; font-weight: 700; color: var(--gold-light); margin-bottom: 14px;"></div>
           <div id="bazhaiGrid" class="bazhai-card-grid"></div>
         </div>
       </div>
@@ -815,10 +688,10 @@
       <!-- Tab 4: AI 智能空间深度分析 -->
       <div id="tab-ai-diag" class="tab-content" style="display: none;">
         <div class="panel-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 20px;">✨</span>
-              <span style="font-weight: 800; color: var(--gold-bright); font-size: 16px;">AI 空间全维度风水诊断报告</span>
+              <span style="font-size: 18px;">✨</span>
+              <span style="font-weight: 700; color: var(--gold-light); font-size: 15px;">AI 空间全维度风水诊断报告</span>
             </div>
             <div style="display: flex; gap: 8px;">
               <button class="btn btn-outline" onclick="copyAiReport()">📋 复制报告全文</button>
@@ -848,20 +721,20 @@
   <div id="modalTutorial" class="modal-backdrop">
     <div class="modal-content">
       <button class="modal-close" onclick="closeTutorialModal()">×</button>
-      <h2 style="color: var(--gold-bright); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+      <h2 style="color: var(--gold-light); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
         <span>🧭</span> 真实罗盘旋转与户型校准教程
       </h2>
       
-      <div style="line-height: 1.8; font-size: 13.5px; color: #cbd5e1;">
-        <div style="background: rgba(229, 193, 88, 0.12); border-left: 4px solid var(--gold-core); padding: 14px 16px; margin-bottom: 16px; border-radius: 8px;">
+      <div style="line-height: 1.8; font-size: 13px; color: #cbd5e1;">
+        <div style="background: rgba(212, 175, 55, 0.12); border-left: 4px solid var(--gold-primary); padding: 12px 14px; margin-bottom: 14px; border-radius: 6px;">
           <strong>💡 怎么旋转罗盘？具体使用手法：</strong><br>
-          1. <strong>对齐天心点</strong>：鼠标按住罗盘<strong>正中心金色圆点</strong>，拖动将十字天心交点对准户型图的几何重心。<br>
+          1. <strong>对齐天心点</strong>：鼠标按住罗盘<strong>正中心金色圆点</strong>，拖动将十字天心交点对准户型图的几何中心。<br>
           2. <strong>旋转对准指北针</strong>：鼠标按住罗盘<strong>外圈二十四山圆环任意位置</strong>，像转方向盘一样绕中心拖动旋转，直接旋转罗盘天池红线，对准户型图上的指北针 N 箭头！<br>
           3. <strong>精准微调</strong>：点击右下角「↺ -1° / ↻ +1°」按钮，可以极精确地对齐一度不差！
         </div>
       </div>
 
-      <div style="text-align: right; margin-top: 20px;">
+      <div style="text-align: right; margin-top: 18px;">
         <button class="btn btn-gold" onclick="closeTutorialModal()">我知道了，开始操作</button>
       </div>
     </div>
@@ -915,7 +788,7 @@
     const PALACE_NAMES = { 1: "正北方", 2: "西南方", 3: "正东方", 4: "东南方", 6: "西北方", 7: "正西方", 8: "东北方", 9: "正南方" };
 
     let currentChartState = null;
-    let currentCompassRotation = 0;
+    let currentCompassRotation = 0; // 当前罗盘盘面实际旋转角度
 
     function initSvgCompass() {
       const gMountains = document.getElementById("svgTwentyFourMountains");
@@ -925,39 +798,37 @@
       gEight.innerHTML = "";
       gTicks.innerHTML = "";
 
-      // 绘制 360 度细密刻度与度数文字
       for (let d = 0; d < 360; d += 5) {
         const rad = (d - 90) * Math.PI / 180;
         const isMajor = d % 15 === 0;
         const isDeca = d % 30 === 0;
-        const len = isDeca ? 11 : (isMajor ? 7.5 : 4);
-        const x1 = 250 + 234 * Math.cos(rad);
-        const y1 = 250 + 234 * Math.sin(rad);
-        const x2 = 250 + (234 - len) * Math.cos(rad);
-        const y2 = 250 + (234 - len) * Math.sin(rad);
+        const len = isDeca ? 10 : (isMajor ? 7 : 4);
+        const x1 = 250 + 230 * Math.cos(rad);
+        const y1 = 250 + 230 * Math.sin(rad);
+        const x2 = 250 + (230 - len) * Math.cos(rad);
+        const y2 = 250 + (230 - len) * Math.sin(rad);
 
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("x1", x1); line.setAttribute("y1", y1);
         line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-        line.setAttribute("stroke", isDeca ? "#fff2a3" : "rgba(229, 193, 88, 0.55)");
-        line.setAttribute("stroke-width", isDeca ? "1.6" : "0.9");
+        line.setAttribute("stroke", isDeca ? "#fce183" : "rgba(212, 175, 55, 0.5)");
+        line.setAttribute("stroke-width", isDeca ? "1.5" : "0.8");
         gTicks.appendChild(line);
 
         if (isDeca) {
-          const tx = 250 + 218 * Math.cos(rad);
-          const ty = 250 + 218 * Math.sin(rad);
+          const tx = 250 + 215 * Math.cos(rad);
+          const ty = 250 + 215 * Math.sin(rad);
           const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-          t.setAttribute("x", tx); t.setAttribute("y", ty + 3.5);
+          t.setAttribute("x", tx); t.setAttribute("y", ty + 3);
           t.setAttribute("fill", "#94a3b8");
-          t.setAttribute("font-size", "8.5");
-          t.setAttribute("font-family", "Cinzel, sans-serif");
+          t.setAttribute("font-size", "8");
+          t.setAttribute("font-family", "sans-serif");
           t.setAttribute("text-anchor", "middle");
           t.textContent = d;
           gTicks.appendChild(t);
         }
       }
 
-      // 绘制 24 山文字与分水岭线
       MOUNTAINS.forEach(m => {
         const rot = m.deg;
         const rad = (rot - 90) * Math.PI / 180;
@@ -967,41 +838,38 @@
         const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         txt.setAttribute("x", x); txt.setAttribute("y", y + 4.5);
         txt.setAttribute("fill", m.polarity === "+" ? "#ef4444" : "#38bdf8");
-        txt.setAttribute("font-size", "12.5");
+        txt.setAttribute("font-size", "12");
         txt.setAttribute("font-weight", "900");
-        txt.setAttribute("font-family", "Noto Serif SC, serif");
         txt.setAttribute("text-anchor", "middle");
         txt.textContent = m.name;
         gMountains.appendChild(txt);
 
         const bRad = (rot - 7.5 - 90) * Math.PI / 180;
-        const x1 = 250 + 200 * Math.cos(bRad);
-        const y1 = 250 + 200 * Math.sin(bRad);
-        const x2 = 250 + 150 * Math.cos(bRad);
-        const y2 = 250 + 150 * Math.sin(bRad);
+        const x1 = 250 + 198 * Math.cos(bRad);
+        const y1 = 250 + 198 * Math.sin(bRad);
+        const x2 = 250 + 152 * Math.cos(bRad);
+        const y2 = 250 + 152 * Math.sin(bRad);
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("x1", x1); line.setAttribute("y1", y1);
         line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-        line.setAttribute("stroke", "rgba(229, 193, 88, 0.45)");
+        line.setAttribute("stroke", "rgba(212, 175, 55, 0.4)");
         line.setAttribute("stroke-width", "1");
         gMountains.appendChild(line);
       });
 
-      // 绘制八卦文字与卦象
       const EIGHT_GUAS = [
         { name: "坎 ☵", deg: 0 }, { name: "艮 ☶", deg: 45 }, { name: "震 ☳", deg: 90 }, { name: "巽 ☴", deg: 135 },
         { name: "离 ☲", deg: 180 }, { name: "坤 ☷", deg: 225 }, { name: "兑 ☱", deg: 270 }, { name: "乾 ☰", deg: 315 }
       ];
       EIGHT_GUAS.forEach(g => {
         const rad = (g.deg - 90) * Math.PI / 180;
-        const x = 250 + 128 * Math.cos(rad);
-        const y = 250 + 128 * Math.sin(rad);
+        const x = 250 + 129 * Math.cos(rad);
+        const y = 250 + 129 * Math.sin(rad);
         const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         txt.setAttribute("x", x); txt.setAttribute("y", y + 4.5);
-        txt.setAttribute("fill", "#fff2a3");
-        txt.setAttribute("font-size", "13");
+        txt.setAttribute("fill", "#fce183");
+        txt.setAttribute("font-size", "12.5");
         txt.setAttribute("font-weight", "800");
-        txt.setAttribute("font-family", "Noto Serif SC, serif");
         txt.setAttribute("text-anchor", "middle");
         txt.textContent = g.name;
         gEight.appendChild(txt);
@@ -1039,6 +907,7 @@
       document.getElementById("txtFacingDegree").innerText = facingDeg.toFixed(1) + "°";
       document.getElementById("txtNorthOffset").innerText = (northOffset >= 0 ? "+" : "") + northOffset.toFixed(1) + "°";
 
+      // 罗盘盘面实际旋转角度 = 向首偏差 + 真北校准偏角
       currentCompassRotation = facingDeg - 180 + northOffset;
       const svgCompass = document.getElementById("svgCompass");
       if (svgCompass) {
@@ -1053,10 +922,10 @@
       const isSub = diff > 3.0;
 
       document.getElementById("orientationSummary").innerHTML = `
-        <div style="font-weight: 800; color: var(--gold-bright); margin-bottom: 2px; font-size: 13.5px;">
+        <div style="font-weight: 800; color: var(--gold-light); margin-bottom: 2px;">
           坐${sittingM.name}山 向${facingM.name}山 (${facingDeg.toFixed(1)}°)
         </div>
-        <div style="color: var(--text-muted); font-size: 12px; line-height: 1.6;">
+        <div style="color: var(--text-muted); font-size: 11.5px; line-height: 1.5;">
           向山：${facingM.gua}卦 | ${facingM.dragon}元龙 (${facingM.polarity === "+" ? "阳+" : "阴-"})<br>
           坐山：${sittingM.gua}卦 | ${sittingM.dragon}元龙 (${sittingM.polarity === "+" ? "阳+" : "阴-"})<br>
           立向状态：<strong style="color: ${isSub ? '#fb7185' : '#34d399'}">${isSub ? "【兼向替卦】偏离" + diff.toFixed(1) + "°" : "【正向下卦】纯正吉气"}</strong>
@@ -1119,8 +988,8 @@
             <span class="metric-badge ${isErWu ? 'badge-red' : (isDangLing ? 'badge-gold' : '')}" style="font-size:10px;">${isErWu ? "二五大煞" : (isDangLing ? "当令旺星" : "")}</span>
           </div>
           <div class="stars-cluster">
-            <div><div class="star-mountain">${m}</div><div style="font-size:10.5px; color:#64748b; text-align:center; font-weight:600;">山</div></div>
-            <div><div class="star-facing">${f}</div><div style="font-size:10.5px; color:#64748b; text-align:center; font-weight:600;">向</div></div>
+            <div><div class="star-mountain">${m}</div><div style="font-size:10px; color:#64748b; text-align:center;">山</div></div>
+            <div><div class="star-facing">${f}</div><div style="font-size:10px; color:#64748b; text-align:center;">向</div></div>
           </div>
           <div style="text-align: right;"><span class="star-base">运 ${b}</span></div>
         `;
@@ -1138,7 +1007,7 @@
       } else if (pair === "14") {
         desc += `<span style="color:#60a5fa; font-weight:bold;">【一四同宫准发科名】</span>：文曲与贪狼汇聚，大利考试、文书创作、学业晋升与科研。宜做书房、办公学习位，摆放四支水培富贵竹催旺。`;
       } else if (pair === "68") {
-        desc += `<span style="color:var(--gold-bright); font-weight:bold;">【六八齐到富比陶朱】</span>：武曲金与左辅土相生，主发偏财、进爵升官，极其适合作为客厅主沙发或财务收银位。`;
+        desc += `<span style="color:var(--gold-light); font-weight:bold;">【六八齐到富比陶朱】</span>：武曲金与左辅土相生，主发偏财、进爵升官，极其适合作为客厅主沙发或财务收银位。`;
       } else if (m === 9 && f === 9) {
         desc += `<span style="color:#f43f5e; font-weight:bold;">【九紫双逢大旺喜庆】</span>：九运当令之极旺火神，利添丁进喜、名誉远播、迎客动水最吉。`;
       } else {
@@ -1161,7 +1030,7 @@
         card.innerHTML = `
           <div style="font-size:12px; color:var(--text-muted);">${PALACE_NAMES[p]}</div>
           <div class="bazhai-star-name ${isJi ? 'ji-star' : 'xiong-star'}">${star}</div>
-          <div style="font-size:11.5px; color:#94a3b8;">${isJi ? '【四吉方】宜大门、主卧、书房' : '【四凶方】宜压卫生间、储物间以煞制煞'}</div>
+          <div style="font-size:11px; color:#94a3b8;">${isJi ? '【四吉方】宜大门、主卧、书房' : '【四凶方】宜压卫生间、储物间以煞制煞'}</div>
         `;
         grid.appendChild(card);
       });
@@ -1188,7 +1057,7 @@
 
       const res = guaMap[guaNum];
       document.getElementById("lifeGuaResult").innerHTML = `
-        <strong>${year}年居者三元本命卦</strong>：<span style="color:var(--gold-bright); font-weight:800;">${res.name}（${res.grp}）</span><br>
+        <strong>${year}年居者三元本命卦</strong>：<span style="color:var(--gold-light); font-weight:800;">${res.name}（${res.grp}）</span><br>
         <span style="color:var(--text-muted); font-size:11.5px;">配置法则：${res.grp === '东四命' ? '宜开坎/震/巽/离门及主卧睡向' : '宜开乾/坤/艮/兑门及主卧睡向'}</span>
       `;
     }
@@ -1225,16 +1094,19 @@
       `).join("");
     }
 
-    // 交互拖拽平移与直接旋转
+    // ==========================================
+    // 核心双重交互：平移立极 与 鼠标直接旋转罗盘
+    // ==========================================
     const compassWrapper = document.getElementById("compassOverlay");
     const centerHandle = document.getElementById("centerMoveHandle");
     const rotator = document.getElementById("compassRotator");
 
+    // 1. 平移立极逻辑 (按住中心圆点拖拽)
     let isTranslating = false;
     let tStartX, tStartY, tInitLeft = 0, tInitTop = 0;
 
     centerHandle.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
+      e.stopPropagation(); // 阻止触发旋转
       isTranslating = true;
       tStartX = e.clientX;
       tStartY = e.clientY;
@@ -1244,21 +1116,27 @@
       tInitTop = rect.top - parentRect.top;
     });
 
+    // 2. 鼠标在外圈按住直接旋转罗盘转盘
     let isRotating = false;
     let startMouseAngle = 0;
     let startCompassAngle = 0;
 
     rotator.addEventListener("mousedown", (e) => {
+      // 如果点击的是中心手柄则不进入旋转
       if (e.target === centerHandle || centerHandle.contains(e.target)) return;
       isRotating = true;
+      
       const rect = compassWrapper.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
+
+      // 计算当前鼠标相对于罗盘中心的夹角 (弧度转角度)
       startMouseAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
       startCompassAngle = parseFloat(document.getElementById("sliderNorthOffset").value);
     });
 
     window.addEventListener("mousemove", (e) => {
+      // 处理平移
       if (isTranslating) {
         const dx = e.clientX - tStartX;
         const dy = e.clientY - tStartY;
@@ -1267,10 +1145,12 @@
         return;
       }
 
+      // 处理旋转
       if (isRotating) {
         const rect = compassWrapper.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
+
         const currentMouseAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
         let deltaAngle = currentMouseAngle - startMouseAngle;
 
@@ -1344,6 +1224,7 @@
         <text x="285" y="105" fill="%2394a3b8" font-size="12" font-family="sans-serif" text-anchor="middle">干湿分离卫浴</text>
         <rect x="50" y="240" width="120" height="200" fill="%230f172a" stroke="%23475569" stroke-width="3"/>
         <text x="110" y="345" fill="%2394a3b8" font-size="13" font-family="sans-serif" text-anchor="middle">次卧书房</text>
+        <!-- 指北针 (提示向偏北 15 度) -->
         <g transform="translate(540, 75)">
           <circle cx="0" cy="0" r="18" fill="rgba(15,23,42,0.8)" stroke="%23d4af37" stroke-width="2"/>
           <polygon points="0,-14 -5,0 5,0" fill="%23ef4444"/>
@@ -1365,8 +1246,8 @@
       const reportBox = document.getElementById("aiReportBox");
       reportBox.innerHTML = `
         <div style="text-align: center; padding: 40px 0;">
-          <div style="font-size: 28px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
-          <div style="margin-top: 14px; color: var(--gold-bright); font-weight: 800; font-size: 15px;">AI 空间风水智能推理引擎正在综合分析户型图与罗盘真北...</div>
+          <div style="font-size: 26px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
+          <div style="margin-top: 14px; color: var(--gold-light); font-weight: 700; font-size: 15px;">AI 空间风水智能推理引擎正在综合分析户型图与罗盘真北...</div>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">正在对齐：二十四山分金 · 玄空飞星 · 八宅大游年 · 三元纳气正零神 · 现代软装物理化解规范</div>
         </div>
       `;
@@ -1390,13 +1271,13 @@
         const reportHtml = `
           <div class="ai-report-header">
             <div>
-              <div style="font-size: 18px; font-weight: 900; color: #f8fafc; letter-spacing: 0.5px;">《现代住宅风水 AI 空间诊断与工程调理方案》</div>
+              <div style="font-size: 18px; font-weight: 800; color: #f8fafc; letter-spacing: 0.5px;">《现代住宅风水 AI 空间诊断与工程调理方案》</div>
               <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
                 元运：下元第 ${state.period} 运 | 坐向：坐${state.sittingM.name}山 向${state.facingM.name}山 (${state.facingDeg}°) | 真北校正：${state.northOffset}° | 格局：${state.pattern}
               </div>
             </div>
             <div>
-              <span class="metric-badge badge-green" style="font-size:12.5px; padding:5px 12px;">AI 空间评级：88 分 (吉宅)</span>
+              <span class="metric-badge badge-green" style="font-size:12px; padding:4px 10px;">AI 空间评级：88 分 (吉宅)</span>
             </div>
           </div>
 
@@ -1409,7 +1290,7 @@
           </p>
 
           <div class="ai-section-title">🎯 二、全屋关键功能方位吉凶对位</div>
-          <ul style="padding-left: 20px; line-height: 1.9;">
+          <ul style="padding-left: 20px; line-height: 1.8;">
             <li><strong>💰 第一主财位 (${wangcaiPalace ? wangcaiPalace : "正南方"})</strong>：九运当令九紫旺向星飞临，此处最宜设为客厅主阳台或常走动动线，宜摆放常青阔叶盆栽与暖光灯催旺现金流。</li>
             <li><strong>📚 文昌考运位 (${wenchangPalace ? wenchangPalace : "东南方"})</strong>：一四同宫利文思创作、学业晋升，宜设书房、办公台。</li>
             <li><strong>⚠️ 病符重煞警戒区 (${erwuPalace ? erwuPalace : "西北乾宫"})</strong>：${erwuPalace ? erwuPalace + "飞临二五交加大煞" : "注意避开二黑病符星"}！绝不可作为主人睡床或明火炉灶，必须采用纯铜六帝钱重金泄化。</li>
@@ -1424,7 +1305,7 @@
           <div class="ai-section-title">🛠️ 四、室内形煞与现代物理软装施工落地清单</div>
           <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px;">
             <thead>
-              <tr style="border-bottom: 1px solid var(--border-gilded); color: var(--gold-bright);">
+              <tr style="border-bottom: 1px solid var(--border-gold); color: var(--gold-light);">
                 <th style="padding: 7px; text-align: left;">排查项目</th>
                 <th style="padding: 7px; text-align: left;">隐患描述</th>
                 <th style="padding: 7px; text-align: left;">免拆墙现代软装施工方案</th>
