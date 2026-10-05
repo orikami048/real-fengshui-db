@@ -158,7 +158,7 @@
     .badge-red { background: rgba(239, 68, 68, 0.15); color: #fb7185; border: 1px solid rgba(239, 68, 68, 0.4); }
     .badge-blue { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
 
-    /* 悬停白话解释气泡系统 (Tooltip) */
+    /* 悬停白话解释气泡系统 (全局动态浮动 Tooltip) */
     .term-tip {
       position: relative;
       cursor: help;
@@ -173,67 +173,36 @@
       opacity: 0.7;
       color: var(--gold-light);
     }
-    [data-tooltip] {
-      position: relative;
-    }
-    [data-tooltip]::before {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%) translateY(4px);
-      padding: 9px 13px;
-      background: #0b111e;
-      color: #e2e8f0;
+    /* 全局最高层级独立悬浮提示框，避免任何父容器 overflow:hidden 截断 */
+    #globalTooltip {
+      position: fixed;
+      display: none;
+      z-index: 100000;
+      pointer-events: none;
+      max-width: 320px;
+      padding: 10px 14px;
+      background: rgba(11, 17, 30, 0.96);
+      color: #f1f5f9;
       border: 1px solid var(--gold-primary);
       border-radius: 8px;
       font-size: 11.5px;
       font-weight: 400;
-      line-height: 1.55;
-      white-space: normal;
-      width: max-content;
-      max-width: 280px;
-      text-align: left;
-      z-index: 9999;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), 0 0 12px rgba(212, 175, 55, 0.25);
-      pointer-events: none;
+      line-height: 1.6;
+      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.9), 0 0 15px rgba(212, 175, 55, 0.3);
+      backdrop-filter: blur(12px);
+      transition: opacity 0.15s ease-out;
       opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      word-break: break-word;
     }
-    [data-tooltip]::after {
-      content: "";
-      position: absolute;
-      bottom: calc(100% + 2px);
-      left: 50%;
-      transform: translateX(-50%) translateY(4px);
-      border-width: 6px 6px 0 6px;
-      border-style: solid;
-      border-color: var(--gold-primary) transparent transparent transparent;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-    [data-tooltip]:hover::before,
-    [data-tooltip]:hover::after {
+    #globalTooltip.show {
+      display: block;
       opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
     }
-    /* 针对靠左或靠右元素的防溢出修正 */
-    [data-tooltip-pos="right"]::before {
-      left: 0;
-      transform: translateX(0) translateY(4px);
-    }
-    [data-tooltip-pos="right"]::after {
-      left: 18px;
-      transform: translateX(0) translateY(4px);
-    }
-    [data-tooltip-pos="right"]:hover::before,
-    [data-tooltip-pos="right"]:hover::after {
-      transform: translateX(0) translateY(0);
+    #globalTooltip .tip-title {
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+      display: block;
     }
 
     .tab-bar {
@@ -347,15 +316,16 @@
       position: absolute;
       top: 14px;
       left: 14px;
-      background: rgba(10, 15, 26, 0.85);
+      background: rgba(10, 15, 26, 0.92);
       border: 1px solid var(--border-gold);
       padding: 8px 14px;
       border-radius: 8px;
       font-size: 12px;
-      backdrop-filter: blur(10px);
-      z-index: 30;
-      pointer-events: none;
+      backdrop-filter: blur(12px);
+      z-index: 60;
       line-height: 1.5;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
     }
 
     /* 快捷旋转控制条 */
@@ -363,15 +333,16 @@
       position: absolute;
       bottom: 14px;
       right: 14px;
-      background: rgba(10, 15, 26, 0.85);
+      background: rgba(10, 15, 26, 0.92);
       border: 1px solid var(--border-gold);
       padding: 6px 10px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
-      z-index: 30;
-      backdrop-filter: blur(10px);
+      z-index: 60;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
     }
     .rot-btn {
       background: rgba(255,255,255,0.06);
@@ -805,8 +776,8 @@
             <!-- 专业透明综合罗盘 Overlay (支持平移与旋转双手势) -->
             <div id="compassOverlay" class="compass-overlay-wrapper">
               <!-- 可旋转盘面 -->
-              <div id="compassRotator" class="compass-rotator">
-                <svg id="svgCompass" width="100%" height="100%" viewBox="0 0 500 500" style="filter: drop-shadow(0 0 20px rgba(0,0,0,0.85));">
+              <div id="compassRotator" class="compass-rotator" style="overflow: visible;">
+                <svg id="svgCompass" width="100%" height="100%" viewBox="0 0 500 500" style="overflow: visible; filter: drop-shadow(0 0 20px rgba(0,0,0,0.85));">
                   <defs>
                     <radialGradient id="gradCenter" cx="50%" cy="50%" r="50%">
                       <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
@@ -1965,6 +1936,97 @@
     document.getElementById("selectPeriod").addEventListener("change", calculateAll);
     document.getElementById("inputBirthYear").addEventListener("input", updateLifeGua);
     document.querySelectorAll('input[name="gender"]').forEach(el => el.addEventListener("change", updateLifeGua));
+
+    // ==========================================
+    // 全局动态悬浮提示框 (智能边缘检测，100% 防溢出截断)
+    // ==========================================
+    const globalTooltipEl = document.createElement("div");
+    globalTooltipEl.id = "globalTooltip";
+    document.body.appendChild(globalTooltipEl);
+
+    let activeTooltipTarget = null;
+
+    function updateTooltipPos(target, e) {
+      if (!target || !globalTooltipEl.classList.contains("show")) return;
+      const text = target.getAttribute("data-tooltip");
+      if (!text) {
+        hideTooltip();
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      const tipWidth = globalTooltipEl.offsetWidth || 260;
+      const tipHeight = globalTooltipEl.offsetHeight || 60;
+      const winWidth = window.innerWidth;
+      const winHeight = window.innerHeight;
+
+      // 默认尝试在元素上方居中显示
+      let left = rect.left + (rect.width / 2) - (tipWidth / 2);
+      let top = rect.top - tipHeight - 10;
+
+      // 1. 如果上方空间不足（靠顶部），则智能翻转到下方
+      if (top < 12) {
+        top = rect.bottom + 10;
+      }
+
+      // 2. 如果下方空间依然超出屏幕，则紧贴视窗底部
+      if (top + tipHeight > winHeight - 12) {
+        top = Math.max(12, winHeight - tipHeight - 12);
+      }
+
+      // 3. 水平方向防两边溢出
+      if (left < 14) {
+        left = 14;
+      } else if (left + tipWidth > winWidth - 14) {
+        left = winWidth - tipWidth - 14;
+      }
+
+      globalTooltipEl.style.left = Math.round(left) + "px";
+      globalTooltipEl.style.top = Math.round(top) + "px";
+    }
+
+    function showTooltip(target, e) {
+      const text = target.getAttribute("data-tooltip");
+      if (!text) return;
+      activeTooltipTarget = target;
+      
+      // 提取标题与内容优化排版
+      if (text.startsWith("【") && text.includes("】：")) {
+        const titleEnd = text.indexOf("】：") + 2;
+        const title = text.substring(0, titleEnd);
+        const desc = text.substring(titleEnd);
+        globalTooltipEl.innerHTML = `<span class="tip-title">${title}</span>${desc}`;
+      } else {
+        globalTooltipEl.textContent = text;
+      }
+
+      globalTooltipEl.classList.add("show");
+      updateTooltipPos(target, e);
+    }
+
+    function hideTooltip() {
+      activeTooltipTarget = null;
+      globalTooltipEl.classList.remove("show");
+    }
+
+    // 采用委托监听全局所有 [data-tooltip] 元素，包括动态生成的九宫格与八宅
+    document.addEventListener("mouseover", (e) => {
+      const target = e.target.closest("[data-tooltip]");
+      if (target) {
+        showTooltip(target, e);
+      }
+    });
+
+    document.addEventListener("mouseout", (e) => {
+      const target = e.target.closest("[data-tooltip]");
+      if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+        hideTooltip();
+      }
+    });
+
+    window.addEventListener("scroll", () => {
+      if (activeTooltipTarget) hideTooltip();
+    }, { passive: true });
 
     initSvgCompass();
     calculateAll();
