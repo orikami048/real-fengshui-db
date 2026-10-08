@@ -759,6 +759,8 @@
       </div>
     </div>
     <div class="header-actions">
+      <!-- 统一国学多模块账户认证与会员中心挂载点 -->
+      <div id="guoxue-auth-mount"></div>
       <button class="btn btn-outline" onclick="loadSampleCase()">载入 120㎡ 户型示例</button>
       <button class="btn btn-outline" onclick="openTutorialModal()">罗盘真北与实战教程</button>
       <button class="btn btn-ai" onclick="switchTab('tab-ai-diag'); runAiAnalysis();">启动空间智能诊断</button>
@@ -2408,5 +2410,7 @@ ${specificAdvice}
     initFormSha();
     loadSampleCase();
   </script>
+  <!-- 统一国学多模块账户认证与会员系统 SDK -->
+  <script src="guoxue_auth.js"></script>
 </body>
 </html>
