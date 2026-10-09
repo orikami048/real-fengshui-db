@@ -313,47 +313,6 @@
                   .join('')}
               </div>
             </div>
-
-            <!-- 小红书爆款文案快速复制器 -->
-            <div>
-              <div class="fire-section-title"><span>📝</span> 小红书 / 朋友圈高爆文案库</div>
-              <div class="fire-copy-box">
-                <!-- 模版 1 -->
-                <div class="fire-copy-item">
-                  <div class="fire-copy-header">
-                    <span class="fire-copy-title">模版 1 · 租房党/卧室改造向 (高赞释怀)</span>
-                    <button class="fire-btn-copy" onclick="window.copyFireCopy(1)">📋 复制文案</button>
-                  </div>
-                  <div class="fire-copy-snippet" id="fire-copy-text-1">搬家后总倒霉？测完这套「2026九紫离火风水卡」，我连夜把床挪了！
-
-姐妹们真的不要不信邪！刚搬进新家这半年总破财生病，测了下发现是【${cardData.facingName}】犯了【${cardData.detectedShas.map(s => s.name.split(' (')[0]).join('、') || '微煞'}】！
-好在它给了超高级的【现代无痕软装化解法】：
-${cardData.detectedShas.map(s => `✦ ${s.name.split(' (')[0]}: ${s.decor}`).join('\n') || '✦ 保持采光通透，气场纯净'}
-而且在【${cardData.wealthCorner.sector}】财位布置了暖红香薰灯，整个人瞬间通透舒服了！
-2026想借九紫离火运转运的姐妹快测测！
-
-#2026九紫离火运 #租房风水 #无痕软装 #卧室布局 #全屋能量 #转运好物</div>
-                </div>
-
-                <!-- 模版 2 -->
-                <div class="fire-copy-item">
-                  <div class="fire-copy-header">
-                    <span class="fire-copy-title">模版 2 · 工位防背刺/搞钱向 (职场发疯共鸣)</span>
-                    <button class="fire-btn-copy" onclick="window.copyFireCopy(2)">📋 复制文案</button>
-                  </div>
-                  <div class="fire-copy-snippet" id="fire-copy-text-2">领导走过来都绕着走！我的工位已经布下「九紫离火防御大阵」🔥
-
-坐在走廊过道每天被甩锅心力交瘁，火速用这个工位气场体检自救：
-1. 椅背搭厚毛毯（构建厚土玄武靠山）；
-2. 正南方摆暖红小马水晶催动九紫火；
-3. 左手青龙位放吸金绿植，右手白虎位清空！
-自从阵法摆好，整个人气场全开，连搞事同事都不敢来惹我了！
-打工人保护自己的第一步，先从叠满工位防御甲开始！
-
-#工位风水 #打工人日常 #防小人玄学 #办公室工位 #九紫离火运 #职场翻盘</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- 右侧 3:4 黄金画幅海报实时渲染 -->
@@ -449,7 +408,7 @@ ${cardData.detectedShas.map(s => `✦ ${s.name.split(' (')[0]}: ${s.decor}`).joi
                   </div>
                 </div>
                 <div style="text-align:right;">
-                  <div style="font-size:9.5px; font-weight:bold; color:#f2c975;">#小红书爆款风水卡</div>
+                  <div style="font-size:9.5px; font-weight:bold; color:#f2c975;">#九紫离火风水</div>
                   <div style="font-size:8px; color:#64748b;">REAL FENG SHUI STUDIO</div>
                 </div>
               </div>
@@ -527,24 +486,6 @@ ${cardData.detectedShas.map(s => `✦ ${s.name.split(' (')[0]}: ${s.decor}`).joi
     updateModal();
     const backdrop = document.getElementById('fireNineModalBackdrop');
     if (backdrop) backdrop.classList.add('active');
-  };
-
-  window.copyFireCopy = async function (num) {
-    const el = document.getElementById(`fire-copy-text-${num}`);
-    if (!el) return;
-    const text = el.innerText;
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('✓ 小红书文案已复制到剪贴板！可直接粘贴发布！');
-    } catch (err) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      alert('✓ 小红书文案已复制到剪贴板！');
-    }
   };
 
   window.downloadFirePoster = async function () {
