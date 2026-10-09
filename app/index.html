@@ -6,6 +6,7 @@
   <title>Real Feng Shui Master Studio | 实战风水罗盘与 AI 空间诊断系统</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="fire_nine.css">
   <style>
     :root {
       --bg-space: #070a12;
@@ -759,6 +760,11 @@
       </div>
     </div>
     <div class="header-actions">
+      <!-- 统一国学多模块账户认证与会员中心挂载点 -->
+      <div id="guoxue-auth-mount"></div>
+      <button class="btn btn-fire" onclick="openFireNineModal()" style="background: linear-gradient(135deg, #d93829 0%, #f2c975 100%); color: #0d0f14; font-weight: 800; box-shadow: 0 4px 15px rgba(217, 56, 41, 0.45); border: 1px solid #f2c975;">
+        🔥 2026九紫离火能量卡 (3:4海报)
+      </button>
       <button class="btn btn-outline" onclick="loadSampleCase()">载入 120㎡ 户型示例</button>
       <button class="btn btn-outline" onclick="openTutorialModal()">罗盘真北与实战教程</button>
       <button class="btn btn-ai" onclick="switchTab('tab-ai-diag'); runAiAnalysis();">启动空间智能诊断</button>
@@ -777,6 +783,10 @@
         <!-- 小白傻瓜测向向导按钮 -->
         <button class="btn-wizard" onclick="openWizardModal()">
           <span>🧭</span> <strong>不知道怎么量？点此启动「小白测向向导」</strong>
+        </button>
+        <!-- 2026九紫离火能量体检快捷入口 -->
+        <button class="btn-wizard" onclick="openFireNineModal()" style="margin-top: 6px; background: linear-gradient(135deg, rgba(217,56,41,0.2) 0%, rgba(242,201,117,0.15) 100%); border-color: rgba(242,201,117,0.4); color: #fce183;">
+          <span>🔥</span> <strong>2026九紫离火运 · 全屋吸金与工位气场防御卡</strong>
         </button>
 
         <div class="form-group">
@@ -2408,5 +2418,9 @@ ${specificAdvice}
     initFormSha();
     loadSampleCase();
   </script>
+  <!-- 统一国学多模块账户认证与会员系统 SDK -->
+  <script src="guoxue_auth.js"></script>
+  <!-- FIRE-NINE MATRIX: 2026 九紫离火运空间吉凶体检与工位气场防御卡 -->
+  <script src="fire_nine_modal.js"></script>
 </body>
 </html>

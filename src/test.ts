@@ -39,4 +39,55 @@ console.log(`[测试6] 九运三元纳气:`);
 console.log(`         正北门纳气性质: ${northIntake.qiNature} (${northIntake.isLingShen ? "零神方大吉" : ""})`);
 console.log(`         正南窗纳气性质: ${southIntake.qiNature} (${southIntake.isZhengShen ? "正神方宜静" : ""})`);
 
+// 6. FIRE-NINE MATRIX: 2026 九紫离火运全屋吸金结界与工位防御推演测试
+import { resolveFireNineMatrix, FACING_PRESETS, COMMON_SHA_REMEDIES } from "./engine/fireNineResolver";
+
+console.log("\n=== 🔥 2026九紫离火结界 (FIRE-NINE) 自动化回归测试 ===");
+
+// 6.1 全屋坐北朝南无煞体检
+const homeResult = resolveFireNineMatrix({
+  scenario: "home",
+  directionKey: "north_south",
+  selectedShaKeys: [],
+});
+if (homeResult.energyScore < 90 || homeResult.scoreRating !== "龙腾离火") {
+  throw new Error(`全屋高分预期失败: score=${homeResult.energyScore}, rating=${homeResult.scoreRating}`);
+}
+console.log(`[测试7] 2026全屋吸金宅 (坐北朝南): ${homeResult.energyScore}分 [${homeResult.scoreRating}]`);
+console.log(`         正财位: ${homeResult.wealthCorner.sector} - ${homeResult.wealthCorner.starName}`);
+console.log(`         文昌位: ${homeResult.wisdomCorner.sector} - ${homeResult.wisdomCorner.starName}`);
+
+// 6.2 卧室门冲床头与横梁压顶化解测试
+const bedroomResult = resolveFireNineMatrix({
+  scenario: "bedroom",
+  directionKey: "south_north",
+  selectedShaKeys: ["men_chong_chuang", "liang_ya_ding"],
+});
+if (bedroomResult.detectedShas.length !== 2) {
+  throw new Error(`卧室形煞侦测数量不符合预期: ${bedroomResult.detectedShas.length}`);
+}
+if (!bedroomResult.detectedShas[0].remedySoftDecor.decorName) {
+  throw new Error("现代软装化解名称缺失");
+}
+console.log(`[测试8] 卧室睡眠舱 (双煞化解): 检出形煞 ${bedroomResult.detectedShas.length} 处，成功匹配无痕软装化解法`);
+
+// 6.3 打工人工位背后空虚防背刺防御测试
+const workResult = resolveFireNineMatrix({
+  scenario: "workspace",
+  directionKey: "west_east",
+  selectedShaKeys: ["gong_wei_wu_kao"],
+});
+if (workResult.scenarioName !== "打工人工位" || !workResult.nineFireMotto.includes("靠山")) {
+  throw new Error("工位场景定制文案不符合预期");
+}
+console.log(`[测试9] 打工人工位防御卡: ${workResult.facingName} -> 护身金句: "${workResult.nineFireMotto}"`);
+
+// 6.4 8大朝向预设完整性断言
+for (const [key, preset] of Object.entries(FACING_PRESETS)) {
+  if (!preset.wealthCorner.sector || !preset.wisdomCorner.sector) {
+    throw new Error(`朝向 ${key} 缺失吉位信息`);
+  }
+}
+console.log(`[测试10] 8大主流朝向离火当令与吉星配置完整性 100% 校验通过`);
+
 console.log("\n✅ 全部测试通过！算法逻辑与现实古籍规范严丝合缝。");
