@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="fire_nine.css">
+  <link rel="stylesheet" href="desk_shield.css">
   <style>
     :root {
       --bg-space: #070a12;
@@ -762,6 +763,9 @@
     <div class="header-actions">
       <!-- 统一国学多模块账户认证与会员中心挂载点 -->
       <div id="guoxue-auth-mount"></div>
+      <button class="btn btn-desk-shield" onclick="openDeskShieldModal()" style="background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #10b981 100%); color: #fff; font-weight: 800; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.45); border: 1px solid rgba(255,255,255,0.4); cursor: pointer;">
+        🛡️ 工位防小人吸金结界 (¥9.9)
+      </button>
       <button class="btn btn-fire" onclick="openFireNineModal()" style="background: linear-gradient(135deg, #d93829 0%, #f2c975 100%); color: #0d0f14; font-weight: 800; box-shadow: 0 4px 15px rgba(217, 56, 41, 0.45); border: 1px solid #f2c975;">
         🔥 2026九紫离火能量卡 (3:4海报)
       </button>
@@ -2422,5 +2426,7 @@ ${specificAdvice}
   <script src="guoxue_auth.js"></script>
   <!-- FIRE-NINE MATRIX: 2026 九紫离火运空间吉凶体检与工位气场防御卡 -->
   <script src="fire_nine_modal.js"></script>
+  <!-- DESK-SHIELD MATRIX: 打工人 1㎡ 工位防小人吸金结界指南 (¥9.9 爆款变现) -->
+  <script src="desk_shield_modal.js"></script>
 </body>
 </html>
