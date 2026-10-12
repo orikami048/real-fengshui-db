@@ -349,3 +349,24 @@ metadata:
 - 信息不完整时：「未见户型图，以下分析以您描述为准，如有偏差请告知」
 - 无法远程判断峦头时：「外部形势需实地勘察，远程仅能就您描述作初步判断」
 - 流年大运与风水冲突时：「风水格局与流年运势相互叠加，以下仅论宅运，个人流年另当别论」
+
+---
+
+## 六、大模型智能大脑与 Google Gemini Key 接入配置
+
+堪舆子顾问系统原生支持 **Google Gemini API** 官方大模型直连，将排盘实测数据（坐向度数、兼向替卦、九星顺逆、宅命卦、协纪建除十二神）作为 Context 上下文输入大模型：
+
+1. **Web 浏览器端直连**：
+   - 点击顶部「**🎎 堪舆子顾问 (Skill)**」弹窗中的「⚙️ 接入 Google Gemini API Key」；
+   - 粘贴您的 Gemini API Key（支持 `gemini-2.5-flash`、`gemini-2.0-flash`、`gemini-1.5-pro`）；
+   - Key 安全保存在本地 `localStorage`，直接与 Google 端点通信；
+   - 在「**空间智能诊断报告**」标签页亦可选择「🌟 Google Gemini 官方大模型」生成深度 Markdown 调理全案。
+
+2. **命令行 CLI / Agent 环境调用**：
+   - 设置环境变量：`export GEMINI_API_KEY="AIzaSy..."` 或在 Windows PowerShell: `$env:GEMINI_API_KEY="AIzaSy..."`；
+   - 命令行运行：
+     ```bash
+     python scripts/fengshui_paipan.py --facing 180 --gemini
+     python scripts/fengshui_paipan.py --zeri --event 入宅 --year 2026 --gemini
+     ```
+

@@ -73,6 +73,39 @@
         </div>
 
         <div class="kanyu-card-body">
+          <!-- Gemini AI 大模型驱动与 Key 配置工具条 -->
+          <div class="kanyu-ai-toolbar">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="kanyuEnginePill" class="kanyu-engine-pill offline">☯️ 内置易学推理引擎</span>
+              <span style="font-size:11px; color:#94a3b8;" id="kanyuModelLabel"></span>
+            </div>
+            <button type="button" class="kanyu-settings-btn" onclick="window.toggleKanyuApiKeyBox()">
+              ⚙️ 接入 Google Gemini API Key
+            </button>
+          </div>
+
+          <!-- 自定义 Gemini Key 设置抽屉 -->
+          <div class="kanyu-api-box" id="kanyuApiBox" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; color:#fce183; font-weight:700;">🌟 接入 Google Gemini 官方大模型 (浏览器直连)</span>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px; color:#93c5fd; text-decoration:underline;">免费获取 Gemini API Key ↗</a>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="password" id="inputKanyuGeminiKey" class="kanyu-input-key" placeholder="粘贴您的 Gemini API Key (AIzaSy...)" style="flex:1; min-width:220px;">
+              <select id="selectKanyuGeminiModel" class="kanyu-select-model">
+                <option value="gemini-2.5-flash" selected>gemini-2.5-flash (极速首选)</option>
+                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+                <option value="gemini-1.5-pro">gemini-1.5-pro (深度推理)</option>
+              </select>
+              <button type="button" class="btn btn-gold" style="padding:5px 14px; font-size:12px;" onclick="window.saveKanyuGeminiKey()">保存Key</button>
+              <button type="button" class="btn btn-outline" style="padding:5px 10px; font-size:12px;" onclick="window.clearKanyuGeminiKey()">清除/切回内置</button>
+            </div>
+            <div style="font-size:11px; color:#94a3b8; line-height:1.4;">
+              🔒 隐私保障：API Key 仅存放于您本地浏览器 localStorage 中，直接与 Google 官方端点通信，绝不上报中转服务器。
+            </div>
+          </div>
+
           <div class="kanyu-preset-grid">
             <div class="kanyu-preset-chip" onclick="window.triggerKanyuPreset('yangzhai')">
               <span class="kanyu-chip-title">🏡 阳宅全息研判</span>
@@ -118,12 +151,162 @@
     });
   }
 
+  // 获取 Gemini 配置
+  function getGeminiConfig() {
+    const key = localStorage.getItem('gemini_api_key') || localStorage.getItem('fengshui_ai_api_key') || '';
+    const model = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
+    return { key, model };
+  }
+
+  // 更新引擎状态栏
+  window.updateKanyuEngineStatus = function () {
+    const pill = document.getElementById('kanyuEnginePill');
+    const label = document.getElementById('kanyuModelLabel');
+    if (!pill) return;
+    const { key, model } = getGeminiConfig();
+    if (key) {
+      pill.className = 'kanyu-engine-pill gemini';
+      pill.innerHTML = '✨ Google Gemini 大模型驱动中';
+      if (label) label.innerText = `(${model})`;
+    } else {
+      pill.className = 'kanyu-engine-pill offline';
+      pill.innerHTML = '☯️ 内置易学推理引擎';
+      if (label) label.innerText = '(未配置Key)';
+    }
+  };
+
+  // 展开/收起 Gemini 设置抽屉
+  window.toggleKanyuApiKeyBox = function () {
+    const box = document.getElementById('kanyuApiBox');
+    if (!box) return;
+    const isVisible = box.style.display !== 'none';
+    box.style.display = isVisible ? 'none' : 'flex';
+    if (!isVisible) {
+      const { key, model } = getGeminiConfig();
+      const input = document.getElementById('inputKanyuGeminiKey');
+      const select = document.getElementById('selectKanyuGeminiModel');
+      if (input) input.value = key;
+      if (select) select.value = model;
+      if (input) setTimeout(() => input.focus(), 100);
+    }
+  };
+
+  // 保存 Gemini API Key
+  window.saveKanyuGeminiKey = function () {
+    const input = document.getElementById('inputKanyuGeminiKey');
+    const select = document.getElementById('selectKanyuGeminiModel');
+    if (!input) return;
+    const key = input.value.trim();
+    if (!key) {
+      alert('请输入有效的 Gemini API Key！');
+      return;
+    }
+    const model = select ? select.value : 'gemini-2.5-flash';
+    localStorage.setItem('gemini_api_key', key);
+    localStorage.setItem('fengshui_ai_api_key', key);
+    localStorage.setItem('gemini_model', model);
+    window.updateKanyuEngineStatus();
+    
+    // 如果主页面的 AI key 输入框存在，同步更新
+    const mainInput = document.getElementById('inputAiApiKey');
+    if (mainInput) mainInput.value = key;
+
+    const box = document.getElementById('kanyuApiBox');
+    if (box) box.style.display = 'none';
+    alert(`✅ Google Gemini API Key 已成功接入！\n当前选用模型：${model}\n堪舆子顾问已升级为顶级 AI 大模型智能大脑。`);
+  };
+
+  // 清除 Gemini Key 切回内置
+  window.clearKanyuGeminiKey = function () {
+    localStorage.removeItem('gemini_api_key');
+    const input = document.getElementById('inputKanyuGeminiKey');
+    if (input) input.value = '';
+    window.updateKanyuEngineStatus();
+    const box = document.getElementById('kanyuApiBox');
+    if (box) box.style.display = 'none';
+    alert('已清除 Key，堪舆子顾问已切回内置易学权威规则推理引擎。');
+  };
+
+  // 构建堪舆子完整学术法统 System Prompt
+  function buildKanyuSystemPrompt(state, bz) {
+    const period = state?.period || 9;
+    const sitName = state?.sittingM?.name || '子';
+    const faceName = state?.facingM?.name || '午';
+    const faceDeg = state?.facingDeg || 180;
+    const isSub = state?.isSub;
+    const pattern = state?.pattern || '旺山旺向';
+    const houseGua = bz?.name || '坎宅 (东四宅)';
+
+    return `你是由古典易学名家道统与现代建筑环境科学深度融合的「堪舆子 · 传统风水顾问（江南三元派玄空名师）」。
+你的学术宗师与经典依归：
+- 《沈氏玄空学》：二十四山下卦挨星替卦诀、山上龙神不下水、水里龙神不上山、九星生旺退煞克、二黑五黄重煞化解；
+- 《协纪辨方书》：太岁三煞、岁破月破、建除十二神黄黑道吉凶宜忌；
+- 《八宅明镜》《阳宅三要》：东四西四宅命配合、门主灶吉凶互配；
+- 《宅经》《葬书》：气乘风则散，界水则止。藏风聚气为本。
+
+用户当前的实测罗盘与房屋理气元数据：
+- 元运：下元第 ${period} 运 (2024-2043 九紫离火运当令)
+- 坐向：坐【${sitName}】山 向【${faceName}】山 (实测向首度数: ${faceDeg}°)
+- 卦象性质：${isSub ? '兼向替卦 (杂气兼向，重在纳气口清纯)' : '正向下卦 (正山正向，气脉纯正)'}
+- 全屋格局：【${pattern}】
+- 宅命卦系：【${houseGua}】
+- 当前流年参数：2026丙午马年（太岁正南午方、三煞正北亥子丑、五黄廉贞东北艮宫）
+
+沟通与解答规范：
+1. 语言儒雅谦逊、博学沉稳，自称“老朽”，称呼对方为“同修”或“阁下”，文笔兼具古典名师意蕴与现代通晓度；
+2. 凡关键论断务必援引《天玉经》《青囊序》《玄空秘旨》《协纪辨方书》等经典名句；
+3. 坚持理性科学人居与诚实边界：坚决拒绝神化迷信、绝不推销法器神物。优先运用“物理隔断（屏风/玄关柜）、动线横移避煞、阔叶常绿绿植柔化、暖色光源聚气、重金属铜器泄化土煞”等现代无痕工程与软装调理方案；
+4. 结构严整清晰，请使用优美的 Markdown 排版（小标题、引用块、列表等）输出。`;
+  }
+
+  // 调用 Google Gemini 官方 API
+  async function callGeminiApi(userPrompt, systemPrompt) {
+    const { key, model } = getGeminiConfig();
+    if (!key) throw new Error('未检测到 Gemini API Key');
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+
+    const payload = {
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2048
+      }
+    };
+    if (systemPrompt) {
+      payload.system_instruction = {
+        parts: [{ text: systemPrompt }]
+      };
+    }
+
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error('Gemini 返回内容为空');
+    return text;
+  }
+
   // 打开/关闭模态窗
   window.openKanyuModal = function () {
     createKanyuModalDom();
     const modal = document.getElementById('modalKanyuAdvisor');
     if (modal) {
       modal.style.display = 'flex';
+      window.updateKanyuEngineStatus();
       const input = document.getElementById('kanyuInputText');
       if (input) setTimeout(() => input.focus(), 150);
     }
@@ -151,19 +334,44 @@
     box.scrollTop = box.scrollHeight;
   }
 
+  function appendKanyuThinking() {
+    const box = document.getElementById('kanyuDialogBox');
+    if (!box) return null;
+    const item = document.createElement('div');
+    item.id = 'kanyuThinkingIndicator';
+    item.className = 'kanyu-msg-item';
+    item.innerHTML = `
+      <div class="kanyu-msg-master kanyu-msg-thinking">
+        <span style="font-size:20px; animation: rotateTaiji 2s linear infinite; display:inline-block;">☯️</span>
+        <span>堪舆子先生正在运盘演卦、调阅典籍并接入 Google Gemini 智能推演中...</span>
+      </div>
+    `;
+    box.appendChild(item);
+    box.scrollTop = box.scrollHeight;
+    return item;
+  }
+
+  function removeKanyuThinking() {
+    const el = document.getElementById('kanyuThinkingIndicator');
+    if (el) el.remove();
+  }
+
   // 触发快捷预设
-  window.triggerKanyuPreset = function (type) {
+  window.triggerKanyuPreset = async function (type) {
     createKanyuModalDom();
     const state = window.currentChartState || null;
+    const bz = (state && state.sittingM && window.BAZHAI_DATA) ? (window.BAZHAI_DATA[state.sittingM.palace] || null) : null;
+    const { key } = getGeminiConfig();
     
+    let userPromptText = "";
+    let offlineResp = "";
+
     if (type === 'yangzhai') {
-      appendKanyuMessage('user', '请先生根据当前实测罗盘与星盘，为舍下作阳宅全息研判。');
-      setTimeout(() => {
-        if (!state) {
-          appendKanyuMessage('master', '《天玉经》云：『江东一卦从来吉，八神四个一』。当前罗盘尚未完成立极，请先在左侧输入向首度数或拨动罗盘天心，老朽方能起盘断吉凶。');
-          return;
-        }
-        const resp = `《玄空秘旨》云：『山上龙神不下水，水里龙神不上山』。
+      userPromptText = '请先生根据当前实测罗盘与星盘，为舍下作阳宅全息研判。';
+      if (!state) {
+        offlineResp = '《天玉经》云：『江东一卦从来吉，八神四个一』。当前罗盘尚未完成立极，请先在左侧输入向首度数或拨动罗盘天心，老朽方能起盘断吉凶。';
+      } else {
+        offlineResp = `《玄空秘旨》云：『山上龙神不下水，水里龙神不上山』。
 
 当前实测舍下坐向乃**坐【${state.sittingM.name}】山向【${state.facingM.name}】山**（实测向首度数 ${state.facingDeg}°），处于**下元九运**之局。
 
@@ -173,12 +381,10 @@
 1. **向星当旺之所**：九紫离火为九运当令财星，宜设明堂开阔大窗、流通走道与柔和灯彩，此谓『当令向星见明堂，骤发财禄不可挡』；
 2. **山星静守之所**：坐山方为人丁健康靠山，床头必须厚重靠实，忌临窗悬空；
 3. **二五重煞方**：二黑病符与五黄凶曜飞临之处，绝不可安炉作灶或设主卧安床，宜以纯铜六帝钱尺、天然铜葫芦重金泄化其土煞凶性。`;
-        appendKanyuMessage('master', resp);
-      }, 350);
+      }
     } else if (type === 'zeri') {
-      appendKanyuMessage('user', '请教先生乔迁入宅与开工修造，当如何依据《协纪辨方书》选定吉期？');
-      setTimeout(() => {
-        appendKanyuMessage('master', `《协纪辨方书》云：『岁破、月破，百神回避；三煞动土，祸患立见』。
+      userPromptText = '请教先生乔迁入宅与开工修造，当如何依据《协纪辨方书》选定吉期？';
+      offlineResp = `《协纪辨方书》云：『岁破、月破，百神回避；三煞动土，祸患立见』。
 
 【四大事项择日铁律】：
 1. **入宅乔迁**：首取**成日**、**开日**、**满日**。严避【岁破日】与【月破日】；入宅吉时宜在巳、午阳气隆盛之时；
@@ -186,12 +392,10 @@
 3. **动工修造**：严避流年太岁方（2026在正南午方）与流年三煞方（2026在正北方亥子丑），五黄飞临之处（2026在东北艮宫）绝不可先起首锤；
 4. **月破速查**：正月破申、二月破酉、三月破戌、四月破亥、五月破子、六月破丑、七月破寅、八月破卯、九月破辰、十月破巳、十一月破午、十二月破未。凡逢月破日，万事莫动。
 
-您亦可在右侧切至 **【📅 协纪择日吉期】** 选项卡，查看精确到月日神煞的交互排演。`);
-      }, 350);
+您亦可在右侧切至 **【📅 协纪择日吉期】** 选项卡，查看精确到月日神煞的交互排演。`;
     } else if (type === 'xingsha') {
-      appendKanyuMessage('user', '请教先生，常见住宅外煞与内煞当如何化解？');
-      setTimeout(() => {
-        appendKanyuMessage('master', `《葬书》云：『气乘风则散，界水则止』。堪舆化煞，以**「移形易位、物理阻隔」**为上策，摆设风水器物为下策。
+      userPromptText = '请教先生，常见住宅外煞与内煞当如何化解？';
+      offlineResp = `《葬书》云：『气乘风则散，界水则止』。堪舆化煞，以**「移形易位、物理阻隔」**为上策，摆设风水器物为下策。
 
 【常见外煞调理】：
 - **路冲煞（枪煞）**：道路直冲大门或主窗。化解：玄关设透光屏风阻隔直气，窗台设宽阔泰山石或绿植厚帘缓冲；
@@ -201,20 +405,41 @@
 【常见内煞调理】：
 - **穿堂风**：大门正对阳台大窗，气流直进直出。化解：大门内1.5米设长虹玻璃玄关柜，令气流『曲则有情』；
 - **横梁压床**：睡床正上方有承重横梁。化解：床头横移脱离梁下，或吊顶做弧形石膏板完全包裹遮蔽；
-- **厨厕相对**：水火相战。化解：两门错开或常闭其一，门上悬挂过膝棉麻长帘。`);
-      }, 350);
+- **厨厕相对**：水火相战。化解：两门错开或常闭其一，门上悬挂过膝棉麻长帘。`;
     } else if (type === 'theory') {
-      appendKanyuMessage('user', '请先生开示：何为三元九运？下元九运对现代阳宅有何影响？');
-      setTimeout(() => {
-        appendKanyuMessage('master', `《青囊序》云：『二十四山分顺逆，共成四十有八局』。
+      userPromptText = '请先生开示：何为三元九运？下元九运对现代阳宅有何影响？';
+      offlineResp = `《青囊序》云：『二十四山分顺逆，共成四十有八局』。
 
 1. **三元九运真源**：以木星土星会合周期为基，一运二十年，三运为一元（六十年），上中下三元共一百八十年大循环。
 2. **当前九运（2024–2043）气象**：
    - 乃**九紫离火运**，离卦属火、居正南方，主文明、科技、女性、精神修养与创意文化；
    - **当旺吉星**：九紫当令最旺，一白坎水为生气（将来之旺），八白艮土为退气；
-   - **正零神大要**：正神在正南离宫（宜实地、高山、静守），零神在正北坎宫（宜水流、大窗、动气纳财）。若反之正南动水、正北闭塞，则谓『正神下水、零神上山』，主退财败气。`);
-      }, 350);
+   - **正零神大要**：正神在正南离宫（宜实地、高山、静守），零神在正北坎宫（宜水流、大窗、动气纳财）。若反之正南动水、正北闭塞，则谓『正神下水、零神上山』，主退财败气。`;
     }
+
+    appendKanyuMessage('user', userPromptText);
+
+    // 若配置了 Gemini Key，优先调动大模型深度针对性作答
+    if (key) {
+      appendKanyuThinking();
+      try {
+        const sysPrompt = buildKanyuSystemPrompt(state, bz);
+        const geminiReply = await callGeminiApi(userPromptText, sysPrompt);
+        removeKanyuThinking();
+        appendKanyuMessage('master', geminiReply);
+        return;
+      } catch (err) {
+        console.warn('Gemini 预设调用失败，平滑降级为内置易学库：', err);
+        removeKanyuThinking();
+        appendKanyuMessage('master', `> 💡 *【提示：Google Gemini 连接受阻（${err.message}），已自动切换为内置权威规则为您作答】*\n\n` + offlineResp);
+        return;
+      }
+    }
+
+    // 默认内置极速响应
+    setTimeout(() => {
+      appendKanyuMessage('master', offlineResp + `\n\n*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可解锁具备自由深度问答的大模型堪舆子大脑)*`);
+    }, 300);
   };
 
   // 自由提问堪舆子
@@ -228,36 +453,61 @@
     input.value = '';
 
     const state = window.currentChartState || null;
-    
-    // 本地快速规则推理回复
+    const bz = (state && state.sittingM && window.BAZHAI_DATA) ? (window.BAZHAI_DATA[state.sittingM.palace] || null) : null;
+    const { key } = getGeminiConfig();
+
+    // 1. 若配置了 Gemini Key，直接调用 Google 大模型
+    if (key) {
+      appendKanyuThinking();
+      try {
+        const sysPrompt = buildKanyuSystemPrompt(state, bz);
+        const reply = await callGeminiApi(q, sysPrompt);
+        removeKanyuThinking();
+        appendKanyuMessage('master', reply);
+        return;
+      } catch (err) {
+        console.warn('Gemini 请求失败，降级为内置专家逻辑：', err);
+        removeKanyuThinking();
+        let fallbackNotice = `> ⚠️ *【Gemini 连接提示：${err.message}。已自动为您切换为内置专家规则推演】*\n\n`;
+        let ruleReply = generateLocalRuleReply(q, state);
+        appendKanyuMessage('master', fallbackNotice + ruleReply);
+        return;
+      }
+    }
+
+    // 2. 本地快速规则推理回复
     setTimeout(() => {
-      let reply = "";
-      if (/路冲|天斩|壁刀|反弓|尖角|煞/i.test(q)) {
-        reply = `《地理五诀》云：『形煞者，视之有物，冲之有声』。针对阁下所询形煞，首重避与隔：
+      let reply = generateLocalRuleReply(q, state);
+      appendKanyuMessage('master', reply + `\n\n*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可接入您的 Gemini 大模型进行任意深度发散对话)*`);
+    }, 400);
+  };
+
+  // 本地专家规则库兜底
+  function generateLocalRuleReply(q, state) {
+    if (/路冲|天斩|壁刀|反弓|尖角|煞/i.test(q)) {
+      return `《地理五诀》云：『形煞者，视之有物，冲之有声』。针对阁下所询形煞，首重避与隔：
 1. **物理阻隔**：能设屏风玄关者，坚决设立；
 2. **移形易位**：睡床或办公桌避开直冲投影；
 3. **气场缓冲**：临窗可置厚实常绿阔叶植物（如龟背竹、琴叶榕），配合纯铜泰山石敢当镇化。`;
-      } else if (/日|择日|乔迁|搬家|开业|动土|结婚|修造/i.test(q)) {
-        reply = `《协纪辨方书》考定：择日先问太岁三煞。
+    } else if (/日|择日|乔迁|搬家|开业|动土|结婚|修造/i.test(q)) {
+      return `《协纪辨方书》考定：择日先问太岁三煞。
 - 选定事项首选【成日】、【开日】或【满日】；
 - 切不可犯当月月破日（如正月逢申、二月逢酉）与主事人本命生肖冲克日；
 - 建议阁下移步右侧 **【📅 协纪择日吉期】** 查看当月全套干支吉凶排演。`;
-      } else if (/财|旺财|水|催财|财位/i.test(q)) {
-        const wangcai = (state && state.facingDeg) ? `当前九运向星旺位` : `正南方离宫或正北方坎水零神方`;
-        reply = `《天玉经》云：『水是山家血脉精，利人害人速如神』。
+    } else if (/财|旺财|水|催财|财位/i.test(q)) {
+      const wangcai = (state && state.facingDeg) ? `当前九运向星旺位` : `正南方离宫或正北方坎水零神方`;
+      return `《天玉经》云：『水是山家血脉精，利人害人速如神』。
 九运之中，当令九紫向星所到之【${wangcai}】乃主财气口。客厅阳台保持窗明几净，设柔和暖色灯光，水流宜内向回流，不可直流外泄，便为得水得财。`;
-      } else if (/床|睡眠|失眠|头朝|主卧/i.test(q)) {
-        reply = `《八宅明镜》云：『安床之法，坐实向虚』。
+    } else if (/床|睡眠|失眠|头朝|主卧/i.test(q)) {
+      return `《八宅明镜》云：『安床之法，坐实向虚』。
 1. 床头必须靠实墙，不可悬空临窗；
 2. 床头两侧避开正对房门或卫生间马桶；
 3. 床头上方严忌横梁压顶与空调重机压制；
 4. 命卦属西四命者床头宜西、西北、西南、东北；属东四命者床头宜北、东、东南、南。`;
-      } else {
-        reply = `《宅经》云：『宅者人之本，人者宅之主』。阁下所询【${q}】，堪舆学讲求因地制宜。阳宅布局万变不离『藏风聚气、动静分明、阴阳调和』十二字。若有具体朝向度数与户型位置，老朽可为阁下深析个中玄妙。`;
-      }
-      appendKanyuMessage('master', reply);
-    }, 400);
-  };
+    } else {
+      return `《宅经》云：『宅者人之本，人者宅之主』。阁下所询【${q}】，堪舆学讲求因地制宜。阳宅布局万变不离『藏风聚气、动静分明、阴阳调和』十二字。若有具体朝向度数与户型位置，老朽可为阁下深析个中玄妙。`;
+    }
+  }
 
   // ------------------------------------------------------------
   // 协纪择日 Tab 交互计算与渲染 (tab-zeri)

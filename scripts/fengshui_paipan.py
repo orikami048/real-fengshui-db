@@ -232,26 +232,71 @@ def print_zeri(res):
     print(f"📜 名师点拨：{res['advice']}")
     print("=" * 60)
 
+def call_gemini_cli(prompt, key, model="gemini-2.5-flash"):
+    import os
+    import urllib.request
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}"
+    payload = {
+        "system_instruction": {
+            "parts": [{"text": "你是由江南三元玄空世家传承与现代建筑环境科学融合的「堪舆子 · 传统风水顾问」。请结合排盘数据给出权威、儒雅且符合现代建筑物理学的解答。"}]
+        },
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048}
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+    except Exception as e:
+        return f"Gemini 请求失败：{e}"
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="实战风水排盘与协纪辨方择日命令行工具")
+    parser = argparse.ArgumentParser(description="实战风水排盘与协纪辨方择日命令行工具 (支持 Google Gemini 大模型直连)")
     parser.add_argument("--facing", type=float, default=180.0, help="实测向首度数 (0.0~359.9)")
     parser.add_argument("--period", type=int, default=9, help="三元九运 (当前默认为 9 运)")
     parser.add_argument("--zeri", action="store_true", help="启动协纪辨方传统择日排演")
     parser.add_argument("--event", type=str, default="入宅", help="择日事项：入宅/开业/动土/婚嫁")
     parser.add_argument("--year", type=int, default=2026, help="择日年份 (如 2026)")
     parser.add_argument("--month", type=int, default=5, help="农历月份 (1~12)")
+    parser.add_argument("--gemini", action="store_true", help="调用 Google Gemini 大模型生成大师研判")
+    parser.add_argument("--key", type=str, default=None, help="Google Gemini API Key (亦可读取 GEMINI_API_KEY 环境变量)")
+    parser.add_argument("--model", type=str, default="gemini-2.5-flash", help="Gemini 模型名称 (默认 gemini-2.5-flash)")
     parser.add_argument("--json", action="store_true", help="输出机器可读 JSON")
     args = parser.parse_args()
     
     if args.zeri:
         z_res = calculate_zeri(args.year, args.month, args.event)
-        if args.json:
+        if args.gemini:
+            import os
+            key = args.key or os.environ.get("GEMINI_API_KEY")
+            if not key:
+                print("❌ 未提供 Gemini API Key，请使用 --key 或设置 GEMINI_API_KEY 环境变量")
+                sys.exit(1)
+            prompt = f"请先生根据以下《协纪辨方书》择日排盘数据，为【{args.event}】事项进行名师指点：\n{json.dumps(z_res, ensure_ascii=False, indent=2)}"
+            print(f"\n🌟 正在请求 Google Gemini ({args.model}) 进行智能择日研判...\n")
+            print(call_gemini_cli(prompt, key, args.model))
+        elif args.json:
             print(json.dumps(z_res, ensure_ascii=False, indent=2))
         else:
             print_zeri(z_res)
     else:
         res = paipan(args.period, args.facing)
-        if args.json:
+        if args.gemini:
+            import os
+            key = args.key or os.environ.get("GEMINI_API_KEY")
+            if not key:
+                print("❌ 未提供 Gemini API Key，请使用 --key 或设置 GEMINI_API_KEY 环境变量")
+                sys.exit(1)
+            prompt = f"请先生根据以下阳宅坐向理气排盘数据，进行全维度空间诊断与工程软装化解指导：\n{json.dumps(res, ensure_ascii=False, indent=2)}"
+            print(f"\n🌟 正在请求 Google Gemini ({args.model}) 进行理气全息研判...\n")
+            print(call_gemini_cli(prompt, key, args.model))
+        elif args.json:
             print(json.dumps(res, ensure_ascii=False, indent=2))
         else:
             print_chart(res)
