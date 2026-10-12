@@ -239,17 +239,20 @@ def call_gemini_cli(prompt, key=None, model="gemini-2.5-flash"):
     import os
     import urllib.request
     target_key = key or os.environ.get("GEMINI_API_KEY") or DEFAULT_VIP_GEMINI_KEY
-    candidate_models = [model, "gemini-3.5-flash", "gemini-3.8-flash"]
+    m_target = model
+    if m_target == "gemini-2.5-flash" or not m_target:
+        m_target = "gemini-3.5-flash-lite"
+    candidate_models = [m_target, "gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-2.5-flash"]
     last_err = None
 
     for m in candidate_models:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={target_key}"
         payload = {
             "system_instruction": {
-                "parts": [{"text": "你是由江南三元玄空世家传承与现代建筑环境科学融合的「堪舆子 · 传统风水顾问」。请结合排盘数据给出权威、儒雅且符合现代建筑物理学的解答。"}]
+                "parts": [{"text": "你是由江南三元玄空世家传承与现代建筑环境科学融合的「堪舆子 · 传统风水顾问」。请结合排盘数据给出权威、儒雅、精炼的解答。"}]
             },
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048}
+            "generationConfig": {"temperature": 0.65, "maxOutputTokens": 800}
         }
         req = urllib.request.Request(
             url,
@@ -258,7 +261,7 @@ def call_gemini_cli(prompt, key=None, model="gemini-2.5-flash"):
             method="POST"
         )
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with urllib.request.urlopen(req, timeout=12) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 return data["candidates"][0]["content"]["parts"][0]["text"]
         except Exception as e:
@@ -276,7 +279,7 @@ if __name__ == "__main__":
     parser.add_argument("--month", type=int, default=5, help="农历月份 (1~12)")
     parser.add_argument("--gemini", action="store_true", help="调用 Google Gemini 大模型生成大师研判")
     parser.add_argument("--key", type=str, default=None, help="Google Gemini API Key (默认自动使用内置 VIP Key)")
-    parser.add_argument("--model", type=str, default="gemini-2.5-flash", help="Gemini 模型名称 (默认 gemini-2.5-flash)")
+    parser.add_argument("--model", type=str, default="gemini-3.5-flash-lite", help="Gemini 模型名称 (默认 gemini-3.5-flash-lite 极速通道)")
     parser.add_argument("--json", action="store_true", help="输出机器可读 JSON")
     args = parser.parse_args()
     

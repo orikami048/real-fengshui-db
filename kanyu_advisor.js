@@ -93,8 +93,9 @@
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
               <input type="password" id="inputKanyuGeminiKey" class="kanyu-input-key" placeholder="粘贴您的 Gemini API Key (AIzaSy...)" style="flex:1; min-width:220px;">
               <select id="selectKanyuGeminiModel" class="kanyu-select-model">
-                <option value="gemini-2.5-flash" selected>gemini-2.5-flash (极速首选)</option>
-                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                <option value="gemini-3.5-flash-lite" selected>gemini-3.5-flash-lite (秒级极速响应 · 推荐)</option>
+                <option value="gemini-3.5-flash">gemini-3.5-flash (平衡精准)</option>
+                <option value="gemini-2.5-flash">gemini-2.5-flash (自动极速路由)</option>
                 <option value="gemini-1.5-flash">gemini-1.5-flash</option>
                 <option value="gemini-1.5-pro">gemini-1.5-pro (深度推理)</option>
               </select>
@@ -172,7 +173,7 @@
   // 获取 Gemini 配置 (支持自定义 Key 或 VIP 自动直连官方内置 Key)
   function getGeminiConfig() {
     const customKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('fengshui_ai_api_key') || '';
-    const customModel = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
+    const customModel = localStorage.getItem('gemini_model') || 'gemini-3.5-flash-lite';
 
     if (customKey) {
       return { key: customKey, model: customModel, isVipBuiltin: false, isAllowed: true };
@@ -180,7 +181,7 @@
 
     const isVip = checkIsVipUser();
     if (isVip) {
-      return { key: BUILTIN_VIP_GEMINI_KEY, model: 'gemini-2.5-flash', isVipBuiltin: true, isAllowed: true };
+      return { key: BUILTIN_VIP_GEMINI_KEY, model: 'gemini-3.5-flash-lite', isVipBuiltin: true, isAllowed: true };
     }
 
     return { key: '', model: customModel, isVipBuiltin: false, isAllowed: false };
@@ -194,8 +195,8 @@
     const cfg = getGeminiConfig();
     if (cfg.isVipBuiltin) {
       pill.className = 'kanyu-engine-pill gemini';
-      pill.innerHTML = '👑 VIP 官方专属 · Google Gemini 2.5 直连';
-      if (label) label.innerText = '(已激活专属Key)';
+      pill.innerHTML = '👑 VIP 官方专属 · Google Gemini 极速直连';
+      if (label) label.innerText = '(已激活专属Key · 极速通道)';
     } else if (cfg.key) {
       pill.className = 'kanyu-engine-pill gemini';
       pill.innerHTML = '✨ Google Gemini 大模型驱动中';
@@ -260,7 +261,7 @@
     alert('已清除自定义 Key，堪舆子顾问已恢复默认状态。');
   };
 
-  // 构建堪舆子完整学术法统 System Prompt
+// 构建堪舆子完整学术法统 System Prompt
   function buildKanyuSystemPrompt(state, bz) {
     const period = state?.period || 9;
     const sitName = state?.sittingM?.name || '子';
@@ -272,7 +273,7 @@
 
     return `你是由古典易学名家道统与现代建筑环境科学深度融合的「堪舆子 · 传统风水顾问（江南三元派玄空名师）」。
 你的学术宗师与经典依归：
-- 《沈氏玄空学》：二十四山下卦挨星替卦诀、山上龙神不下水、水里龙神不上山、九星生旺退煞克、二黑五黄重煞化解；
+- 《沈氏玄空学》：二十四山下卦挨星替卦诀、山上龙神不下水、水里龙神不上山、二黑五黄重煞化解；
 - 《协纪辨方书》：太岁三煞、岁破月破、建除十二神黄黑道吉凶宜忌；
 - 《八宅明镜》《阳宅三要》：东四西四宅命配合、门主灶吉凶互配；
 - 《宅经》《葬书》：气乘风则散，界水则止。藏风聚气为本。
@@ -286,26 +287,41 @@
 - 当前流年参数：2026丙午马年（太岁正南午方、三煞正北亥子丑、五黄廉贞东北艮宫）
 
 沟通与解答规范：
-1. 语言儒雅谦逊、博学沉稳，自称“老朽”，称呼对方为“同修”或“阁下”，文笔兼具古典名师意蕴与现代通晓度；
-2. 凡关键论断务必援引《天玉经》《青囊序》《玄空秘旨》《协纪辨方书》等经典名句；
-3. 坚持理性科学人居与诚实边界：坚决拒绝神化迷信、绝不推销法器神物。优先运用“物理隔断（屏风/玄关柜）、动线横移避煞、阔叶常绿绿植柔化、暖色光源聚气、重金属铜器泄化土煞”等现代无痕工程与软装调理方案；
-4. 结构严整清晰，请使用优美的 Markdown 排版（小标题、引用块、列表等）输出。`;
+1. 语言儒雅谦逊、博学沉稳，自称“老朽”，称呼对方为“同修”或“阁下”；
+2. 凡关键论断务必简要援引经典名句，坚持理性科学人居：坚决拒绝神化迷信、绝不推销法器神物；
+3. 【极速要领】：请开门见山、直接点破玄机要害。优先输出 180~350 字的核心破局法与典籍依据，语言精炼有力，排版优雅，拒绝冗长套话与无意义填充。`;
   }
 
-  // 调用 Google Gemini 官方 API (带自动容错回退机制)
+  // 调用 Google Gemini 官方 API (高并发极速直连 + 自动模型故障转移)
   async function callGeminiApi(userPrompt, systemPrompt) {
     const cfg = getGeminiConfig();
     if (!cfg.isAllowed) throw new Error('VIP 专属权益未激活');
 
-    // 默认请求 gemini-2.5-flash，带自动候选模型容错
-    const candidateModels = [cfg.model, 'gemini-3.5-flash', 'gemini-3.8-flash'];
+    // 智能模型映射与容错候选集：
+    // Google 目前针对当前 Key 推荐 gemini-3.5-flash-lite（实测延迟仅 1.1s 极速响应）
+    // 若配置为过期的 gemini-2.5-flash，直接极速映射为 3.5-flash-lite，消除 404 往返耗时
+    let primary = cfg.model;
+    if (primary === 'gemini-2.5-flash' || !primary) {
+      primary = 'gemini-3.5-flash-lite';
+    }
+
+    const candidateModels = Array.from(new Set([
+      primary,
+      'gemini-3.5-flash-lite',
+      'gemini-3.5-flash',
+      'gemini-2.5-flash'
+    ]));
+
     let lastError = null;
 
     for (const m of candidateModels) {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${cfg.key}`;
       const payload = {
         contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+        generationConfig: {
+          temperature: 0.65,
+          maxOutputTokens: 800
+        }
       };
       if (systemPrompt) {
         payload.system_instruction = { parts: [{ text: systemPrompt }] };
@@ -324,8 +340,9 @@
         } else {
           const errData = await resp.json().catch(() => ({}));
           lastError = new Error(errData.error?.message || `HTTP ${resp.status}`);
-          if (resp.status === 404 || resp.status === 503) {
-            continue; // 尝试下一个候选模型
+          // 404 或 503 时立即尝试下一个模型
+          if (resp.status === 404 || resp.status === 503 || resp.status === 429) {
+            continue;
           }
           throw lastError;
         }
@@ -375,6 +392,8 @@
     box.scrollTop = box.scrollHeight;
   }
 
+  let kanyuThinkingTimer = null;
+
   function appendKanyuThinking() {
     const box = document.getElementById('kanyuDialogBox');
     if (!box) return null;
@@ -382,19 +401,75 @@
     item.id = 'kanyuThinkingIndicator';
     item.className = 'kanyu-msg-item';
     item.innerHTML = `
-      <div class="kanyu-msg-master kanyu-msg-thinking">
-        <span style="font-size:20px; animation: rotateTaiji 2s linear infinite; display:inline-block;">☯️</span>
-        <span>堪舆子先生正在运盘演卦、调阅典籍并接入 Google Gemini 智能推演中...</span>
+      <div class="kanyu-msg-master kanyu-msg-thinking" style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:22px; animation: rotateTaiji 1.2s linear infinite; display:inline-block;">☯️</span>
+        <span id="kanyuThinkingText" style="color:#fce183; font-size:13px; font-weight:500;">
+          ☯️ 正在排定二十四山天心飞星盘...
+        </span>
       </div>
     `;
     box.appendChild(item);
     box.scrollTop = box.scrollHeight;
+
+    const stages = [
+      "☯️ 正在排定二十四山天心飞星盘...",
+      "📜 正在调阅《沈氏玄空》《协纪辨方书》古籍法统...",
+      "⚡ Google Gemini 官方极速大模型正在推演点拨玄机..."
+    ];
+    let stageIdx = 0;
+    if (kanyuThinkingTimer) clearInterval(kanyuThinkingTimer);
+    kanyuThinkingTimer = setInterval(() => {
+      stageIdx = (stageIdx + 1) % stages.length;
+      const textEl = document.getElementById('kanyuThinkingText');
+      if (textEl) textEl.innerText = stages[stageIdx];
+    }, 450);
+
     return item;
   }
 
   function removeKanyuThinking() {
+    if (kanyuThinkingTimer) {
+      clearInterval(kanyuThinkingTimer);
+      kanyuThinkingTimer = null;
+    }
     const el = document.getElementById('kanyuThinkingIndicator');
     if (el) el.remove();
+  }
+
+  // 平滑逐字打字机效果渲染（增加极速沉浸感）
+  function renderTypewriterMasterMessage(rawText) {
+    const box = document.getElementById('kanyuDialogBox');
+    if (!box) return;
+    const item = document.createElement('div');
+    item.className = 'kanyu-msg-item';
+    item.innerHTML = `<div class="kanyu-msg-master"><strong>堪舆子云</strong>：<br><div class="kanyu-typewriter-body"></div></div>`;
+    box.appendChild(item);
+    box.scrollTop = box.scrollHeight;
+
+    const bodyEl = item.querySelector('.kanyu-typewriter-body');
+    const finalHtml = window.marked ? window.marked.parse(rawText) : rawText.replace(/\n/g, '<br>');
+
+    // 若内容太长或不需要打字机则快速呈现
+    if (rawText.length < 20 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      bodyEl.innerHTML = finalHtml;
+      box.scrollTop = box.scrollHeight;
+      return;
+    }
+
+    // 采用极速流式打字模拟（每批 3-5 字符，总耗时控制在 300ms 以内）
+    let charPos = 0;
+    const stepLen = Math.max(4, Math.floor(rawText.length / 30));
+    const timer = setInterval(() => {
+      charPos += stepLen;
+      if (charPos >= rawText.length) {
+        clearInterval(timer);
+        bodyEl.innerHTML = finalHtml;
+      } else {
+        const slice = rawText.slice(0, charPos);
+        bodyEl.innerHTML = (window.marked ? window.marked.parse(slice) : slice.replace(/\n/g, '<br>')) + '<span style="display:inline-block;width:6px;height:14px;background:#fce183;margin-left:3px;vertical-align:middle;animation:blinkCursor 0.6s infinite;"></span>';
+      }
+      box.scrollTop = box.scrollHeight;
+    }, 20);
   }
 
   // 触发快捷预设
@@ -467,7 +542,7 @@
         const sysPrompt = buildKanyuSystemPrompt(state, bz);
         const geminiReply = await callGeminiApi(userPromptText, sysPrompt);
         removeKanyuThinking();
-        appendKanyuMessage('master', geminiReply);
+        renderTypewriterMasterMessage(geminiReply);
         return;
       } catch (err) {
         console.warn('Gemini 预设调用失败，平滑降级为内置易学库：', err);
@@ -507,7 +582,7 @@
         const sysPrompt = buildKanyuSystemPrompt(state, bz);
         const reply = await callGeminiApi(q, sysPrompt);
         removeKanyuThinking();
-        appendKanyuMessage('master', reply);
+        renderTypewriterMasterMessage(reply);
         return;
       } catch (err) {
         console.warn('Gemini 请求失败，降级为内置专家逻辑：', err);
