@@ -1155,28 +1155,16 @@
             </div>
           </div>
 
-          <!-- AI 引擎配置栏 (内置高阶易学推理引擎与自定义模型) -->
+          <!-- VIP 智能空间诊断配置栏 (统一官方大模型通道，无须用户配Key) -->
           <div class="ai-config-bar">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="color:var(--gold-light); font-weight:700;">诊断推理引擎：</span>
-              <select id="selectAiProvider" class="form-select" style="width: auto; padding: 4px 10px; font-size: 12px; background: rgba(9,13,22,0.9);" onchange="handleAiProviderChange()">
-                <option value="builtin_offline" selected>内置易学权威规则推理引擎 (推荐 · 毫秒级即时响应)</option>
-                <option value="custom_gemini">🌟 Google Gemini 官方大模型 (接入 Gemini Key)</option>
-                <option value="pollinations_free">免费在线大模型通道 (免Key尝试)</option>
-                <option value="custom_deepseek">自定义 DeepSeek API (需填 Key)</option>
-                <option value="custom_openai">自定义 兼容 OpenAI / Kimi / 智谱 API</option>
-              </select>
-            </div>
-
-            <!-- 自定义 Key 输入区（按需折叠展开） -->
-            <div id="customApiKeyBox" style="display: none; align-items: center; gap: 8px; flex: 1; min-width: 260px;">
-              <input type="password" id="inputAiApiKey" class="form-control" placeholder="sk-..." style="padding: 4px 8px; font-size: 12px;">
-              <button class="btn btn-outline" style="padding: 3px 8px; font-size: 11px;" onclick="saveCustomApiKey()">保存Key</button>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="aiVipPill" class="metric-badge badge-gold" style="font-size:12px; padding:4px 10px;">👑 VIP 空间智能诊断 · Google Gemini</span>
+              <span id="aiVipStatusText" style="font-size:12px; color:#94a3b8;">(VIP 会员专享)</span>
             </div>
 
             <div style="margin-left: auto; display:flex; align-items:center; gap:8px;">
-              <span id="aiStatusTag" class="metric-badge badge-green">易学推理引擎就绪</span>
-              <button class="btn btn-ai" style="padding: 5px 12px; font-size: 12px;" onclick="runAiAnalysis()">重新生成诊断</button>
+              <button id="btnAiVipAction" class="btn btn-outline" style="padding: 4px 12px; font-size: 11.5px; border-color:rgba(212,175,55,0.4); color:#fce183;" onclick="handleAiVipActionClick()">👑 开通 VIP 会员</button>
+              <button class="btn btn-ai" style="padding: 5px 14px; font-size: 12px;" onclick="runAiAnalysis()">⚡ 生成空间智能诊断</button>
             </div>
           </div>
 
@@ -2012,65 +2000,45 @@
     };
 
     // ==========================================
-    // 免费在线 AI 大模型诊断引擎接入 (免填Key · 免费即用 · 支持自定义)
+    // VIP 空间智能诊断大模型引擎状态维护
     // ==========================================
-    window.handleAiProviderChange = function() {
-      const provider = document.getElementById("selectAiProvider").value;
-      const keyBox = document.getElementById("customApiKeyBox");
-      const statusTag = document.getElementById("aiStatusTag");
-      const inputKey = document.getElementById("inputAiApiKey");
-      
-      if (provider.startsWith("custom_")) {
-        keyBox.style.display = "flex";
-        const savedKey = (provider === "custom_gemini") 
-          ? (localStorage.getItem("gemini_api_key") || localStorage.getItem("fengshui_ai_api_key") || "")
-          : (localStorage.getItem("fengshui_ai_api_key") || "");
-        inputKey.value = savedKey;
+    window.updateAiVipBar = function() {
+      const isVip = Boolean(window.GuoxueAuth && typeof window.GuoxueAuth.isVip === 'function' && (window.GuoxueAuth.isVip('fengshui') || window.GuoxueAuth.isVip()));
+      const pill = document.getElementById("aiVipPill");
+      const text = document.getElementById("aiVipStatusText");
+      const btn = document.getElementById("btnAiVipAction");
 
-        const isVip = Boolean(window.GuoxueAuth && typeof window.GuoxueAuth.isVip === 'function' && (window.GuoxueAuth.isVip('fengshui') || window.GuoxueAuth.isVip()));
-
-        if (provider === "custom_gemini") {
-          if (isVip && !savedKey) {
-            inputKey.placeholder = "👑 您是 VIP 会员，已自动激活官方 Gemini 2.5 专属通道 (免填Key)";
-            statusTag.innerText = "👑 VIP 官方通道已就绪";
-            statusTag.className = "metric-badge badge-green";
-          } else {
-            inputKey.placeholder = "粘贴 Google Gemini API Key (AIzaSy...)";
-            statusTag.innerText = savedKey ? "Gemini Key 已就绪" : (isVip ? "👑 VIP 官方通道已就绪" : "VIP专属通道或填Key");
-            statusTag.className = (savedKey || isVip) ? "metric-badge badge-green" : "metric-badge badge-red";
-          }
-        } else {
-          inputKey.placeholder = "sk-...";
-          statusTag.innerText = savedKey ? "自定义Key已配置" : "请输入API Key";
-          statusTag.className = savedKey ? "metric-badge badge-green" : "metric-badge badge-red";
+      if (isVip) {
+        if (pill) {
+          pill.className = "metric-badge badge-green";
+          pill.innerText = "👑 VIP 官方通道已激活 · Google Gemini 极速直连";
         }
-      } else if (provider === "builtin_offline") {
-        keyBox.style.display = "none";
-        statusTag.innerText = "易学推理引擎就绪";
-        statusTag.className = "metric-badge badge-green";
+        if (text) text.innerText = "(专属大模型特权)";
+        if (btn) {
+          btn.innerText = "✨ VIP 已生效";
+          btn.style.color = "#34d399";
+          btn.style.borderColor = "#10b981";
+        }
       } else {
-        keyBox.style.display = "none";
-        statusTag.innerText = "在线通道就绪";
-        statusTag.className = "metric-badge badge-blue";
+        if (pill) {
+          pill.className = "metric-badge badge-gold";
+          pill.innerText = "🔒 VIP 空间智能诊断 · Google Gemini";
+        }
+        if (text) text.innerText = "(VIP 专享功能)";
+        if (btn) {
+          btn.innerText = "👑 免费体验开通 VIP";
+          btn.style.color = "#fce183";
+          btn.style.borderColor = "rgba(212,175,55,0.4)";
+        }
       }
     };
 
-    window.saveCustomApiKey = function() {
-      const key = document.getElementById("inputAiApiKey").value.trim();
-      if (!key) {
-        alert("请输入有效的 API Key！");
-        return;
+    window.handleAiVipActionClick = function() {
+      if (window.GuoxueAuth && typeof window.GuoxueAuth.openMemberModal === 'function') {
+        window.GuoxueAuth.openMemberModal();
+      } else {
+        alert("请点击页面右上角「登录 / 会员中心」免费开通实战风水 VIP！");
       }
-      const provider = document.getElementById("selectAiProvider").value;
-      localStorage.setItem("fengshui_ai_api_key", key);
-      if (provider === "custom_gemini" || key.startsWith("AIzaSy")) {
-        localStorage.setItem("gemini_api_key", key);
-        if (window.updateKanyuEngineStatus) window.updateKanyuEngineStatus();
-      }
-      const statusTag = document.getElementById("aiStatusTag");
-      statusTag.innerText = "API Key 已保存";
-      statusTag.className = "metric-badge badge-green";
-      alert("✅ API Key 已安全保存在您本地浏览器中！\n堪舆子顾问与空间智能诊断已联通。");
     };
 
     // 构建发给 AI 的高精度玄空理气与八宅参数 Prompt
@@ -2211,7 +2179,7 @@ ${specificAdvice}
 `;
     }
 
-    // 核心主入口：结合免费真实 AI API 与 本地易学推理引擎
+    // 核心主入口：VIP 专属 Google Gemini 空间全维度智能诊断
     window.runAiAnalysis = async function() {
       // 1. 确保切换到 AI 诊断 Tab 并滑动进入视窗
       switchTab("tab-ai-diag");
@@ -2226,15 +2194,35 @@ ${specificAdvice}
       }
       const state = currentChartState;
       const bz = (state && state.sittingM) ? (BAZHAI_DATA[state.sittingM.palace] || BAZHAI_DATA[1]) : BAZHAI_DATA[1];
-      const provider = document.getElementById("selectAiProvider") ? document.getElementById("selectAiProvider").value : "builtin_offline";
       const userConcern = document.getElementById("inputUserConcern") ? document.getElementById("inputUserConcern").value.trim() : "";
 
-      // 3. 渲染加载中动态效果
+      // 3. 严格会员权限检验：非 VIP 用户直接展示开通 VIP 引导卡片，不提供本地推理引擎
+      const isVip = Boolean(window.GuoxueAuth && typeof window.GuoxueAuth.isVip === 'function' && (window.GuoxueAuth.isVip('fengshui') || window.GuoxueAuth.isVip()));
+      if (!isVip) {
+        reportBox.innerHTML = `
+          <div style="text-align: center; padding: 50px 24px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 16px; margin: 12px 0;">
+            <div style="font-size: 48px; margin-bottom: 12px;">👑</div>
+            <h3 style="color: var(--gold-light); font-size: 19px; margin-bottom: 10px;">全维度风水智能空间诊断为 VIP 专属功能</h3>
+            <p style="font-size: 13.5px; color: #94a3b8; max-width: 520px; margin: 0 auto 24px; line-height: 1.7;">
+              空间智能诊断基于 Google Gemini 官方大模型，结合实测二十四山分金度数、三元九运九宫飞星、八宅游年及三元纳气法则，自动为您输出定制化工程级软装调理方案。<br>
+              当前系统为免费体验期，点击下方按钮即可一键免费体验开通 VIP！
+            </p>
+            <div style="display:flex; justify-content:center; gap:12px;">
+              <button class="btn btn-gold" style="padding: 10px 28px; font-size: 14px; font-weight: 700;" onclick="handleAiVipActionClick()">
+                ✨ 立即免费开通 VIP 体验
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 4. VIP 用户：渲染动态加载效果并直连官方大模型
       reportBox.innerHTML = `
         <div style="text-align: center; padding: 48px 0;">
-          <div style="font-size: 32px; animation: rotateTaiji 2s linear infinite; display: inline-block;">☯️</div>
+          <div style="font-size: 32px; animation: rotateTaiji 1.2s linear infinite; display: inline-block;">☯️</div>
           <div style="margin-top: 16px; color: var(--gold-light); font-weight: 700; font-size: 16px;">
-            正在进行全维度理气推演与空间诊断 ...
+            正在接入 Google Gemini 官方大模型进行空间全维度推演...
           </div>
           <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 8px;">
             罗盘二十四山分金 (${state ? state.facingDeg : 0}°) · 玄空九宫盘 · 八宅明镜 · 三元纳气深度计算中
@@ -2242,176 +2230,58 @@ ${specificAdvice}
         </div>
       `;
 
-      // 4. 内置易学推理引擎（默认即时响应，权威且无网络风险）
-      if (provider === "builtin_offline") {
-        setTimeout(() => {
-          const mdText = generateOfflineExpertReport(state, bz, userConcern);
-          renderReportMarkdown(mdText, "易学权威推理引擎生成");
-        }, 400);
-        return;
-      }
+      const prompt = buildFengShuiPrompt(state, bz, userConcern);
+      const apiKey = atob("QVEuQWI4Uk42TGs1RzFoTFhGVFdVZktDY3lEQ2xnZE1KUXJaY0dCYmdEU1RvOHBSbl9aQnc=");
+      const candidateModels = [
+        "gemini-3.5-flash-lite",
+        "gemini-3.5-flash",
+        "gemini-2.5-flash"
+      ];
+      let reply = "";
+      let usedModel = "gemini-3.5-flash-lite";
+      let lastErr = null;
 
-      // 5. 自定义大模型 API Key 模式 (含 Google Gemini 直连与 VIP 官方专属通道)
-      if (provider.startsWith("custom_")) {
-        const customKey = (provider === "custom_gemini")
-          ? (localStorage.getItem("gemini_api_key") || localStorage.getItem("fengshui_ai_api_key") || (document.getElementById("inputAiApiKey") ? document.getElementById("inputAiApiKey").value.trim() : ""))
-          : (localStorage.getItem("fengshui_ai_api_key") || (document.getElementById("inputAiApiKey") ? document.getElementById("inputAiApiKey").value.trim() : ""));
-
-        const isVip = Boolean(window.GuoxueAuth && typeof window.GuoxueAuth.isVip === 'function' && (window.GuoxueAuth.isVip('fengshui') || window.GuoxueAuth.isVip()));
-        
-        let apiKey = customKey;
-        let isBuiltinVip = false;
-
-        // 如果用户选择了 Gemini，且用户是 VIP 但未填自定义Key，直接启用方剂绑定的官方 VIP Key
-        if (provider === "custom_gemini" && !apiKey && isVip) {
-          apiKey = atob("QVEuQWI4Uk42TGs1RzFoTFhGVFdVZktDY3lEQ2xnZE1KUXJaY0dCYmdEU1RvOHBSbl9aQnc=");
-          isBuiltinVip = true;
-        }
-
-        if (!apiKey) {
-          if (provider === "custom_gemini") {
-            const wantOpen = confirm("👑【VIP 专属特权】Google Gemini 2.5 官方旗舰大模型为 VIP 专属权益。\n\n当前为系统体验期，点击「确定」即可一键免费体验开通 VIP！\n（您也可以在上方输入框中填入您自己的独立 API Key）");
-            if (wantOpen && window.GuoxueAuth && window.GuoxueAuth.openModal) {
-              window.GuoxueAuth.openModal();
-            }
-            const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
-            renderReportMarkdown(fallbackMd, "易学权威推理引擎 (VIP 专属通道未激活)");
-            return;
-          } else {
-            alert("请先在上方输入框填入您的 API Key 并点击「保存Key」！\n已自动为您使用内置易学权威推理引擎生成报告。");
-            const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
-            renderReportMarkdown(fallbackMd, "易学权威推理引擎 (自定义Key未填降级)");
-            return;
-          }
-        }
-
-        const prompt = buildFengShuiPrompt(state, bz, userConcern);
-
-        // 5.1 Google Gemini 官方大模型直接调用 (首选 gemini-3.5-flash-lite 极速秒级响应)
-        if (provider === "custom_gemini") {
-          try {
-            let geminiModel = localStorage.getItem("gemini_model") || "gemini-3.5-flash-lite";
-            if (geminiModel === "gemini-2.5-flash" || !geminiModel) {
-              geminiModel = "gemini-3.5-flash-lite";
-            }
-            const candidateModels = Array.from(new Set([
-              geminiModel,
-              "gemini-3.5-flash-lite",
-              "gemini-3.5-flash",
-              "gemini-2.5-flash"
-            ]));
-            let reply = "";
-            let usedModel = geminiModel;
-            let lastErr = null;
-
-            for (const m of candidateModels) {
-              const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
-              try {
-                const resp = await fetch(endpoint, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    system_instruction: {
-                      parts: [{ text: "你是一位兼具三十年江南三元派堪舆与现代室内设计经验的顶级空间规划大师，请使用专业精美的 Markdown 格式回答。" }]
-                    },
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.65, maxOutputTokens: 2048 }
-                  })
-                });
-
-                if (resp.ok) {
-                  const data = await resp.json();
-                  reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                  if (reply) {
-                    usedModel = m;
-                    break;
-                  }
-                } else {
-                  const errData = await resp.json().catch(() => ({}));
-                  lastErr = new Error(errData.error?.message || `HTTP ${resp.status}`);
-                  if (resp.status === 404 || resp.status === 503 || resp.status === 429) continue;
-                  throw lastErr;
-                }
-              } catch (err) {
-                lastErr = err;
-              }
-            }
-
-            if (!reply) throw lastErr || new Error("Gemini 返回内容为空");
-            const tagLabel = isBuiltinVip ? `👑 VIP 官方通道 (${usedModel}) 实时生成` : `Google Gemini (${usedModel}) 官方大模型实时生成`;
-            renderReportMarkdown(reply, tagLabel);
-            return;
-          } catch (err) {
-            console.warn("Gemini API 请求失败，降级为内置推理：", err);
-            const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
-            renderReportMarkdown(fallbackMd, `易学权威推理引擎 (Gemini 连接异常: ${err.message})`);
-            return;
-          }
-        }
-
-        // 5.2 DeepSeek / OpenAI 兼容接口调用
+      for (const m of candidateModels) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
         try {
-          const endpoint = provider === "custom_deepseek" 
-            ? "https://api.deepseek.com/chat/completions" 
-            : "https://api.openai.com/v1/chat/completions";
-          const modelName = provider === "custom_deepseek" ? "deepseek-chat" : "gpt-4o-mini";
-
           const resp = await fetch(endpoint, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${apiKey}`
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: modelName,
-              messages: [{ role: "user", content: prompt }],
-              temperature: 0.7
+              system_instruction: {
+                parts: [{ text: "你是一位兼具三十年江南三元派堪舆与现代室内设计经验的顶级空间规划大师，请使用专业精美的 Markdown 格式回答。" }]
+              },
+              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.65, maxOutputTokens: 2048 }
             })
           });
 
-          if (!resp.ok) throw new Error("API 返回状态码：" + resp.status);
-          const data = await resp.json();
-          const reply = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "";
-          if (!reply) throw new Error("API 返回内容为空");
-          renderReportMarkdown(reply, `自定义大模型 (${modelName}) 实时生成`);
-          return;
+          if (resp.ok) {
+            const data = await resp.json();
+            reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (reply) {
+              usedModel = m;
+              break;
+            }
+          } else {
+            const errData = await resp.json().catch(() => ({}));
+            lastErr = new Error(errData.error?.message || `HTTP ${resp.status}`);
+            if (resp.status === 404 || resp.status === 503 || resp.status === 429) continue;
+            throw lastErr;
+          }
         } catch (err) {
-          console.warn("自定义 API 请求失败，降级为内置推理：", err);
-          const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
-          renderReportMarkdown(fallbackMd, "易学权威推理引擎 (自定义API连接异常降级)");
-          return;
+          lastErr = err;
         }
       }
 
-      // 6. 在线免费大模型通道（带3秒极速超时，若失败或不可用无缝切换内置引擎，绝不卡死或白屏）
-      try {
-        const prompt = buildFengShuiPrompt(state, bz, userConcern);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-        const resp = await fetch("https://text.pollinations.ai/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            messages: [
-              { role: "system", content: "你是一位兼具三十年风水堪舆与现代室内设计经验的顶级空间规划大师，请使用专业精美的 Markdown 格式回答。" },
-              { role: "user", content: prompt }
-            ],
-            model: "openai"
-          })
-        });
-        clearTimeout(timeoutId);
-
-        if (!resp.ok) throw new Error("在线通道状态 " + resp.status);
-        const text = await resp.text();
-        if (!text || text.length < 50 || text.trim().startsWith("{")) throw new Error("在线通道返回数据格式不符");
-
-        renderReportMarkdown(text, "在线大模型通道实时生成");
-      } catch (e) {
-        console.warn("在线大模型通道网络波动，无缝使用易学权威推理引擎保底：", e);
-        const fallbackMd = generateOfflineExpertReport(state, bz, userConcern);
-        renderReportMarkdown(fallbackMd, "易学权威推理引擎 (在线通道繁忙自动保障)");
+      if (reply) {
+        renderReportMarkdown(reply, `👑 VIP 官方通道 (${usedModel}) 实时生成`);
+      } else {
+        reportBox.innerHTML = `
+          <div style="padding: 24px; text-align: center; color: #fb7185;">
+            ⚠️ 大模型推演服务繁忙或连接波动（${lastErr ? lastErr.message : "请求未成功"}），请稍候点击「生成空间智能诊断」重试。
+          </div>
+        `;
       }
     };
 
@@ -2624,6 +2494,12 @@ ${specificAdvice}
     if (window.calculateAndRenderZeriTab) {
       window.calculateAndRenderZeriTab();
     }
+    if (window.updateAiVipBar) {
+      window.updateAiVipBar();
+    }
+    window.addEventListener("guoxue:auth_change", () => {
+      if (window.updateAiVipBar) window.updateAiVipBar();
+    });
   </script>
   <!-- 统一国学多模块账户认证与会员系统 SDK -->
   <script src="guoxue_auth.js"></script>

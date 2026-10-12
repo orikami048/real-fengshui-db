@@ -73,38 +73,15 @@
         </div>
 
         <div class="kanyu-card-body">
-          <!-- Gemini AI 大模型驱动与 Key 配置工具条 -->
+          <!-- VIP 智能大模型服务状态条 -->
           <div class="kanyu-ai-toolbar">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span id="kanyuEnginePill" class="kanyu-engine-pill offline">☯️ 内置易学推理引擎</span>
-              <span style="font-size:11px; color:#94a3b8;" id="kanyuModelLabel"></span>
+              <span id="kanyuEnginePill" class="kanyu-engine-pill offline">🔒 VIP 智能大模型推演</span>
+              <span style="font-size:11.5px; color:#94a3b8;" id="kanyuModelLabel"></span>
             </div>
-            <button type="button" class="kanyu-settings-btn" onclick="window.toggleKanyuApiKeyBox()">
-              ⚙️ 接入 Google Gemini API Key
+            <button type="button" class="kanyu-settings-btn" id="kanyuVipActionBtn" onclick="window.handleKanyuVipAction()" style="cursor:pointer;">
+              👑 开通 VIP 会员
             </button>
-          </div>
-
-          <!-- 自定义 Gemini Key 设置抽屉 -->
-          <div class="kanyu-api-box" id="kanyuApiBox" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#fce183; font-weight:700;">🌟 接入 Google Gemini 官方大模型 (浏览器直连)</span>
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px; color:#93c5fd; text-decoration:underline;">免费获取 Gemini API Key ↗</a>
-            </div>
-            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-              <input type="password" id="inputKanyuGeminiKey" class="kanyu-input-key" placeholder="粘贴您的 Gemini API Key (AIzaSy...)" style="flex:1; min-width:220px;">
-              <select id="selectKanyuGeminiModel" class="kanyu-select-model">
-                <option value="gemini-3.5-flash-lite" selected>gemini-3.5-flash-lite (秒级极速响应 · 推荐)</option>
-                <option value="gemini-3.5-flash">gemini-3.5-flash (平衡精准)</option>
-                <option value="gemini-2.5-flash">gemini-2.5-flash (自动极速路由)</option>
-                <option value="gemini-1.5-flash">gemini-1.5-flash</option>
-                <option value="gemini-1.5-pro">gemini-1.5-pro (深度推理)</option>
-              </select>
-              <button type="button" class="btn btn-gold" style="padding:5px 14px; font-size:12px;" onclick="window.saveKanyuGeminiKey()">保存Key</button>
-              <button type="button" class="btn btn-outline" style="padding:5px 10px; font-size:12px;" onclick="window.clearKanyuGeminiKey()">清除/切回内置</button>
-            </div>
-            <div style="font-size:11px; color:#94a3b8; line-height:1.4;">
-              🔒 隐私保障：API Key 仅存放于您本地浏览器 localStorage 中，直接与 Google 官方端点通信，绝不上报中转服务器。
-            </div>
           </div>
 
           <div class="kanyu-preset-grid">
@@ -170,95 +147,46 @@
     return false;
   }
 
-  // 获取 Gemini 配置 (支持自定义 Key 或 VIP 自动直连官方内置 Key)
-  function getGeminiConfig() {
-    const customKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('fengshui_ai_api_key') || '';
-    const customModel = localStorage.getItem('gemini_model') || 'gemini-3.5-flash-lite';
-
-    if (customKey) {
-      return { key: customKey, model: customModel, isVipBuiltin: false, isAllowed: true };
+  // 唤起会员中心进行开通
+  window.handleKanyuVipAction = function () {
+    if (window.GuoxueAuth && typeof window.GuoxueAuth.openMemberModal === 'function') {
+      window.GuoxueAuth.openMemberModal();
+    } else {
+      alert('请点击页面右上角「登录 / 会员中心」免费开通实战风水 VIP！');
     }
+  };
 
-    const isVip = checkIsVipUser();
-    if (isVip) {
-      return { key: BUILTIN_VIP_GEMINI_KEY, model: 'gemini-3.5-flash-lite', isVipBuiltin: true, isAllowed: true };
-    }
-
-    return { key: '', model: customModel, isVipBuiltin: false, isAllowed: false };
-  }
-
-  // 更新引擎状态栏
+  // 更新引擎状态栏 (VIP默认已开通，非VIP显示开通VIP)
   window.updateKanyuEngineStatus = function () {
     const pill = document.getElementById('kanyuEnginePill');
     const label = document.getElementById('kanyuModelLabel');
+    const btn = document.getElementById('kanyuVipActionBtn');
+    const isVip = checkIsVipUser();
+
     if (!pill) return;
-    const cfg = getGeminiConfig();
-    if (cfg.isVipBuiltin) {
+    if (isVip) {
       pill.className = 'kanyu-engine-pill gemini';
-      pill.innerHTML = '👑 VIP 官方专属 · Google Gemini 极速直连';
-      if (label) label.innerText = '(已激活专属Key · 极速通道)';
-    } else if (cfg.key) {
-      pill.className = 'kanyu-engine-pill gemini';
-      pill.innerHTML = '✨ Google Gemini 大模型驱动中';
-      if (label) label.innerText = `(${cfg.model})`;
+      pill.innerHTML = '👑 VIP 专属 · Google Gemini 极速大模型';
+      if (label) label.innerText = '(已激活专属推演特权)';
+      if (btn) {
+        btn.innerText = '✨ VIP 会员已生效';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#34d399';
+        btn.onclick = () => {
+          if (window.GuoxueAuth && window.GuoxueAuth.openMemberModal) window.GuoxueAuth.openMemberModal();
+        };
+      }
     } else {
       pill.className = 'kanyu-engine-pill offline';
-      pill.innerHTML = '☯️ 内置易学推理引擎';
-      if (label) label.innerText = checkIsVipUser() ? '' : '(VIP开通后可直连官方Key)';
+      pill.innerHTML = '🔒 VIP 专属智能推演';
+      if (label) label.innerText = '(开通 VIP 即可解锁先生智能推演)';
+      if (btn) {
+        btn.innerText = '👑 免费体验开通 VIP';
+        btn.style.borderColor = 'rgba(212,175,55,0.4)';
+        btn.style.color = '#fce183';
+        btn.onclick = window.handleKanyuVipAction;
+      }
     }
-  };
-
-  // 展开/收起 Gemini 设置抽屉
-  window.toggleKanyuApiKeyBox = function () {
-    const box = document.getElementById('kanyuApiBox');
-    if (!box) return;
-    const isVisible = box.style.display !== 'none';
-    box.style.display = isVisible ? 'none' : 'flex';
-    if (!isVisible) {
-      const cfg = getGeminiConfig();
-      const input = document.getElementById('inputKanyuGeminiKey');
-      const select = document.getElementById('selectKanyuGeminiModel');
-      if (input) input.value = cfg.isVipBuiltin ? '' : cfg.key;
-      if (input && cfg.isVipBuiltin) input.placeholder = "👑 您是 VIP 会员，已自动激活官方专属 Key";
-      if (select) select.value = cfg.model;
-      if (input && !cfg.isVipBuiltin) setTimeout(() => input.focus(), 100);
-    }
-  };
-
-  // 保存 Gemini API Key
-  window.saveKanyuGeminiKey = function () {
-    const input = document.getElementById('inputKanyuGeminiKey');
-    const select = document.getElementById('selectKanyuGeminiModel');
-    if (!input) return;
-    const key = input.value.trim();
-    if (!key) {
-      alert('请输入有效的 Gemini API Key！');
-      return;
-    }
-    const model = select ? select.value : 'gemini-2.5-flash';
-    localStorage.setItem('gemini_api_key', key);
-    localStorage.setItem('fengshui_ai_api_key', key);
-    localStorage.setItem('gemini_model', model);
-    window.updateKanyuEngineStatus();
-    
-    // 如果主页面的 AI key 输入框存在，同步更新
-    const mainInput = document.getElementById('inputAiApiKey');
-    if (mainInput) mainInput.value = key;
-
-    const box = document.getElementById('kanyuApiBox');
-    if (box) box.style.display = 'none';
-    alert(`✅ Google Gemini API Key 已成功接入！\n当前选用模型：${model}\n堪舆子顾问已升级为顶级 AI 大模型智能大脑。`);
-  };
-
-  // 清除 Gemini Key 切回内置
-  window.clearKanyuGeminiKey = function () {
-    localStorage.removeItem('gemini_api_key');
-    const input = document.getElementById('inputKanyuGeminiKey');
-    if (input) input.value = '';
-    window.updateKanyuEngineStatus();
-    const box = document.getElementById('kanyuApiBox');
-    if (box) box.style.display = 'none';
-    alert('已清除自定义 Key，堪舆子顾问已恢复默认状态。');
   };
 
 // 构建堪舆子完整学术法统 System Prompt
@@ -292,30 +220,22 @@
 3. 【极速要领】：请开门见山、直接点破玄机要害。优先输出 180~350 字的核心破局法与典籍依据，语言精炼有力，排版优雅，拒绝冗长套话与无意义填充。`;
   }
 
-  // 调用 Google Gemini 官方 API (高并发极速直连 + 自动模型故障转移)
+  // 调用 Google Gemini 官方 API (仅限 VIP，默认使用官方 VIP 专属通道)
   async function callGeminiApi(userPrompt, systemPrompt) {
-    const cfg = getGeminiConfig();
-    if (!cfg.isAllowed) throw new Error('VIP 专属权益未激活');
-
-    // 智能模型映射与容错候选集：
-    // Google 目前针对当前 Key 推荐 gemini-3.5-flash-lite（实测延迟仅 1.1s 极速响应）
-    // 若配置为过期的 gemini-2.5-flash，直接极速映射为 3.5-flash-lite，消除 404 往返耗时
-    let primary = cfg.model;
-    if (primary === 'gemini-2.5-flash' || !primary) {
-      primary = 'gemini-3.5-flash-lite';
+    if (!checkIsVipUser()) {
+      throw new Error('VIP 专属权益未激活');
     }
 
-    const candidateModels = Array.from(new Set([
-      primary,
+    const candidateModels = [
       'gemini-3.5-flash-lite',
       'gemini-3.5-flash',
       'gemini-2.5-flash'
-    ]));
+    ];
 
     let lastError = null;
 
     for (const m of candidateModels) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${cfg.key}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${BUILTIN_VIP_GEMINI_KEY}`;
       const payload = {
         contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
         generationConfig: {
@@ -535,30 +455,43 @@
 
     appendKanyuMessage('user', userPromptText);
 
-    // 若具备权限（VIP 激活或自定义 Key），优先调动大模型深度针对性作答
-    if (cfg.isAllowed) {
-      appendKanyuThinking();
-      try {
-        const sysPrompt = buildKanyuSystemPrompt(state, bz);
-        const geminiReply = await callGeminiApi(userPromptText, sysPrompt);
-        removeKanyuThinking();
-        renderTypewriterMasterMessage(geminiReply);
-        return;
-      } catch (err) {
-        console.warn('Gemini 预设调用失败，平滑降级为内置易学库：', err);
-        removeKanyuThinking();
-        appendKanyuMessage('master', `> 💡 *【提示：Google Gemini 连接受阻（${err.message}），已自动切换为内置权威规则为您作答】*\n\n` + offlineResp);
-        return;
-      }
+    // 严格会员权限检验：VIP 默认直连官方 Gemini 大模型，非 VIP 提示开通 VIP
+    const isVip = checkIsVipUser();
+    if (!isVip) {
+      setTimeout(() => {
+        const nonVipHtml = `
+          <div style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 10px; padding: 16px; margin: 8px 0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <span style="font-size:20px;">👑</span>
+              <strong style="color:#fce183; font-size:14px;">堪舆子智能大模型推演为 VIP 专享功能</strong>
+            </div>
+            <p style="font-size:12.5px; color:#cbd5e1; line-height:1.6; margin-bottom:12px;">
+              同修雅步。堪舆子先生深度易学推演已全面接入 Google Gemini 官方大模型，为您提供二十四山分金立极、挨星替卦与现代空间工程级调理。<br>
+              当前您尚未开通实战风水 VIP 会员。现为免费体验期，点击下方按钮即可一键免费激活 VIP 专属推演特权！
+            </p>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button type="button" class="btn btn-gold" style="padding:6px 16px; font-size:12.5px; font-weight:700;" onclick="window.handleKanyuVipAction()">
+                ✨ 立即免费开通 VIP 体验
+              </button>
+            </div>
+          </div>
+        `;
+        appendKanyuMessage('master', nonVipHtml);
+      }, 250);
+      return;
     }
 
-    // 非 VIP 或未填 Key 默认内置极速响应
-    setTimeout(() => {
-      const vipTip = checkIsVipUser()
-        ? `*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可自定义模型参数)*`
-        : `*(👑 提示：Google Gemini 2.5 官方大模型为 VIP 会员专享通道。点击右上角登录并免费开通 VIP 体验，即可畅享顶级 AI 堪舆子大脑！)*`;
-      appendKanyuMessage('master', offlineResp + `\n\n` + vipTip);
-    }, 300);
+    appendKanyuThinking();
+    try {
+      const sysPrompt = buildKanyuSystemPrompt(state, bz);
+      const geminiReply = await callGeminiApi(userPromptText, sysPrompt);
+      removeKanyuThinking();
+      renderTypewriterMasterMessage(geminiReply);
+    } catch (err) {
+      console.warn('Gemini 调用失败：', err);
+      removeKanyuThinking();
+      appendKanyuMessage('master', `⚠️ 堪舆子推演服务繁忙或网络波动（${err.message}），请稍候重试。`);
+    }
   };
 
   // 自由提问堪舆子
@@ -573,60 +506,47 @@
 
     const state = window.currentChartState || null;
     const bz = (state && state.sittingM && window.BAZHAI_DATA) ? (window.BAZHAI_DATA[state.sittingM.palace] || null) : null;
-    const cfg = getGeminiConfig();
+    const isVip = checkIsVipUser();
 
-    // 1. 若具备权限（VIP 或 自定义 Key），直接调用 Google 大模型
-    if (cfg.isAllowed) {
-      appendKanyuThinking();
-      try {
-        const sysPrompt = buildKanyuSystemPrompt(state, bz);
-        const reply = await callGeminiApi(q, sysPrompt);
-        removeKanyuThinking();
-        renderTypewriterMasterMessage(reply);
-        return;
-      } catch (err) {
-        console.warn('Gemini 请求失败，降级为内置专家逻辑：', err);
-        removeKanyuThinking();
-        let fallbackNotice = `> ⚠️ *【Gemini 连接提示：${err.message}。已自动为您切换为内置专家规则推演】*\n\n`;
-        let ruleReply = generateLocalRuleReply(q, state);
-        appendKanyuMessage('master', fallbackNotice + ruleReply);
-        return;
-      }
+    // 严格会员权限检验：非 VIP 仅展示开通 VIP 引导
+    if (!isVip) {
+      setTimeout(() => {
+        const nonVipHtml = `
+          <div style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 10px; padding: 16px; margin: 8px 0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <span style="font-size:20px;">👑</span>
+              <strong style="color:#fce183; font-size:14px;">堪舆子智能大模型问答为 VIP 专享功能</strong>
+            </div>
+            <p style="font-size:12.5px; color:#cbd5e1; line-height:1.6; margin-bottom:12px;">
+              向堪舆子请教具体住宅格局、形煞化解与择日吉凶需经由官方 AI 大模型深度计算。<br>
+              当前为系统体验期，点击下方即可一键免费体验开通 VIP！
+            </p>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button type="button" class="btn btn-gold" style="padding:6px 16px; font-size:12.5px; font-weight:700;" onclick="window.handleKanyuVipAction()">
+                ✨ 立即免费开通 VIP 体验
+              </button>
+            </div>
+          </div>
+        `;
+        appendKanyuMessage('master', nonVipHtml);
+      }, 250);
+      return;
     }
 
-    // 2. 本地快速规则推理回复 (带 VIP 专属大模型引导)
-    setTimeout(() => {
-      let reply = generateLocalRuleReply(q, state);
-      appendKanyuMessage('master', reply + `\n\n*(👑 提示：Google Gemini 2.5 官方大模型为 VIP 会员专享通道。点击右上角登录并免费开通 VIP 体验，即可畅享顶级 AI 堪舆子大脑！)*`);
-    }, 400);
+    appendKanyuThinking();
+    try {
+      const sysPrompt = buildKanyuSystemPrompt(state, bz);
+      const reply = await callGeminiApi(q, sysPrompt);
+      removeKanyuThinking();
+      renderTypewriterMasterMessage(reply);
+    } catch (err) {
+      console.warn('Gemini 请求失败：', err);
+      removeKanyuThinking();
+      appendKanyuMessage('master', `⚠️ 堪舆子推演服务繁忙（${err.message}），请稍后重试。`);
+    }
   };
 
-  // 本地专家规则库兜底
-  function generateLocalRuleReply(q, state) {
-    if (/路冲|天斩|壁刀|反弓|尖角|煞/i.test(q)) {
-      return `《地理五诀》云：『形煞者，视之有物，冲之有声』。针对阁下所询形煞，首重避与隔：
-1. **物理阻隔**：能设屏风玄关者，坚决设立；
-2. **移形易位**：睡床或办公桌避开直冲投影；
-3. **气场缓冲**：临窗可置厚实常绿阔叶植物（如龟背竹、琴叶榕），配合纯铜泰山石敢当镇化。`;
-    } else if (/日|择日|乔迁|搬家|开业|动土|结婚|修造/i.test(q)) {
-      return `《协纪辨方书》考定：择日先问太岁三煞。
-- 选定事项首选【成日】、【开日】或【满日】；
-- 切不可犯当月月破日（如正月逢申、二月逢酉）与主事人本命生肖冲克日；
-- 建议阁下移步右侧 **【📅 协纪择日吉期】** 查看当月全套干支吉凶排演。`;
-    } else if (/财|旺财|水|催财|财位/i.test(q)) {
-      const wangcai = (state && state.facingDeg) ? `当前九运向星旺位` : `正南方离宫或正北方坎水零神方`;
-      return `《天玉经》云：『水是山家血脉精，利人害人速如神』。
-九运之中，当令九紫向星所到之【${wangcai}】乃主财气口。客厅阳台保持窗明几净，设柔和暖色灯光，水流宜内向回流，不可直流外泄，便为得水得财。`;
-    } else if (/床|睡眠|失眠|头朝|主卧/i.test(q)) {
-      return `《八宅明镜》云：『安床之法，坐实向虚』。
-1. 床头必须靠实墙，不可悬空临窗；
-2. 床头两侧避开正对房门或卫生间马桶；
-3. 床头上方严忌横梁压顶与空调重机压制；
-4. 命卦属西四命者床头宜西、西北、西南、东北；属东四命者床头宜北、东、东南、南。`;
-    } else {
-      return `《宅经》云：『宅者人之本，人者宅之主』。阁下所询【${q}】，堪舆学讲求因地制宜。阳宅布局万变不离『藏风聚气、动静分明、阴阳调和』十二字。若有具体朝向度数与户型位置，老朽可为阁下深析个中玄妙。`;
-    }
-  }
+
 
   // ------------------------------------------------------------
   // 协纪择日 Tab 交互计算与渲染 (tab-zeri)
