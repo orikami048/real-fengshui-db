@@ -22,12 +22,28 @@
    - **沈氏玄空飞星**：洛书九宫轨迹顺逆飞布，支持下元九运（2024–2043）、下卦正向与兼向替卦（挨星替卦诀），自动判定四大格局（旺山旺向/上山下水/双星到向/双星到山）与星曜交会吉凶。
    - **八宅明镜宅法**：严守立春干支计算居者男女三元命卦（东四命/西四命），推演八大宅卦与八宫游年星（生气、延年、天医、伏位、绝命、五鬼、六煞、祸害）。
    - **现代高层三元纳气法**：以门窗阳台为动气口，严格遵循九运正神（离火宜静）、零神（坎水宜动）法则，评估生旺衰死气。
+   - **《协纪辨方书》传统择日学**：融入建除十二神黄黑道排演，严避岁破、月破、流年三煞与五黄凶位，专攻入宅乔迁、开业开市、动土开工吉日吉时。
    - **峦头形煞与可落地装修化解**：穿堂煞、卫生间居中、开门见灶、横梁压顶、天斩煞、缺角煞等，提供现代建筑物理软装阻隔与五行化解方案。
 2. **多形态交付与即插即用**：
-   - **🖥️ 开箱即用 Web 交互式界面 (`index.html`)**：零依赖纯前端与本地 Web 服务，提供 360° 交互式罗盘、彩色九宫飞星盘、八宅吉凶卡片与一键打印诊断报告。
-   - **🐍 独立 CLI 排盘引擎 (`scripts/fengshui_paipan.py`)**：单文件跨平台排盘，支持终端排盘与 `--json` 机器格式输出。
-   - **💾 预构建单文件 SQLite 数据库 (`database/fengshui_master.sqlite`)**：内置 24 山、九星、八宅、形煞及真实住宅实勘案例。
-   - **📚 体系化理论与实战案例 (`references/`, `cases/`)**：5 篇核心理论白皮书与 2 篇真实住宅勘测工程化解案例。
+   - **🤖 开放 Agent Skills 规范标准集成 (`SKILL.md` / `skills/fengshui-master/`)**：对齐 [agentskills.io](https://agentskills.io) 标准，内置「堪舆子 · 江南三元派传人」传统顾问，支持在 Claude Code、Codex CLI、Antigravity 等智能体中无缝调用。
+   - **🖥️ 开箱即用 Web 交互式界面 (`index.html`)**：零依赖纯前端与本地 Web 服务，提供 360° 交互式罗盘、彩色九宫飞星盘、八宅吉凶卡片、协纪择日矩阵、堪舆子顾问弹窗与一键打印诊断报告。
+   - **🐍 独立 CLI 排盘引擎 (`scripts/fengshui_paipan.py`)**：单文件跨平台排盘，支持九宫排盘、`--zeri` 择日推演与 `--json` 机器格式输出。
+   - **💾 预构建单文件 SQLite 数据库 (`database/fengshui_master.sqlite`)**：内置 24 山、九星、八宅、形煞、择日及真实住宅实勘案例。
+   - **📚 体系化理论与实战案例 (`references/`, `cases/`)**：7 篇核心理论白皮书（含择日学与五行干支）与 2 篇真实住宅勘测工程化解案例。
+
+---
+
+## 🤖 智能体 Skill 使用 (Agent Skill Usage)
+
+本项目已完整接入 [voidforall/fengshui.skill](https://github.com/voidforall/fengshui.skill) 标准，仓库本身即为一个完整的 Agent Skill：
+
+```bash
+# 方式 1：使用 npx skills 一键安装
+npx skills add orikami048/real-fengshui-db
+
+# 方式 2：在 Claude Code / Codex CLI 中直接作为风水顾问使用
+# 触发场景：阳宅朝向分析、入宅开业择日、煞气化解建议、风水典籍答疑
+```
 
 ---
 
@@ -49,13 +65,15 @@ npm run start
 - **九宫洛书交互飞星盘**：彩色渲染山星、向星与运星，醒目高亮九运当令旺星与二五交加大煞；点击任一宫位即可查看星曜组合秘传断语与现代调理指导。
 - **八宅宅命配合器**：输入居者出生年份与性别，自动推算三元本命卦与宅卦八宫游年分布。
 - **三元纳气门窗体检**：评估大门与阳台纳气属性，指导落地窗纱帘与玄关动线。
+- **📅 协纪择日与吉时排演**：一键推演入宅/开市/动土吉日，十二建星黄黑道吉凶矩阵，标示岁破、月破与流年三煞大禁。
+- **🎎 堪舆子顾问弹窗**：随时呼出江南三元派传人，提供引经据典的白话专业解惑。
 - **🖨️ 一键打印报告**：点击“打印/导出实战风水诊断勘测报告”，生成整洁的 PDF 或纸质施工方案。
 
 ---
 
 ## 🚀 命令行 CLI 使用 (CLI Usage)
 
-### Python 独立排盘 CLI (`scripts/fengshui_paipan.py`)
+### Python 独立排盘与择日 CLI (`scripts/fengshui_paipan.py`)
 ```bash
 # 1. 默认九运、向首 180°（坐正北子山 向正南午山）
 python scripts/fengshui_paipan.py --facing 180
@@ -63,8 +81,12 @@ python scripts/fengshui_paipan.py --facing 180
 # 2. 兼向替卦测试（偏离正山超过3度）
 python scripts/fengshui_paipan.py --facing 184.2
 
-# 3. 输出机器可读 JSON 数据给 API 或大模型
+# 3. 《协纪辨方书》择日排演 (2026年农历6月入宅)
+python scripts/fengshui_paipan.py --zeri --year 2026 --month 6 --event 入宅
+
+# 4. 输出机器可读 JSON 数据给 API 或大模型
 python scripts/fengshui_paipan.py --facing 180 --json
+python scripts/fengshui_paipan.py --zeri --year 2026 --month 6 --json
 ```
 
 ---

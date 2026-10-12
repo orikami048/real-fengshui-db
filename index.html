@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="fire_nine.css">
   <link rel="stylesheet" href="desk_shield.css">
+  <link rel="stylesheet" href="kanyu_advisor.css">
   <style>
     :root {
       --bg-space: #070a12;
@@ -763,6 +764,9 @@
     <div class="header-actions">
       <!-- 统一国学多模块账户认证与会员中心挂载点 -->
       <div id="guoxue-auth-mount"></div>
+      <button class="btn btn-kanyu" onclick="openKanyuModal()">
+        🎎 堪舆子顾问 (Skill)
+      </button>
       <button class="btn btn-desk-shield" onclick="openDeskShieldModal()" style="background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #10b981 100%); color: #fff; font-weight: 800; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.45); border: 1px solid rgba(255,255,255,0.4); cursor: pointer;">
         🛡️ 工位防小人吸金结界 (¥9.9)
       </button>
@@ -894,6 +898,7 @@
         <button class="tab-btn term-tip" onclick="switchTab('tab-feixing')" data-tooltip="【玄空飞星白话】：风水顶级理气法门。结合三元九运时空流转与房屋朝向，推算全屋9个宫位的人丁健康（山星）与财富进取（向星）。">玄空飞星九宫盘</button>
         <button class="tab-btn term-tip" onclick="switchTab('tab-bazhai')" data-tooltip="【八宅明镜白话】：大门与坐向定宅卦，推演全屋四吉方(生气延年天医伏位)与四凶方(绝命五鬼六煞祸害)，适合布局主卧与厨卫。">八宅明镜吉凶盘</button>
         <button class="tab-btn term-tip" onclick="switchTab('tab-naqi')" data-tooltip="【三元纳气白话】：高层现代楼房核心！看大窗与阳台从哪个方位进风进气。九运正神宜静、零神宜动纳旺水旺气。">三元高层纳气</button>
+        <button class="tab-btn term-tip" onclick="switchTab('tab-zeri')" data-tooltip="【协纪择日白话】：依据《协纪辨方书》推算入宅、开业、动土黄道吉日，严避岁破月破与三煞凶方。">📅 协纪择日吉期</button>
         <button class="tab-btn term-tip" onclick="switchTab('tab-ai-diag')" data-tooltip="【智能深度诊断白话】：综合玄空星曜、八宅吉凶、纳气口与峦头形态，生成房间逐一定位分析与现代软装化解全套方案。">空间智能诊断报告</button>
         <button class="tab-btn term-tip" onclick="switchTab('tab-remedies')" data-tooltip="【峦头形煞白话】：看得见的室内外物理结构煞气（如穿堂风、开门见灶、横梁压顶、卫生间居中等）的现代建筑装修改造指南。">实战峦头化解清单</button>
       </div>
@@ -1056,6 +1061,95 @@
             </span>
           </div>
           <div id="naqiList"></div>
+        </div>
+      </div>
+
+      <!-- Tab: 协纪辨方择日吉期 -->
+      <div id="tab-zeri" class="tab-content" style="display: none;">
+        <div class="panel-card">
+          <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span>📅 《协纪辨方书》传统择日与吉时排演</span>
+            <span class="metric-badge badge-gold">严避岁破月破 · 趋吉乘旺</span>
+          </div>
+
+          <!-- 控制工具栏 -->
+          <div class="zeri-control-grid">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:12px;">择日事项</label>
+              <select id="selectZeriEvent" class="form-select" style="font-size:12px; padding:6px 10px;" onchange="calculateAndRenderZeriTab()">
+                <option value="入宅" selected>🏡 乔迁新居 (入宅/进伙)</option>
+                <option value="开业">🏬 开张开市 (开业/剪彩)</option>
+                <option value="动土">🔨 装修破土 (动工修造)</option>
+                <option value="嫁娶">💍 婚嫁大吉 (迎亲合卺)</option>
+                <option value="安床">🛏️ 主卧安床 (定盟安居)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:12px;">择日公历年份</label>
+              <select id="selectZeriYear" class="form-select" style="font-size:12px; padding:6px 10px;" onchange="calculateAndRenderZeriTab()">
+                <option value="2024">2024 甲辰龙年</option>
+                <option value="2025">2025 乙巳蛇年</option>
+                <option value="2026" selected>2026 丙午马年 (当前)</option>
+                <option value="2027">2027 丁未羊年</option>
+                <option value="2028">2028 戊申猴年</option>
+                <option value="2029">2029 己酉鸡年</option>
+                <option value="2030">2030 庚戌狗年</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:12px;">农历月份</label>
+              <select id="selectZeriMonth" class="form-select" style="font-size:12px; padding:6px 10px;" onchange="calculateAndRenderZeriTab()">
+                <option value="1">正月 (寅月·建寅)</option>
+                <option value="2">二月 (卯月·建卯)</option>
+                <option value="3">三月 (辰月·建辰)</option>
+                <option value="4">四月 (巳月·建巳)</option>
+                <option value="5" selected>五月 (午月·建午)</option>
+                <option value="6">六月 (未月·建未)</option>
+                <option value="7">七月 (申月·建申)</option>
+                <option value="8">八月 (酉月·建酉)</option>
+                <option value="9">九月 (戌月·建戌)</option>
+                <option value="10">十月 (亥月·建亥)</option>
+                <option value="11">冬月 (子月·建子)</option>
+                <option value="12">腊月 (丑月·建丑)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:12px;">主事人生肖</label>
+              <select id="selectZeriZodiac" class="form-select" style="font-size:12px; padding:6px 10px;" onchange="calculateAndRenderZeriTab()">
+                <option value="鼠">子鼠</option>
+                <option value="牛">丑牛</option>
+                <option value="虎">寅虎</option>
+                <option value="兔">卯兔</option>
+                <option value="龙">辰龙</option>
+                <option value="蛇">巳蛇</option>
+                <option value="马" selected>午马</option>
+                <option value="羊">未羊</option>
+                <option value="猴">申猴</option>
+                <option value="鸡">酉鸡</option>
+                <option value="狗">戌狗</option>
+                <option value="猪">亥猪</option>
+              </select>
+            </div>
+
+            <button class="btn btn-gold" style="padding:7px 16px; font-weight:700; white-space:nowrap;" onclick="calculateAndRenderZeriTab()">
+              ⚡ 立即排演吉期
+            </button>
+          </div>
+
+          <!-- 年运神煞横幅 -->
+          <div id="zeriStatsBanner" class="zeri-stats-banner"></div>
+
+          <!-- 十二建星吉凶矩阵 -->
+          <div style="font-size:13px; font-weight:700; color:var(--gold-light); margin-bottom:10px;">
+            🌟 建除十二神黄黑道吉凶矩阵（当月流转）：
+          </div>
+          <div id="zeriOfficersGrid" class="zeri-officers-grid"></div>
+
+          <!-- 堪舆子箴言与实战纳气指引 -->
+          <div id="zeriAdviceCard" class="zeri-advice-card"></div>
         </div>
       </div>
 
@@ -2060,21 +2154,23 @@ ${userConcern ? `### 💡 四、居者专属关切针对性解答\n- 深度回�
 `;
       }
 
-      return `# 《现代住宅风水全维度智能空间诊断与工程调理方案》
+      return `# 《堪舆子 · 现代住宅全维度理气诊断与工程调理方案》
 
+> **堪舆家训**：「峦头为体，理气为用；峦头差，理气无用；理气差，峦头吉地亦减分。」——江南三元世家《沈氏玄空学》
 > **理气元数据**：下元第 ${state.period} 运 | 坐${state.sittingM.name}山 向${state.facingM.name}山 (${state.facingDeg}°) | 宅卦：${bz.name} | 格局：${state.pattern}
 
 ### 一、户型地气格局与罗盘真北综评
+《青囊序》云：『二十四山分顺逆，共成四十有八局』。
 本宅经罗盘天心十道立极与真北校准后，确定坐向为**坐${state.sittingM.name}山 向${state.facingM.name}山**。
 ${state.isSub ? "实测偏角超过3度，磁场兼带杂气，已按沈氏《挨星替卦诀》排定替卦星盘，关键在于调理向首纳气口之清纯度。" : "实测处于正山正向黄金中心带，地气纯正，主家道平顺安定。"}
 全屋呈现**【${state.pattern}】**气象，只要配合合理的门窗纳气与床位布局，丁财两旺之机立现。
 
 ### 二、全屋关键功能方位吉凶对位
 1. **核心财帛纳气位（${wangcaiPalace ? wangcaiPalace : "正南方"}）**：
-   - 当令九紫当旺向星飞临，此处气场活跃、主生财迅速。
+   - 《天玉经》云：『当令向星见明堂，骤发财禄不可挡』。此处九紫向星当令旺气飞临，气场活跃、主生财进取。
    - **调理方案**：最宜规划为客厅会客区、全景落地阳台或人员走动主要动线。建议安设温暖柔和之暖光落地灯，配合阔叶常绿绿植，聚气纳财。
 2. **文昌考运与仕途晋升位（${wenchangPalace ? wenchangPalace : "东南方"}）**：
-   - 一四同宫准发科名，利思维清晰、创作考试与晋升。
+   - 《玄空秘旨》云：『一四同宫，准发科名之显』。此处气聚灵秀，利思维清晰、创作考试与晋升。
    - **调理方案**：最宜设为书房、静音办公位或学龄儿童书桌，桌角摆放四支水培富贵竹，案头保持洁净明亮。
 3. **居者人丁康宁主卧位（${PALACE_NAMES[state.sittingM.palace]}）**：
    - 处于坐山靠山方，主身体精力恢复与夫妻贵人和睦。
@@ -2096,6 +2192,9 @@ ${specificAdvice}
 | **横梁压顶** | 睡床或书桌上方有实心承重梁 | 睡床横移50cm脱离垂直投影，或吊顶做微弧形石膏板包梁消除压抑感 |
 | **中宫湿秽** | 卫生间靠近全屋几何天心点 | 加装静音大风量排风扇24小时排风维持微负压，马桶后方置粗盐安忍水化湿 |
 | **门冲对冲** | 卫生间门正对卧室房门 | 卫生间常闭并悬挂1.5米过膝天然棉麻长门帘，门边摆放黄金葛绿植吸湿 |
+
+### 六、名师箴言与诚实边界
+> 《宅经》云：『地善则苗茂，宅吉则人荣』。堪舆调理以营造安适磁场为用，风水为辅，人为为主；因地制宜、心正气和，福善自臻。
 `;
     }
 
@@ -2421,9 +2520,14 @@ ${specificAdvice}
     updateLifeGua();
     initFormSha();
     loadSampleCase();
+    if (window.calculateAndRenderZeriTab) {
+      window.calculateAndRenderZeriTab();
+    }
   </script>
   <!-- 统一国学多模块账户认证与会员系统 SDK -->
   <script src="guoxue_auth.js"></script>
+  <!-- KANYU ADVISOR: 堪舆子 · 传统风水顾问与协纪辨方择日系统 (Agent Skill 深度集成) -->
+  <script src="kanyu_advisor.js"></script>
   <!-- FIRE-NINE MATRIX: 2026 九紫离火运空间吉凶体检与工位气场防御卡 -->
   <script src="fire_nine_modal.js"></script>
   <!-- DESK-SHIELD MATRIX: 打工人 1㎡ 工位防小人吸金结界指南 (¥9.9 爆款变现) -->

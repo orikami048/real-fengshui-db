@@ -1,0 +1,341 @@
+/* ============================================================
+   堪舆子 · 传统风水顾问与协纪择日系统 样式表 (Kanyu Advisor CSS)
+   ============================================================ */
+
+/* 头部导航专属按钮 */
+.btn-kanyu {
+  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #d4af37 100%);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-kanyu:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.55);
+  border-color: #fce183;
+}
+
+/* 模态弹窗遮罩 */
+.kanyu-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 15, 0.82);
+  backdrop-filter: blur(12px);
+  z-index: 10001;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: kanyuFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes kanyuFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 模态弹窗卡片主体 */
+.kanyu-modal-card {
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  background: radial-gradient(circle at 50% 10%, #121d33 0%, #0a0f1d 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(16, 185, 129, 0.12);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 弹窗头部 */
+.kanyu-card-header {
+  padding: 20px 24px;
+  background: rgba(18, 25, 41, 0.95);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.kanyu-persona-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.kanyu-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(212, 175, 55, 0.25));
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+.kanyu-persona-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+.kanyu-persona-subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.kanyu-quote {
+  font-size: 11.5px;
+  color: #fce183;
+  margin-top: 4px;
+  font-style: italic;
+  opacity: 0.92;
+}
+
+/* 弹窗内容滚动区 */
+.kanyu-card-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 快捷操作分类网格 */
+.kanyu-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.kanyu-preset-chip {
+  background: rgba(18, 26, 44, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+.kanyu-preset-chip:hover {
+  border-color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.kanyu-chip-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.kanyu-chip-desc {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+/* 对话输出区域 */
+.kanyu-dialog-container {
+  background: rgba(9, 14, 25, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  padding: 18px;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.kanyu-msg-item {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.kanyu-msg-user {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #e0f2fe;
+}
+.kanyu-msg-master {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #f1f5f9;
+}
+.kanyu-msg-master strong { color: #fce183; }
+.kanyu-msg-master blockquote {
+  border-left: 3px solid #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 6px 12px;
+  margin: 8px 0;
+  color: #a7f3d0;
+  font-size: 12.5px;
+}
+
+/* 底部提问输入栏 */
+.kanyu-input-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.kanyu-input-text {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+  color: #f8fafc;
+  padding: 10px 14px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.kanyu-input-text:focus {
+  border-color: #34d399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+/* 弹窗底部诚实边界声明 */
+.kanyu-boundary-footer {
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   Tab 协纪择日吉期专属样式 (tab-zeri)
+   ------------------------------------------------------------ */
+.zeri-control-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+  background: rgba(15, 22, 36, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+}
+.zeri-stats-banner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.zeri-stat-box {
+  background: rgba(12, 17, 28, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.zeri-stat-label {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+.zeri-stat-val {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--gold-light);
+}
+
+/* 十二建星网格展示 */
+.zeri-officers-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.zeri-officer-cell {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.zeri-officer-cell.cell-daji {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.18);
+}
+.zeri-officer-cell.cell-ciji {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+}
+.zeri-officer-cell.cell-daxiong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+.zeri-officer-name {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+.zeri-officer-grade {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.badge-daji { background: #10b981; color: #ffffff; }
+.badge-ciji { background: #0284c7; color: #ffffff; }
+.badge-ping { background: #475569; color: #ffffff; }
+.badge-xiong { background: #dc2626; color: #ffffff; }
+
+.zeri-advice-card {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  line-height: 1.7;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+.zeri-advice-card h4 {
+  color: #34d399;
+  font-size: 15px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .kanyu-preset-grid { grid-template-columns: 1fr 1fr; }
+  .zeri-control-grid { grid-template-columns: 1fr 1fr; }
+  .zeri-stats-banner { grid-template-columns: 1fr 1fr; }
+  .zeri-officers-grid { grid-template-columns: repeat(3, 1fr); }
+}

@@ -145,15 +145,114 @@ def print_chart(res):
         print(line_stars)
         print("-" * 55)
 
+def calculate_zeri(year=2026, month=5, event="入宅"):
+    # 基础三煞太岁数据库
+    san_sha_map = {
+        "申子辰": {"name": "正南方", "branches": ["巳", "午", "未"], "years": [2024, 2028, 2032, 2036, 2040]},
+        "巳酉丑": {"name": "正东方", "branches": ["寅", "卯", "辰"], "years": [2025, 2029, 2033, 2037, 2041]},
+        "寅午戌": {"name": "正北方", "branches": ["亥", "子", "丑"], "years": [2026, 2030, 2034, 2038, 2042]},
+        "亥卯未": {"name": "正西方", "branches": ["申", "酉", "戌"], "years": [2027, 2031, 2035, 2039, 2043]}
+    }
+    
+    ganzhi_year_list = {
+        2024: ("甲辰", "龙", "东南(辰120°)", "西北乾宫"),
+        2025: ("乙巳", "蛇", "东南(巳150°)", "正西兑宫"),
+        2026: ("丙午", "马", "正南(午180°)", "东北艮宫"),
+        2027: ("丁未", "羊", "西南(未210°)", "正南离宫"),
+        2028: ("戊申", "猴", "西南(申240°)", "正北坎宫"),
+        2029: ("己酉", "鸡", "正西(酉270°)", "西南坤宫"),
+        2030: ("庚戌", "狗", "西北(戌300°)", "正东震宫")
+    }
+    
+    gz_info = ganzhi_year_list.get(year, ("丙午", "马", "正南(午180°)", "东北艮宫"))
+    
+    # 查找三煞方
+    sha_info = None
+    for group, val in san_sha_map.items():
+        if year in val["years"]:
+            sha_info = val
+            break
+    if not sha_info:
+        sha_info = san_sha_map["寅午戌"]
+        
+    # 月破地支 (农历1-12月)
+    month_clash = {1:"申", 2:"酉", 3:"戌", 4:"亥", 5:"子", 6:"丑", 7:"寅", 8:"卯", 9:"辰", 10:"巳", 11:"午", 12:"未"}
+    clash_branch = month_clash.get(month, "子")
+    
+    # 建除吉凶
+    jian_chu = [
+        {"name": "建", "nature": "平中带凶", "good": ["祭祀", "祈福"], "bad": ["开市", "嫁娶", "入宅", "动土"]},
+        {"name": "除", "nature": "吉神", "good": ["沐浴", "大扫除", "求医治病"], "bad": ["嫁娶", "出行"]},
+        {"name": "满", "nature": "次吉", "good": ["入宅乔迁", "开市纳财", "结纳宴客"], "bad": ["动土开渠", "安葬"]},
+        {"name": "平", "nature": "平日", "good": ["修饰垣墙", "日常事务"], "bad": ["诉讼", "嫁娶", "重大开张"]},
+        {"name": "定", "nature": "吉神", "good": ["安床", "签约订盟", "开业祈福"], "bad": ["争执词讼", "远行"]},
+        {"name": "执", "nature": "小凶", "good": ["安防设施", "守成修墙"], "bad": ["开市", "入宅搬家"]},
+        {"name": "破", "nature": "大凶(月破)", "good": ["破土拆旧"], "bad": ["万事不宜", "严忌入宅与开工"]},
+        {"name": "危", "nature": "次凶", "good": ["祭祀", "安居"], "bad": ["登高涉险", "开市动工"]},
+        {"name": "成", "nature": "大吉(首选)", "good": ["入宅乔迁", "开市开业", "嫁娶", "动土开工"], "bad": ["诉讼争执"]},
+        {"name": "收", "nature": "次吉", "good": ["纳财入库", "签定合同", "收款"], "bad": ["出殡安葬", "借贷"]},
+        {"name": "开", "nature": "大吉(首选)", "good": ["开张开市", "入宅大吉", "嫁娶", "出行签约"], "bad": ["破土", "安葬"]},
+        {"name": "闭", "nature": "凶日", "good": ["修补堵塞", "安葬"], "bad": ["开业开市", "入宅动土"]}
+    ]
+    
+    recommended = [j for j in jian_chu if any(event in g for g in j["good"])]
+    if not recommended:
+        recommended = [j for j in jian_chu if "大吉" in j["nature"] or "吉神" in j["nature"]]
+        
+    return {
+        "year": year,
+        "year_stem_branch": gz_info[0],
+        "zodiac": gz_info[1],
+        "taisui_direction": gz_info[2],
+        "wuhuang_direction": gz_info[3],
+        "sansha_direction": sha_info["name"],
+        "sansha_branches": sha_info["branches"],
+        "lunar_month": month,
+        "month_clash_branch": clash_branch,
+        "event": event,
+        "recommended_officers": recommended,
+        "advice": f"【堪舆子择日箴言】《协纪辨方书》云：『避凶莫重于太岁三煞』。{year}年太岁在{gz_info[2]}，三煞在{sha_info['name']}，五黄在{gz_info[3]}。办理【{event}】首选【成日】、【开日】或【满日】，切忌犯逢【{clash_branch}日（月破日）】与当年岁破日。"
+    }
+
+def print_zeri(res):
+    print("=" * 60)
+    print(f"🏮 《协纪辨方书》堪舆学传统择日吉期排演")
+    print("=" * 60)
+    print(f"年份：{res['year']} 年（干支：{res['year_stem_branch']} · 肖{res['zodiac']}）")
+    print(f"太岁方位（忌先动土）：{res['taisui_direction']}")
+    print(f"年三煞位（严防破煞）：{res['sansha_direction']}（地支：{'、'.join(res['sansha_branches'])}）")
+    print(f"流年五黄大煞位：{res['wuhuang_direction']}")
+    print(f"农历月份：农历 {res['lunar_month']} 月 | 💥 当月月破凶日：逢【{res['month_clash_branch']}日】万事避用")
+    print(f"咨询事项：【{res['event']}】")
+    print("-" * 60)
+    print("🎯 首选建除黄道吉神推荐：")
+    for r in res["recommended_officers"]:
+        print(f"  • 【{r['name']}日】({r['nature']})：宜 {', '.join(r['good'])} | 忌 {', '.join(r['bad'])}")
+    print("-" * 60)
+    print(f"📜 名师点拨：{res['advice']}")
+    print("=" * 60)
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="实战风水排盘命令行工具")
+    parser = argparse.ArgumentParser(description="实战风水排盘与协纪辨方择日命令行工具")
     parser.add_argument("--facing", type=float, default=180.0, help="实测向首度数 (0.0~359.9)")
     parser.add_argument("--period", type=int, default=9, help="三元九运 (当前默认为 9 运)")
+    parser.add_argument("--zeri", action="store_true", help="启动协纪辨方传统择日排演")
+    parser.add_argument("--event", type=str, default="入宅", help="择日事项：入宅/开业/动土/婚嫁")
+    parser.add_argument("--year", type=int, default=2026, help="择日年份 (如 2026)")
+    parser.add_argument("--month", type=int, default=5, help="农历月份 (1~12)")
     parser.add_argument("--json", action="store_true", help="输出机器可读 JSON")
     args = parser.parse_args()
     
-    res = paipan(args.period, args.facing)
-    if args.json:
-        print(json.dumps(res, ensure_ascii=False, indent=2))
+    if args.zeri:
+        z_res = calculate_zeri(args.year, args.month, args.event)
+        if args.json:
+            print(json.dumps(z_res, ensure_ascii=False, indent=2))
+        else:
+            print_zeri(z_res)
     else:
-        print_chart(res)
+        res = paipan(args.period, args.facing)
+        if args.json:
+            print(json.dumps(res, ensure_ascii=False, indent=2))
+        else:
+            print_chart(res)
+
