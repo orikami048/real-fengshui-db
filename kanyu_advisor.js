@@ -151,11 +151,39 @@
     });
   }
 
-  // 获取 Gemini 配置
+  // 方剂官方内置绑定的 Gemini 官方 API Key (VIP 专属直连)
+  const BUILTIN_VIP_GEMINI_KEY = atob('QVEuQWI4Uk42TGs1RzFoTFhGVFdVZktDY3lEQ2xnZE1KUXJaY0dCYmdEU1RvOHBSbl9aQnc=');
+
+  // 检查当前用户是否具有 VIP 权限
+  function checkIsVipUser() {
+    if (window.GuoxueAuth && typeof window.GuoxueAuth.isVip === 'function') {
+      return Boolean(window.GuoxueAuth.isVip('fengshui') || window.GuoxueAuth.isVip());
+    }
+    try {
+      const uStr = localStorage.getItem('guoxue_user_cache');
+      if (uStr) {
+        const u = JSON.parse(uStr);
+        if (u.memberships && (u.memberships['fengshui']?.is_vip || u.memberships['fangji']?.is_vip)) return true;
+      }
+    } catch(e) {}
+    return false;
+  }
+
+  // 获取 Gemini 配置 (支持自定义 Key 或 VIP 自动直连官方内置 Key)
   function getGeminiConfig() {
-    const key = localStorage.getItem('gemini_api_key') || localStorage.getItem('fengshui_ai_api_key') || '';
-    const model = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
-    return { key, model };
+    const customKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('fengshui_ai_api_key') || '';
+    const customModel = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
+
+    if (customKey) {
+      return { key: customKey, model: customModel, isVipBuiltin: false, isAllowed: true };
+    }
+
+    const isVip = checkIsVipUser();
+    if (isVip) {
+      return { key: BUILTIN_VIP_GEMINI_KEY, model: 'gemini-2.5-flash', isVipBuiltin: true, isAllowed: true };
+    }
+
+    return { key: '', model: customModel, isVipBuiltin: false, isAllowed: false };
   }
 
   // 更新引擎状态栏
@@ -163,15 +191,19 @@
     const pill = document.getElementById('kanyuEnginePill');
     const label = document.getElementById('kanyuModelLabel');
     if (!pill) return;
-    const { key, model } = getGeminiConfig();
-    if (key) {
+    const cfg = getGeminiConfig();
+    if (cfg.isVipBuiltin) {
+      pill.className = 'kanyu-engine-pill gemini';
+      pill.innerHTML = '👑 VIP 官方专属 · Google Gemini 2.5 直连';
+      if (label) label.innerText = '(已激活专属Key)';
+    } else if (cfg.key) {
       pill.className = 'kanyu-engine-pill gemini';
       pill.innerHTML = '✨ Google Gemini 大模型驱动中';
-      if (label) label.innerText = `(${model})`;
+      if (label) label.innerText = `(${cfg.model})`;
     } else {
       pill.className = 'kanyu-engine-pill offline';
       pill.innerHTML = '☯️ 内置易学推理引擎';
-      if (label) label.innerText = '(未配置Key)';
+      if (label) label.innerText = checkIsVipUser() ? '' : '(VIP开通后可直连官方Key)';
     }
   };
 
@@ -182,12 +214,13 @@
     const isVisible = box.style.display !== 'none';
     box.style.display = isVisible ? 'none' : 'flex';
     if (!isVisible) {
-      const { key, model } = getGeminiConfig();
+      const cfg = getGeminiConfig();
       const input = document.getElementById('inputKanyuGeminiKey');
       const select = document.getElementById('selectKanyuGeminiModel');
-      if (input) input.value = key;
-      if (select) select.value = model;
-      if (input) setTimeout(() => input.focus(), 100);
+      if (input) input.value = cfg.isVipBuiltin ? '' : cfg.key;
+      if (input && cfg.isVipBuiltin) input.placeholder = "👑 您是 VIP 会员，已自动激活官方专属 Key";
+      if (select) select.value = cfg.model;
+      if (input && !cfg.isVipBuiltin) setTimeout(() => input.focus(), 100);
     }
   };
 
@@ -224,7 +257,7 @@
     window.updateKanyuEngineStatus();
     const box = document.getElementById('kanyuApiBox');
     if (box) box.style.display = 'none';
-    alert('已清除 Key，堪舆子顾问已切回内置易学权威规则推理引擎。');
+    alert('已清除自定义 Key，堪舆子顾问已恢复默认状态。');
   };
 
   // 构建堪舆子完整学术法统 System Prompt
@@ -259,45 +292,48 @@
 4. 结构严整清晰，请使用优美的 Markdown 排版（小标题、引用块、列表等）输出。`;
   }
 
-  // 调用 Google Gemini 官方 API
+  // 调用 Google Gemini 官方 API (带自动容错回退机制)
   async function callGeminiApi(userPrompt, systemPrompt) {
-    const { key, model } = getGeminiConfig();
-    if (!key) throw new Error('未检测到 Gemini API Key');
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+    const cfg = getGeminiConfig();
+    if (!cfg.isAllowed) throw new Error('VIP 专属权益未激活');
 
-    const payload = {
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: userPrompt }]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2048
-      }
-    };
-    if (systemPrompt) {
-      payload.system_instruction = {
-        parts: [{ text: systemPrompt }]
+    // 默认请求 gemini-2.5-flash，带自动候选模型容错
+    const candidateModels = [cfg.model, 'gemini-3.5-flash', 'gemini-3.8-flash'];
+    let lastError = null;
+
+    for (const m of candidateModels) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${cfg.key}`;
+      const payload = {
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
       };
+      if (systemPrompt) {
+        payload.system_instruction = { parts: [{ text: systemPrompt }] };
+      }
+
+      try {
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) return text;
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          lastError = new Error(errData.error?.message || `HTTP ${resp.status}`);
+          if (resp.status === 404 || resp.status === 503) {
+            continue; // 尝试下一个候选模型
+          }
+          throw lastError;
+        }
+      } catch (err) {
+        lastError = err;
+      }
     }
-
-    const resp = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${resp.status}`);
-    }
-
-    const data = await resp.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error('Gemini 返回内容为空');
-    return text;
+    throw lastError || new Error('Gemini API 调用未成功');
   }
 
   // 打开/关闭模态窗
@@ -316,6 +352,11 @@
     const modal = document.getElementById('modalKanyuAdvisor');
     if (modal) modal.style.display = 'none';
   };
+
+  // 监听会员登录与 VIP 状态变化实时刷新引擎标识
+  window.addEventListener('guoxue:auth_change', () => {
+    if (window.updateKanyuEngineStatus) window.updateKanyuEngineStatus();
+  });
 
   // 在对话框追加消息
   function appendKanyuMessage(role, text) {
@@ -361,7 +402,7 @@
     createKanyuModalDom();
     const state = window.currentChartState || null;
     const bz = (state && state.sittingM && window.BAZHAI_DATA) ? (window.BAZHAI_DATA[state.sittingM.palace] || null) : null;
-    const { key } = getGeminiConfig();
+    const cfg = getGeminiConfig();
     
     let userPromptText = "";
     let offlineResp = "";
@@ -419,8 +460,8 @@
 
     appendKanyuMessage('user', userPromptText);
 
-    // 若配置了 Gemini Key，优先调动大模型深度针对性作答
-    if (key) {
+    // 若具备权限（VIP 激活或自定义 Key），优先调动大模型深度针对性作答
+    if (cfg.isAllowed) {
       appendKanyuThinking();
       try {
         const sysPrompt = buildKanyuSystemPrompt(state, bz);
@@ -436,9 +477,12 @@
       }
     }
 
-    // 默认内置极速响应
+    // 非 VIP 或未填 Key 默认内置极速响应
     setTimeout(() => {
-      appendKanyuMessage('master', offlineResp + `\n\n*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可解锁具备自由深度问答的大模型堪舆子大脑)*`);
+      const vipTip = checkIsVipUser()
+        ? `*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可自定义模型参数)*`
+        : `*(👑 提示：Google Gemini 2.5 官方大模型为 VIP 会员专享通道。点击右上角登录并免费开通 VIP 体验，即可畅享顶级 AI 堪舆子大脑！)*`;
+      appendKanyuMessage('master', offlineResp + `\n\n` + vipTip);
     }, 300);
   };
 
@@ -454,10 +498,10 @@
 
     const state = window.currentChartState || null;
     const bz = (state && state.sittingM && window.BAZHAI_DATA) ? (window.BAZHAI_DATA[state.sittingM.palace] || null) : null;
-    const { key } = getGeminiConfig();
+    const cfg = getGeminiConfig();
 
-    // 1. 若配置了 Gemini Key，直接调用 Google 大模型
-    if (key) {
+    // 1. 若具备权限（VIP 或 自定义 Key），直接调用 Google 大模型
+    if (cfg.isAllowed) {
       appendKanyuThinking();
       try {
         const sysPrompt = buildKanyuSystemPrompt(state, bz);
@@ -475,10 +519,10 @@
       }
     }
 
-    // 2. 本地快速规则推理回复
+    // 2. 本地快速规则推理回复 (带 VIP 专属大模型引导)
     setTimeout(() => {
       let reply = generateLocalRuleReply(q, state);
-      appendKanyuMessage('master', reply + `\n\n*(💡 提示：点击顶部「⚙️ 接入 Google Gemini API Key」，即可接入您的 Gemini 大模型进行任意深度发散对话)*`);
+      appendKanyuMessage('master', reply + `\n\n*(👑 提示：Google Gemini 2.5 官方大模型为 VIP 会员专享通道。点击右上角登录并免费开通 VIP 体验，即可畅享顶级 AI 堪舆子大脑！)*`);
     }, 400);
   };
 
